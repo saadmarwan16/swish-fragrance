@@ -1,5 +1,5 @@
-import { GrHistory, GrUserAdmin } from "react-icons/gr";
-import { AiOutlineDashboard } from "react-icons/ai";
+import { GrHistory } from "react-icons/gr";
+import { AiOutlineDashboard, AiOutlineGroup } from "react-icons/ai";
 import { FaShoppingCart, FaShoppingBag } from "react-icons/fa";
 import Routes from "../constants/routes";
 
@@ -10,6 +10,12 @@ const adminIsActive = (path: string) => {
       icon: <AiOutlineDashboard />,
       route: Routes.ADMIN_DASHBOARD,
       isActive: path === Routes.ADMIN_DASHBOARD,
+    },
+    {
+      title: "Categories",
+      icon: <AiOutlineGroup />,
+      route: Routes.CATEGORIES,
+      isActive: path === Routes.CATEGORIES,
     },
     {
       title: "Products",
@@ -28,12 +34,6 @@ const adminIsActive = (path: string) => {
       icon: <GrHistory />,
       route: Routes.HISTORY,
       isActive: path === Routes.HISTORY,
-    },
-    {
-      title: "Admins",
-      icon: <GrUserAdmin />,
-      route: Routes.ADMINS,
-      isActive: path === Routes.ADMINS,
     },
   ];
 };

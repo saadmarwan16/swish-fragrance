@@ -33,7 +33,7 @@ const AdminHeader: FunctionComponent<AdminHeaderProps> = () => {
         <div className="hidden lg:block dropdown">
           <label
             tabIndex={0}
-            className="flex items-center justify-center btn btn-outline gap-4 px-2 py-[10px] text-xl border border-gray-400 rounded-lg hover:cursor-pointer"
+            className="flex items-center justify-center btn btn-outline gap-4 px-2 py-[10px] text-xl border border-base-300 rounded-lg hover:cursor-pointer"
           >
             <div className="flex items-center">
               <AiOutlinePlus />

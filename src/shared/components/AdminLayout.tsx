@@ -4,6 +4,7 @@ import AdminDate from "./AdminDate";
 import useCustomBreakPointContext from "../hooks/useCustomBreakPoint";
 import AdminDrawerSide from "./AdminDrawerSide";
 import AdminHeader from "./AdminHeader";
+import MetaTags from "./MetaTags";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -16,13 +17,9 @@ const AdminLayout: FunctionComponent<AdminLayoutProps> = ({
 }) => {
   const { maxWidth } = useCustomBreakPointContext();
 
-  const title = titlePrefix + " - Admin " + " | Swish Fragrance";
-
   return (
     <>
-      <Head>
-        <title>{title}</title>
-      </Head>
+    <MetaTags titlePrefix={titlePrefix + ' - Admin'} />
 
       <div className="drawer drawer-mobile">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />

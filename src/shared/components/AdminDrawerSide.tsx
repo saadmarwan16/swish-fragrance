@@ -9,7 +9,7 @@ interface AdminDrawerSideProps {}
 
 const AdminDrawerSide: FunctionComponent<AdminDrawerSideProps> = () => {
   return (
-    <div className="border-r border-gray-400 drawer-side">
+    <div className="border-r border-base-300 drawer-side">
       <label htmlFor="my-drawer" className="drawer-overlay"></label>
       <ul className="justify-between w-4/5 p-4 pt-8 overflow-y-auto md:pt-10 lg:pt-12 sm:w-3/5 md:w-96 lg:w-80 menu bg-base-100 text-base-content">
         <div className="flex flex-col gap-8 sm:gap-10 md:gap-12">

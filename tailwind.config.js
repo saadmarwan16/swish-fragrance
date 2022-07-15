@@ -3,5 +3,15 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [require("daisyui"), require("@tailwindcss/line-clamp")],
+  plugins: [require("@tailwindcss/line-clamp"), require("daisyui")],
+  daisyui: {
+    themes: [
+      {
+        bumblebee: {
+          ...require("daisyui/src/colors/themes")["[data-theme=bumblebee]"],
+          secondary: "#59C3C3",
+        },
+      },
+    ],
+  },
 };

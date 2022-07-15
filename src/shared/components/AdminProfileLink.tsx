@@ -10,16 +10,16 @@ const AdminProfileLink: FunctionComponent<AdminProfileLinkProps> = () => {
       <a>
         <div className="flex items-center gap-2">
           <div className="avatar placeholder">
-            <div className="w-12 rounded bg-neutral-focus text-neutral-content">
+            <div className="w-12 rounded bg-primary text-primary-content">
               <span className="text-3xl font-medium">A</span>
             </div>
           </div>
 
-          <div>
-            <p className="text-lg font-medium text-black line-clamp-1">
+          <div className="font-medium">
+            <p className="text-lg text-black line-clamp-1">
               Abdul Rahman Sa-ad
             </p>
-            <p className="text-sm italic text-blue-500 line-clamp-1">
+            <p className="text-sm italic text-primary line-clamp-1">
               @rahmansaad16
             </p>
           </div>
