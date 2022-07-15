@@ -4,10 +4,19 @@ import AdminNewProductAndCategoryLinks from "./AdminNewProductAndCategoryLinks";
 import AdminProfileLink from "./AdminProfileLink";
 import AdminSideBarItems from "./AdminSideBarItems";
 import { HiOutlineLogout } from "react-icons/hi";
+import { destroyCookie } from "nookies";
+import { useRouter } from "next/router";
 
 interface AdminDrawerSideProps {}
 
 const AdminDrawerSide: FunctionComponent<AdminDrawerSideProps> = () => {
+  const router = useRouter();
+
+  const logoutClicked = () => {
+    destroyCookie(null, "jwt");
+    router.reload();
+  };
+
   return (
     <div className="border-r border-base-300 drawer-side">
       <label htmlFor="my-drawer" className="drawer-overlay"></label>
@@ -29,7 +38,7 @@ const AdminDrawerSide: FunctionComponent<AdminDrawerSideProps> = () => {
         </div>
 
         <li className="text-xl">
-          <a>
+          <a onClick={logoutClicked}>
             <HiOutlineLogout /> Logout
           </a>
         </li>

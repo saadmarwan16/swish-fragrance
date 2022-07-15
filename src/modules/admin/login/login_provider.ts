@@ -1,7 +1,3 @@
-import {
-  ConvertLoginErrorModel,
-  LoginErrorModel,
-} from "../../../shared/errors/login_error_model";
 import http from "../../../shared/utils/http";
 import { ConvertLoginModel } from "./login_model";
 

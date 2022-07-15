@@ -57,7 +57,7 @@ export interface Pagination {
 }
 
 // Converts JSON strings to/from your types
-export class ConvertCategories {
+export class ConvertCategoriesModel {
   public static toCategoriesModel(json: string): CategoriesModel {
     return JSON.parse(json);
   }

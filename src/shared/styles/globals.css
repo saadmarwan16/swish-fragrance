@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-flex-center {
+  @apply flex justify-center items-center;
+}
+
+.custom-full-screen {
+  @apply w-full min-h-screen;
+}
+
+.custom-heading1 {
+  @apply text-xl font-semibold leading-6  sm:text-2xl lg:text-3xl;
+}
+
+.custom-subtitle1 {
+  @apply text-gray-600 sm:text-base  text-sm;
+}
+
+.custom-input {
+  @apply w-full !outline-none input input-ghost border-2 focus:border-secondary input-sm sm:input-md bg-base-200;
+}
+
+.custom-input-group {
+  @apply input-group input-group-sm sm:input-group-md;
+}
+
+.custom-primary-button {
+  @apply btn btn-block btn-primary btn-sm;
+}

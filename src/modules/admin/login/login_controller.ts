@@ -1,8 +1,10 @@
 import { AxiosError } from "axios";
 import { makeAutoObservable } from "mobx";
-import {
-  ConvertLoginErrorModel,
-} from "../../../shared/errors/login_error_model";
+import Router from "next/router";
+import { setCookie } from "nookies";
+import Routes from "../../../shared/constants/routes";
+import { ConvertLoginErrorModel } from "../../../shared/errors/login_error_model";
+import { ILoginInputs } from "../../../shared/types/interfaces";
 import errorToast from "../../../shared/utils/errorToast";
 import getUnexpectedError from "../../../shared/utils/getUnexpectedError";
 import { LoginModel } from "./login_model";
@@ -10,30 +12,23 @@ import loginProvider from "./login_provider";
 
 export class LoginController {
   isLoggingIn = false;
-  identifier = "";
-  password = "";
   failureOrUser: LoginModel | null = null;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  onIdentifierChanged = (value: string) => {
-    this.identifier = value;
-  };
-
-  onPasswordChanged = (value: string) => {
-    this.password = value;
-  };
-
-  onLoginButtonClicked = async () => {
+  onLoginButtonClicked = async (data: ILoginInputs) => {
     try {
       this.isLoggingIn = true;
-      const user = await loginProvider.login(
-        JSON.stringify({ identifier: this.identifier, password: this.password })
-      );
+      const response = await loginProvider.login(JSON.stringify(data));
 
-      errorToast('Success', 'It was a success');
+      setCookie(null, "jwt", response.jwt, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: Routes.ADMIN_DASHBOARD,
+      });
+
+      Router.push(Routes.ADMIN_DASHBOARD);
     } catch (e) {
       if (e instanceof AxiosError) {
         const results = ConvertLoginErrorModel.toLoginErrorModel(

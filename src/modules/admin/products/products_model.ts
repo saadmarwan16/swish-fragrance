@@ -40,7 +40,7 @@ export interface Pagination {
 }
 
 // Converts JSON strings to/from your types
-export class ConvertProducts {
+export class ConvertProductsModel {
   public static toProductsModel(json: string): ProductsModel {
     return JSON.parse(json);
   }

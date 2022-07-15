@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import AdminLayout from "../../src/shared/components/AdminLayout";
+import AdminLayout from "../../../src/shared/components/AdminLayout";
 
 interface NewProductPageProps {}
 

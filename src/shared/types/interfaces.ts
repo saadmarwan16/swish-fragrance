@@ -1,4 +1,4 @@
-export interface UnexpectedLoginError {
-  name: string;
-  message: string;
+export interface ILoginInputs {
+  identifier: string;
+  password: string;
 }

@@ -5,7 +5,6 @@ import { parseCookies } from "nookies";
 import Router from "next/router";
 import Routes from "../src/shared/constants/routes";
 import { configure } from "mobx";
-// import { ToastContainer } from "react-toast";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,7 +15,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <CustomBreakPointProvider>
-      {/* <ToastContainer position="bottom-right" delay={1000} /> */}
       <ToastContainer
         position="bottom-right"
         autoClose={4000}

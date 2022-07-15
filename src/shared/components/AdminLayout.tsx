@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { FunctionComponent, ReactNode } from "react";
 import AdminDate from "./AdminDate";
 import useCustomBreakPointContext from "../hooks/useCustomBreakPoint";
@@ -19,7 +18,7 @@ const AdminLayout: FunctionComponent<AdminLayoutProps> = ({
 
   return (
     <>
-    <MetaTags titlePrefix={titlePrefix + ' - Admin'} />
+      <MetaTags titlePrefix={titlePrefix + " - Admin"} />
 
       <div className="drawer drawer-mobile">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
