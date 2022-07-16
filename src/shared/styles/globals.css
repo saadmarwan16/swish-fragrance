@@ -14,8 +14,12 @@
   @apply text-xl font-semibold leading-6  sm:text-2xl lg:text-3xl;
 }
 
+.custom-heading2 {
+  @apply font-semibold md:text-lg lg:text-xl;
+}
+
 .custom-subtitle1 {
-  @apply text-gray-600 sm:text-base  text-sm;
+  @apply text-gray-500 sm:text-base  text-sm;
 }
 
 .custom-input {
@@ -28,4 +32,28 @@
 
 .custom-primary-button {
   @apply btn btn-block btn-primary btn-sm;
+}
+
+.custom-secondary-button {
+  @apply btn btn-secondary btn-outline btn-sm;
+}
+
+.custom-normal-button-base {
+  @apply font-medium normal-case;
+}
+
+.custom-grid-1234 {
+  @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3;
+}
+
+.custom-categories-products-container {
+  @apply p-4 my-4 border rounded-lg border-base-300;
+}
+
+.custom-category-product-link {
+  @apply border rounded-lg border-base-300 hover:border-secondary;
+}
+
+.custom-category-product-container {
+  @apply flex flex-col items-center gap-4 p-4 text-center;
 }

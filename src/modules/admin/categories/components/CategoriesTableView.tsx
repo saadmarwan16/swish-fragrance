@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FunctionComponent } from "react";
+import Routes from "../../../../shared/constants/routes";
 import getCategoryDetails from "../../../../shared/utils/getCategoryDetails";
 import { CategoriesModel } from "../categories_model";
 
@@ -27,7 +28,7 @@ const CategoriesTableView: FunctionComponent<CategoriesTableViewProps> = ({
           );
 
           return (
-            <Link key={id} href="/">
+            <Link key={id} href={Routes.CATEGORY_DETAILS(id)}>
               <tr className="hover hover:cursor-pointer">
                 <td>{attributes.name}</td>
                 <td>{numberOfProducts}</td>

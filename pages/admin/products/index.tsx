@@ -1,15 +1,24 @@
+import { observer } from "mobx-react-lite";
 import type { GetServerSideProps, NextPage } from "next";
+import nookies, { parseCookies } from "nookies";
+import { useState } from "react";
+import ProductsGridView from "../../../src/modules/admin/products/components/ProductsGridView";
+import ProductsTableView from "../../../src/modules/admin/products/components/ProductsTableView";
+import ProductsTitleSearch from "../../../src/modules/admin/products/components/ProductsTitleSearch";
 import productsController from "../../../src/modules/admin/products/products_controller";
 import { ProductsModel } from "../../../src/modules/admin/products/products_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
-import LogoAvatar from "../../../src/shared/components/LogoAvatar";
+import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
+import PaginationTabs from "../../../src/shared/components/PaginationTabs";
+import Routes from "../../../src/shared/constants/routes";
 
 interface ProductsPageProps {
   products?: ProductsModel;
 }
 
 const Products: NextPage<ProductsPageProps> = (props) => {
-  const products = props.products;
+  const [isTableView, setIsTableView] = useState(true);
+  const products = props.products ?? productsController.products;
 
   return (
     <AdminLayout titlePrefix="Products">
@@ -17,64 +26,39 @@ const Products: NextPage<ProductsPageProps> = (props) => {
         <div>Cannot find products</div>
       ) : (
         <div>
-          <div className="pt-4">
-            <p className="text-lg font-semibold sm:text-xl md:text-2xl lg:text-3xl">
-              Products
-            </p>
+          <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
+            <p className="custom-heading1">Products</p>
+
+            <div className="flex gap-4">
+              <CategoriesProductsSelectView
+                title="Table View"
+                isActive={isTableView}
+                setIsActive={() => setIsTableView(true)}
+              />
+
+              <CategoriesProductsSelectView
+                title="Grid View"
+                isActive={!isTableView}
+                setIsActive={() => setIsTableView(false)}
+              />
+            </div>
           </div>
-          <p className="text-sm text-gray-500 lg:text-base">
+          <p className="custom-subtitle1">
             Manage your products and increase sales
           </p>
-          <div className="py-4">
-            <p className="font-semibold md:text-lg lg:text-xl text-primary">
-              Products ({products.meta.pagination.total})
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {products.data.map(
-              ({
-                id,
-                attributes: {
-                  name,
-                  in_stock,
-                  revenue_generated,
-                  starting_price,
-                  number_sold,
-                },
-              }) => (
-                <div
-                  className="flex flex-col gap-4 p-4 border rounded-lg border-secondary"
-                  key={id}
-                >
-                  <div className="flex justify-center">
-                    <LogoAvatar />
-                  </div>
-                  <div className="flex justify-center">
-                    <p className="text-lg font-semibold">{name}</p>
-                  </div>
-                  <div>
-                    <div>
-                      <span className="text-primary">Starting Price: </span>
-                      <span className="font-semibold">${starting_price}</span>
-                    </div>
-                    <div>
-                      <span className="text-primary">Number Sold: </span>
-                      <span className="font-semibold">{number_sold}</span>
-                    </div>
-                    <div>
-                      <span className="text-primary">Revenue Generated: </span>
-                      <span className="font-semibold">
-                        ${revenue_generated}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-primary">Number In Stock: </span>
-                      <span className="font-semibold">{in_stock}</span>
-                    </div>
-                  </div>
-                </div>
-              )
+
+          <div className="custom-categories-products-container">
+            <ProductsTitleSearch itemCount={products.meta.pagination.total} />
+
+            {isTableView ? (
+              <ProductsTableView products={products} />
+            ) : (
+              <ProductsGridView products={products} />
             )}
+
+            <div className="flex justify-end pt-6">
+              <PaginationTabs />
+            </div>
           </div>
         </div>
       )}
@@ -82,8 +66,22 @@ const Products: NextPage<ProductsPageProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const products = await productsController.getProducts();
+
+  // const jwt = parseCookies(context.req).jwt;
+  // const jwt = nookies.get(context.res);
+  // console.log(jwt);
+  // console.log(context.req.cookies.jwt);
+
+  // if (!context.req.cookies) {
+  //   return {
+  //     redirect: {
+  //       destination: Routes.ADMIN_LOGIN,
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   return {
     props: {
@@ -92,4 +90,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export default Products;
+export default observer(Products);

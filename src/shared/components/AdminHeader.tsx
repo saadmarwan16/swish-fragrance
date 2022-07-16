@@ -15,7 +15,7 @@ const AdminHeader: FunctionComponent<AdminHeaderProps> = () => {
   const { minWidth } = useCustomBreakPointContext();
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="custom-flex-center !justify-between">
       <div className="flex gap-4">
         <label
           htmlFor="my-drawer"
@@ -33,7 +33,7 @@ const AdminHeader: FunctionComponent<AdminHeaderProps> = () => {
         <div className="hidden lg:block dropdown">
           <label
             tabIndex={0}
-            className="flex items-center justify-center btn btn-outline gap-4 px-2 py-[10px] text-xl border border-base-300 rounded-lg hover:cursor-pointer"
+            className="custom-flex-center btn btn-outline gap-4 px-2 py-[10px] text-xl border border-base-300"
           >
             <div className="flex items-center">
               <AiOutlinePlus />

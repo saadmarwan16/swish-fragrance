@@ -26,6 +26,9 @@ export class LoginController {
       setCookie(null, "jwt", response.jwt, {
         maxAge: 30 * 24 * 60 * 60,
         path: Routes.ADMIN_DASHBOARD,
+        secure: process.env.NODE_ENV !== "development",
+        // sameSite: 'strict',
+        // httpOnly: true,
       });
 
       Router.push(Routes.ADMIN_DASHBOARD);

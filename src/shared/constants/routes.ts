@@ -11,8 +11,8 @@ abstract class Routes {
   static readonly ADMIN_LOGIN = "/admin/login";
   static readonly FORGOT_PASSWORD = "/admin/forgot-password";
   static readonly RESET_PASSWORD = "/admin/reset-password";
-  static readonly SINGLE_CATEGORY = "/admin/single-category";
-  static readonly SINGLE_PRODUCT = "/admin/single-product";
+  static readonly PRODUCT_DETAILS = (id: number) => `/admin/products/${id}`;
+  static readonly CATEGORY_DETAILS = (id: number) => `/admin/categories/${id}`;
 }
 
 export default Routes;

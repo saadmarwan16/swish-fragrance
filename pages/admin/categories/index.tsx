@@ -1,14 +1,13 @@
 import { observer } from "mobx-react-lite";
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import { AiOutlineUnorderedList } from "react-icons/ai";
-import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import categoriesController from "../../../src/modules/admin/categories/categories_controller";
 import { CategoriesModel } from "../../../src/modules/admin/categories/categories_model";
 import CategoriesGridView from "../../../src/modules/admin/categories/components/CategoriesGridView";
 import CategoriesTableView from "../../../src/modules/admin/categories/components/CategoriesTableView";
 import CategoriesTitleSearch from "../../../src/modules/admin/categories/components/CategoriesTitleSearch";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
+import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
 import PaginationTabs from "../../../src/shared/components/PaginationTabs";
 
 interface CategoriesPageProps {
@@ -26,40 +25,26 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
       ) : (
         <div>
           <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
-            <p className="text-lg font-semibold sm:text-xl md:text-2xl lg:text-3xl">
-              Categories
-            </p>
+            <p className="custom-heading1">Categories</p>
 
             <div className="flex gap-4">
-              <div
-                className={`flex items-center gap-2 px-3 py-1 border rounded-lg ${
-                  isTableView
-                    ? "border-primary text-primary"
-                    : "border-base-300"
-                } hover:cursor-pointer hover:bg-base-200`}
-                onClick={() => setIsTableView(true)}
-              >
-                <AiOutlineUnorderedList />
-                <p className="text-xs sm:text-sm md:text-base">Table View</p>
-              </div>
+              <CategoriesProductsSelectView
+                title="Table View"
+                isActive={isTableView}
+                setIsActive={() => setIsTableView(true)}
+              />
 
-              <div
-                className={`flex items-center gap-2 px-3 py-1 border rounded-lg ${
-                  isTableView
-                    ? "border-base-300"
-                    : "border-primary text-primary"
-                } hover:cursor-pointer hover:bg-base-200`}
-                onClick={() => setIsTableView(false)}
-              >
-                <BsFillGrid3X3GapFill />
-                <p className="text-xs sm:text-sm md:text-base">Grid View</p>
-              </div>
+              <CategoriesProductsSelectView
+                title="Grid View"
+                isActive={!isTableView}
+                setIsActive={() => setIsTableView(false)}
+              />
             </div>
           </div>
-          <p className="text-sm text-gray-500 lg:text-base">
+          <p className="custom-subtitle1">
             Manage your categories and increase sales
           </p>
-          <div className="p-4 my-4 border rounded-lg border-base-300">
+          <div className="custom-categories-products-container">
             <CategoriesTitleSearch
               itemCount={categories.meta.pagination.total}
             />

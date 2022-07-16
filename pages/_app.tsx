@@ -30,38 +30,38 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-const redirectUser = (ctx: any, location: any) => {
-  if (ctx.req) {
-    ctx.res.writeHead(302, { Location: location });
-    ctx.res.end();
-  } else {
-    Router.push(location);
-  }
-};
+// const redirectUser = (ctx: any, location: any) => {
+//   if (ctx.req) {
+//     ctx.res.writeHead(302, { Location: location });
+//     ctx.res.end();
+//   } else {
+//     Router.push(location);
+//   }
+// };
 
-MyApp.getInitialProps = async ({
-  Component,
-  ctx,
-}: {
-  Component: any;
-  ctx: any;
-}) => {
-  let pageProps = {};
-  const jwt = parseCookies(ctx).jwt;
+// MyApp.getInitialProps = async ({
+//   Component,
+//   ctx,
+// }: {
+//   Component: any;
+//   ctx: any;
+// }) => {
+//   let pageProps = {};
+//   const jwt = parseCookies(ctx).jwt;
 
-  if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
-  }
+//   if (Component.getInitialProps) {
+//     pageProps = await Component.getInitialProps(ctx);
+//   }
 
-  if (!jwt) {
-    if (ctx.pathname !== Routes.ADMIN_LOGIN) {
-      redirectUser(ctx, Routes.ADMIN_LOGIN);
-    }
-  }
+//   if (!jwt) {
+//     if (ctx.pathname !== Routes.ADMIN_LOGIN) {
+//       redirectUser(ctx, Routes.ADMIN_LOGIN);
+//     }
+//   }
 
-  return {
-    pageProps,
-  };
-};
+//   return {
+//     pageProps,
+//   };
+// };
 
 export default MyApp;

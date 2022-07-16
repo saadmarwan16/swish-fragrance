@@ -9,26 +9,18 @@ interface PasswordVisibilityButtonProps {
 
 const PasswordVisibilityButton: FunctionComponent<
   PasswordVisibilityButtonProps
-> = ({ isPasswordVisible, togglePasswordVisibility }) => {
-  if (isPasswordVisible) {
-    return (
-      <button
-        className="px-2 sm:px-4 bg-base-300"
-        onClick={togglePasswordVisibility}
-      >
-        <AiOutlineEyeInvisible className="text-lg sm:text-xl" />
-      </button>
-    );
-  } else {
-    return (
-      <button
-        className="px-2 sm:px-4 bg-base-300"
-        onClick={togglePasswordVisibility}
-      >
-        <MdOutlineVisibility className="text-lg sm:text-xl" />
-      </button>
-    );
-  }
-};
+> = ({ isPasswordVisible, togglePasswordVisibility }) => (
+  <button
+    type="button"
+    className="px-2 sm:px-4 bg-base-300"
+    onClick={togglePasswordVisibility}
+  >
+    {isPasswordVisible ? (
+      <AiOutlineEyeInvisible className="text-lg sm:text-xl" />
+    ) : (
+      <MdOutlineVisibility className="text-lg sm:text-xl" />
+    )}
+  </button>
+);
 
 export default PasswordVisibilityButton;

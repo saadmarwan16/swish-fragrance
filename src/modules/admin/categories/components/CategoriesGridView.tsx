@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { FunctionComponent } from "react";
+import Routes from "../../../../shared/constants/routes";
 import getCategoryDetails from "../../../../shared/utils/getCategoryDetails";
 import { CategoriesModel } from "../categories_model";
-import CategoriesTitleSearch from "./CategoriesTitleSearch";
 
 interface CategoriesGridViewProps {
   categories: CategoriesModel;
@@ -12,26 +12,26 @@ const CategoriesGridView: FunctionComponent<CategoriesGridViewProps> = ({
   categories,
 }) => {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="custom-grid-1234">
       {categories.data.map(({ id, attributes }) => {
         const { numberOfProducts, sold, revenue } = getCategoryDetails(
           attributes.products
         );
 
         return (
-          <Link key={id} href="/">
-            <a className="border rounded-lg border-base-300 hover:border-secondary">
-              <div className="flex flex-col items-center gap-4 p-4 text-center">
-                <p className="text-lg font-semibold text-primary">
+          <Link key={id} href={Routes.CATEGORY_DETAILS(id)}>
+            <a className="custom-category-product-link">
+              <div className="custom-category-product-container">
+                <p className="custom-heading2 text-primary">
                   {attributes.name}
                 </p>
 
                 <div>
                   <div>
                     <span className="text-lg font-semibold">
-                      {numberOfProducts}{" "}
+                      {numberOfProducts} {""}
                     </span>
-                    <span className="text-sm text-gray-500">products</span>
+                    <span className="text-sm text-gray-500">product(s)</span>
                   </div>
                   <div>
                     <span className="text-lg font-semibold">{sold} </span>

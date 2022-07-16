@@ -10,11 +10,11 @@ const AdminDashboardLink: FunctionComponent<AdminDashboardLinkProps> = () => {
   return (
     <Link href={Routes.ADMIN_DASHBOARD}>
       <a className="hidden lg:block">
-        <div className="flex items-center gap-2">
+        <div className="gap-2 custom-flex-center !justify-start">
           <LogoAvatar />
           <div>
-            <p className="text-2xl font-semibold text-base-content">Swish Fragrance</p>
-            <p className="text-sm font-normal text-gray-500">Master Admin</p>
+            <p className="custom-heading2 text-base-content">Swish Fragrance</p>
+            <p className="font-normal custom-subtitle1">Master Admin</p>
           </div>
         </div>
       </a>
