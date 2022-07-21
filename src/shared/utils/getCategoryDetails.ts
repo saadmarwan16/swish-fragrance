@@ -1,4 +1,4 @@
-import { Products } from "../../modules/admin/categories/categories_model";
+import { Products } from "../../modules/admin/brands/brands_model";
 
 const getCategoryDetails = (products: Products) => {
   let numberOfProducts = 0;

@@ -2,6 +2,7 @@ import { GrHistory } from "react-icons/gr";
 import { AiOutlineDashboard, AiOutlineGroup } from "react-icons/ai";
 import { FaShoppingCart, FaShoppingBag } from "react-icons/fa";
 import Routes from "../constants/routes";
+import { GiPerfumeBottle } from "react-icons/gi";
 
 const adminIsActive = (path: string) => {
   return [
@@ -10,6 +11,12 @@ const adminIsActive = (path: string) => {
       icon: <AiOutlineDashboard />,
       route: Routes.ADMIN_DASHBOARD,
       isActive: path === Routes.ADMIN_DASHBOARD,
+    },
+    {
+      title: "Brands",
+      icon: <GiPerfumeBottle />,
+      route: Routes.BRANDS,
+      isActive: path === Routes.BRANDS,
     },
     {
       title: "Categories",

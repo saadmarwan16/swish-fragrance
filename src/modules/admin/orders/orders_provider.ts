@@ -1,0 +1,32 @@
+import getOrderStatusFilterQuery from "../../../shared/queries/getOrderStatusFilterQuery";
+import getPaginationQuery from "../../../shared/queries/getPaginationQuery";
+import http from "../../../shared/utils/http";
+import { ConvertOrdersModel } from "./orders_model";
+import { ConvertOrderModel } from "./order_model";
+
+export class OrdersProvider {
+  getOrder = async (id: string) => {
+    const order = await http.get(`/orders/${id}`);
+
+    return ConvertOrderModel.toOrderModel(JSON.stringify(order.data));
+  };
+
+  getOrders = async (page: number, filter: string) => {
+    const orders = await http.get(
+      `/orders?${getPaginationQuery(
+        page
+      )}&${getOrderStatusFilterQuery(filter)}&populate=*`
+    );
+
+    return ConvertOrdersModel.toOrdersModel(JSON.stringify(orders.data));
+  };
+
+  addOrder = async () => {};
+
+  updateOrder = async () => {};
+
+  deleteOrder = async () => {};
+}
+
+const ordersProvider = new OrdersProvider();
+export default ordersProvider;

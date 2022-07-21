@@ -8,59 +8,95 @@ import CategoriesTableView from "../../../src/modules/admin/categories/component
 import CategoriesTitleSearch from "../../../src/modules/admin/categories/components/CategoriesTitleSearch";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
+import EmptyContent from "../../../src/shared/components/EmptyContent";
+import ErrorContent from "../../../src/shared/components/ErrorContent";
+import LoaderContent from "../../../src/shared/components/LoaderContent";
 import PaginationTabs from "../../../src/shared/components/PaginationTabs";
 
 interface CategoriesPageProps {
-  categories?: CategoriesModel;
+  categories: CategoriesModel | null;
 }
 
 const Categories: NextPage<CategoriesPageProps> = (props) => {
-  const [isTableView, setIsTableView] = useState(true);
-  const categories = props.categories;
+  const [categories, setCategories] = useState(props.categories);
 
   return (
     <AdminLayout titlePrefix="Categories">
-      {!categories ? (
-        <div>Cannot find categories</div>
-      ) : (
-        <div>
-          <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
-            <p className="custom-heading1">Categories</p>
+      <div>
+        <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
+          <p className="custom-heading1">Categories</p>
 
-            <div className="flex gap-4">
-              <CategoriesProductsSelectView
-                title="Table View"
-                isActive={isTableView}
-                setIsActive={() => setIsTableView(true)}
-              />
-
-              <CategoriesProductsSelectView
-                title="Grid View"
-                isActive={!isTableView}
-                setIsActive={() => setIsTableView(false)}
-              />
-            </div>
-          </div>
-          <p className="custom-subtitle1">
-            Manage your categories and increase sales
-          </p>
-          <div className="custom-categories-products-container">
-            <CategoriesTitleSearch
-              itemCount={categories.meta.pagination.total}
+          <div className="flex gap-4">
+            <CategoriesProductsSelectView
+              title="Table View"
+              isActive={categoriesController.isTableView}
+              setIsActive={() => categoriesController.setIsTableView(true)}
             />
 
-            {isTableView ? (
-              <CategoriesTableView categories={categories} />
-            ) : (
-              <CategoriesGridView categories={categories} />
-            )}
-
-            <div className="flex justify-end pt-6">
-              <PaginationTabs />
-            </div>
+            <CategoriesProductsSelectView
+              title="Grid View"
+              isActive={!categoriesController.isTableView}
+              setIsActive={() => categoriesController.setIsTableView(false)}
+            />
           </div>
         </div>
-      )}
+        <p className="custom-subtitle1">
+          Manage your categories and increase sales
+        </p>
+        <div className="custom-categories-products-container">
+          {!categories ? (
+            <ErrorContent
+              title="Categories"
+              setContent={() =>
+                categoriesController
+                  .getCategories()
+                  .then((res) => setCategories(res))
+              }
+            />
+          ) : (
+            <>
+              <CategoriesTitleSearch
+                itemsCount={categories.data.length}
+                pagination={categories.meta.pagination}
+                setContent={(value) => setCategories(value)}
+              />
+
+              {categoriesController.loading ? (
+                <LoaderContent />
+              ) : (
+                <>
+                  {categories.data.length === 0 ? (
+                    <EmptyContent title="Categories" content="categories" />
+                  ) : (
+                    <>
+                      {categoriesController.isTableView ? (
+                        <CategoriesTableView categories={categories} />
+                      ) : (
+                        <CategoriesGridView categories={categories} />
+                      )}
+
+                      <PaginationTabs
+                        pagination={categories.meta.pagination}
+                        setContent={(page) => {
+                          if (categoriesController.searchQuery === "") {
+                            categoriesController
+                              .getCategories(page)
+                              .then((res) => setCategories(res));
+                          } else {
+                            categoriesController
+                              .changeSearchedCategoriesPage(page)
+                              .then((res) => setCategories(res));
+                          }
+                        }}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </div>
+      </div>
     </AdminLayout>
   );
 };

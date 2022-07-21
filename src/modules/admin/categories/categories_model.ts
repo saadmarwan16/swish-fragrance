@@ -34,7 +34,6 @@ export interface ProductsDatum {
 export interface FluffyAttributes {
   name: string;
   is_discounted: boolean;
-  starting_price: number;
   in_stock: number;
   number_sold: number;
   revenue_generated: number;
@@ -42,7 +41,10 @@ export interface FluffyAttributes {
   updatedAt: Date;
   publishedAt: Date;
   discount: number;
-  gender: string;
+  selling_price: number;
+  size: string;
+  cost_price: number;
+  restock_point: number;
 }
 
 export interface Meta {

@@ -9,59 +9,94 @@ import productsController from "../../../src/modules/admin/products/products_con
 import { ProductsModel } from "../../../src/modules/admin/products/products_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
+import EmptyContent from "../../../src/shared/components/EmptyContent";
+import ErrorContent from "../../../src/shared/components/ErrorContent";
+import LoaderContent from "../../../src/shared/components/LoaderContent";
 import PaginationTabs from "../../../src/shared/components/PaginationTabs";
-import Routes from "../../../src/shared/constants/routes";
 
 interface ProductsPageProps {
-  products?: ProductsModel;
+  products: ProductsModel | null;
 }
 
 const Products: NextPage<ProductsPageProps> = (props) => {
-  const [isTableView, setIsTableView] = useState(true);
-  const products = props.products ?? productsController.products;
+  const [products, setProducts] = useState(props.products);
 
   return (
     <AdminLayout titlePrefix="Products">
-      {!products ? (
-        <div>Cannot find products</div>
-      ) : (
-        <div>
-          <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
-            <p className="custom-heading1">Products</p>
+      <div>
+        <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
+          <p className="custom-heading1">Products</p>
 
-            <div className="flex gap-4">
-              <CategoriesProductsSelectView
-                title="Table View"
-                isActive={isTableView}
-                setIsActive={() => setIsTableView(true)}
-              />
+          <div className="flex gap-4">
+            <CategoriesProductsSelectView
+              title="Table View"
+              isActive={productsController.isTableView}
+              setIsActive={() => productsController.setIsTableView(true)}
+            />
 
-              <CategoriesProductsSelectView
-                title="Grid View"
-                isActive={!isTableView}
-                setIsActive={() => setIsTableView(false)}
-              />
-            </div>
-          </div>
-          <p className="custom-subtitle1">
-            Manage your products and increase sales
-          </p>
-
-          <div className="custom-categories-products-container">
-            <ProductsTitleSearch itemCount={products.meta.pagination.total} />
-
-            {isTableView ? (
-              <ProductsTableView products={products} />
-            ) : (
-              <ProductsGridView products={products} />
-            )}
-
-            <div className="flex justify-end pt-6">
-              <PaginationTabs />
-            </div>
+            <CategoriesProductsSelectView
+              title="Grid View"
+              isActive={!productsController.isTableView}
+              setIsActive={() => productsController.setIsTableView(false)}
+            />
           </div>
         </div>
-      )}
+        <p className="custom-subtitle1">
+          Manage your products and increase sales
+        </p>
+
+        <div className="custom-categories-products-container">
+          {!products ? (
+            <ErrorContent
+              title="Products"
+              setContent={() =>
+                productsController.getProducts().then((res) => setProducts(res))
+              }
+            />
+          ) : (
+            <>
+              <ProductsTitleSearch
+                itemsCount={products.data.length}
+                pagination={products.meta.pagination}
+                setProducts={setProducts}
+              />
+
+              {productsController.loading ? (
+                <LoaderContent />
+              ) : (
+                <>
+                  {products.data.length === 0 ? (
+                    <EmptyContent title="Products" content="products" />
+                  ) : (
+                    <>
+                      {productsController.isTableView ? (
+                        <ProductsTableView products={products} />
+                      ) : (
+                        <ProductsGridView products={products} />
+                      )}
+
+                      <PaginationTabs
+                        pagination={products.meta.pagination}
+                        setContent={(page) => {
+                          if (productsController.searchQuery === "") {
+                            productsController
+                              .getProducts(page)
+                              .then((res) => setProducts(res));
+                          } else {
+                            productsController
+                              .changeSearchedProductsPage(page)
+                              .then((res) => setProducts(res));
+                          }
+                        }}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </div>
+      </div>
     </AdminLayout>
   );
 };

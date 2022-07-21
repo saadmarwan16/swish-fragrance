@@ -31,7 +31,7 @@ const ProductsTableView: FunctionComponent<ProductsTableViewProps> = ({
                 number_sold,
                 in_stock,
                 revenue_generated,
-                gender,
+                size
               },
             }) => (
               <Link key={id} href={Routes.PRODUCT_DETAILS(id)}>
@@ -42,7 +42,7 @@ const ProductsTableView: FunctionComponent<ProductsTableViewProps> = ({
 
                       <div>
                         <div className="font-bold">{name}</div>
-                        <div className="text-sm opacity-50">{gender}</div>
+                        <div className="text-sm opacity-50">{size}</div>
                       </div>
                     </div>
                   </td>

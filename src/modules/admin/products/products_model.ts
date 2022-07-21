@@ -10,22 +10,24 @@ export interface ProductsModel {
 }
 
 export interface Datum {
-  id: number;
+  id:         number;
   attributes: Attributes;
 }
 
 export interface Attributes {
-  name: string;
-  is_discounted: boolean;
-  starting_price: number;
-  in_stock: number;
-  number_sold: number;
+  name:              string;
+  is_discounted:     boolean;
+  in_stock:          number;
+  number_sold:       number;
   revenue_generated: number;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date;
-  discount: number;
-  gender: string;
+  createdAt:         Date;
+  updatedAt:         Date;
+  publishedAt:       Date;
+  discount:          number;
+  selling_price:     number;
+  size:              string;
+  cost_price:        number;
+  restock_point:     number;
 }
 
 export interface Meta {
@@ -33,19 +35,19 @@ export interface Meta {
 }
 
 export interface Pagination {
-  page: number;
-  pageSize: number;
+  page:      number;
+  pageSize:  number;
   pageCount: number;
-  total: number;
+  total:     number;
 }
 
 // Converts JSON strings to/from your types
 export class ConvertProductsModel {
   public static toProductsModel(json: string): ProductsModel {
-    return JSON.parse(json);
+      return JSON.parse(json);
   }
 
   public static productsModelToJson(value: ProductsModel): string {
-    return JSON.stringify(value);
+      return JSON.stringify(value);
   }
 }

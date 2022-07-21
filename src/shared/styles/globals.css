@@ -26,6 +26,10 @@
   @apply w-full !outline-none input input-ghost border-2 focus:border-secondary input-sm sm:input-md bg-base-200;
 }
 
+.custom-select {
+  @apply w-full !outline-none select select-ghost border-2 focus:border-secondary select-sm sm:select-md bg-base-200;
+}
+
 .custom-input-group {
   @apply input-group input-group-sm sm:input-group-md;
 }
@@ -56,4 +60,8 @@
 
 .custom-category-product-container {
   @apply flex flex-col items-center gap-4 p-4 text-center;
+}
+
+.new-product-layout {
+  @apply flex flex-col gap-2 sm:flex-row;
 }
