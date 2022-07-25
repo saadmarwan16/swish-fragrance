@@ -10,16 +10,16 @@ export interface CategoriesModel {
 }
 
 export interface CategoriesModelDatum {
-  id: number;
+  id:         number;
   attributes: PurpleAttributes;
 }
 
 export interface PurpleAttributes {
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  name:        string;
+  createdAt:   Date;
+  updatedAt:   Date;
   publishedAt: Date;
-  products: Products;
+  products:    Products;
 }
 
 export interface Products {
@@ -27,24 +27,38 @@ export interface Products {
 }
 
 export interface ProductsDatum {
-  id: number;
+  id:         number;
   attributes: FluffyAttributes;
 }
 
 export interface FluffyAttributes {
-  name: string;
-  is_discounted: boolean;
-  in_stock: number;
-  number_sold: number;
+  name:              string;
+  in_stock:          number;
+  number_sold:       number;
   revenue_generated: number;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date;
-  discount: number;
-  selling_price: number;
-  size: string;
-  cost_price: number;
-  restock_point: number;
+  createdAt:         Date;
+  updatedAt:         Date;
+  publishedAt:       Date;
+  discount:          number;
+  selling_price:     number;
+  size:              string;
+  cost_price:        number;
+  restock_point:     number;
+  profit:            number;
+  image:             Image;
+}
+
+export interface Image {
+  data: Data | null;
+}
+
+export interface Data {
+  id:         number;
+  attributes: DataAttributes;
+}
+
+export interface DataAttributes {
+  url: string;
 }
 
 export interface Meta {
@@ -52,19 +66,19 @@ export interface Meta {
 }
 
 export interface Pagination {
-  page: number;
-  pageSize: number;
+  page:      number;
+  pageSize:  number;
   pageCount: number;
-  total: number;
+  total:     number;
 }
 
 // Converts JSON strings to/from your types
 export class ConvertCategoriesModel {
   public static toCategoriesModel(json: string): CategoriesModel {
-    return JSON.parse(json);
+      return JSON.parse(json);
   }
 
   public static categoriesModelToJson(value: CategoriesModel): string {
-    return JSON.stringify(value);
+      return JSON.stringify(value);
   }
 }

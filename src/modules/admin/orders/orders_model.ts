@@ -7,74 +7,98 @@
 import { TOrderStatusKeys } from "../../../shared/types/types";
 
 export interface OrdersModel {
-    data: OrdersModelDatum[];
-    meta: Meta;
+  data: OrdersModelDatum[];
+  meta: Meta;
 }
 
 export interface OrdersModelDatum {
-    id:         number;
-    attributes: PurpleAttributes;
+  id:         number;
+  attributes: PurpleAttributes;
 }
 
 export interface PurpleAttributes {
-    amount:         number;
-    payment_method: string;
-    status:         TOrderStatusKeys;
-    // status:         string;
-    createdAt:      Date;
-    updatedAt:      Date;
-    publishedAt:    Date;
-    payment_status: string;
-    address:        null | string;
-    city:           null | string;
-    region:         null | string;
-    country:        string;
-    products:       Products;
+  payment_method: string;
+  createdAt:      Date;
+  updatedAt:      Date;
+  publishedAt:    Date;
+  payment_status: string;
+  address:        string;
+  city:           string;
+  region:         string;
+  country:        string;
+  status:         TOrderStatusKeys;
+  total:          number;
+  delivery_date:  Date;
+  sub_total:      number;
+  discount:       number;
+  delivery_cost:  number;
+  user:           User;
+  products:       Products;
 }
 
 export interface Products {
-    data: ProductsDatum[];
+  data: ProductsDatum[];
 }
 
 export interface ProductsDatum {
-    id:         number;
-    attributes: FluffyAttributes;
+  id:         number;
+  attributes: FluffyAttributes;
 }
 
 export interface FluffyAttributes {
-    name:              string;
-    is_discounted:     boolean;
-    in_stock:          number;
-    number_sold:       number;
-    revenue_generated: number;
-    createdAt:         Date;
-    updatedAt:         Date;
-    publishedAt:       Date;
-    discount:          number;
-    selling_price:     number;
-    size:              string;
-    cost_price:        number;
-    restock_point:     number;
+  name:          string;
+  selling_price: number;
+  image:         Image;
+}
+
+export interface Image {
+  data: ImageData | null;
+}
+
+export interface ImageData {
+  id:         number;
+  attributes: TentacledAttributes;
+}
+
+export interface TentacledAttributes {
+  url: string;
+}
+
+export interface User {
+  data: UserData;
+}
+
+export interface UserData {
+  id:         number;
+  attributes: StickyAttributes;
+}
+
+export interface StickyAttributes {
+  name:     string;
+  username: string;
+  number:   string;
+  email:    string;
+  image:    Image;
 }
 
 export interface Meta {
-    pagination: Pagination;
+  pagination: Pagination;
 }
 
 export interface Pagination {
-    page:      number;
-    pageSize:  number;
-    pageCount: number;
-    total:     number;
+  page:      number;
+  pageSize:  number;
+  pageCount: number;
+  total:     number;
 }
 
 // Converts JSON strings to/from your types
 export class ConvertOrdersModel {
-    public static toOrdersModel(json: string): OrdersModel {
-        return JSON.parse(json);
-    }
+  public static toOrdersModel(json: string): OrdersModel {
+      return JSON.parse(json);
+  }
 
-    public static ordersModelToJson(value: OrdersModel): string {
-        return JSON.stringify(value);
-    }
+  public static ordersModelToJson(value: OrdersModel): string {
+      return JSON.stringify(value);
+  }
 }

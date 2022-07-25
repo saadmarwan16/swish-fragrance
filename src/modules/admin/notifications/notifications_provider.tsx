@@ -1,3 +1,4 @@
+import getDateFilterQuery from "../../../shared/queries/getDateFilterQuery";
 import getPaginationQuery from "../../../shared/queries/getPaginationQuery";
 import http from "../../../shared/utils/http";
 import { ConvertNotificationsModel } from "./notifications_model";
@@ -5,8 +6,17 @@ import { ConvertNotificationsModel } from "./notifications_model";
 export class NotificationsProvider {
   getNotifications = async (page: number) => {
     const notifications = await http.get(
-      `/notifications?${getPaginationQuery(page)}`
+      `/notifications?${getDateFilterQuery(
+        "kjfka",
+        "fjkaj"
+      )}`
     );
+    // const notifications = await http.get(
+    //   `/notifications?${getPaginationQuery(page)}&${getDateFilterQuery(
+    //     "kjfka",
+    //     "fjkaj"
+    //   )}`
+    // );
 
     return ConvertNotificationsModel.toNotificationsModel(
       JSON.stringify(notifications.data)

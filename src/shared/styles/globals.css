@@ -22,6 +22,9 @@
   @apply text-gray-500 sm:text-base  text-sm;
 }
 
+.custom-subtitle2 {
+  @apply text-gray-500  text-sm;}
+
 .custom-input {
   @apply w-full !outline-none input input-ghost border-2 focus:border-secondary input-sm sm:input-md bg-base-200;
 }

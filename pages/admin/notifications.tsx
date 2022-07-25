@@ -8,8 +8,9 @@ import { NotificationsModel } from "../../src/modules/admin/notifications/notifi
 import AdminLayout from "../../src/shared/components/AdminLayout";
 import EmptyContent from "../../src/shared/components/EmptyContent";
 import ErrorContent from "../../src/shared/components/ErrorContent";
-import LoaderContent from "../../src/shared/components/LoaderContent";
 import PaginationTabs from "../../src/shared/components/PaginationTabs";
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import DateRangePicker from "../../src/shared/components/DateRangePicker";
 
 interface NotificationsPageProps {
   notifications: NotificationsModel | null;
@@ -21,7 +22,12 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
   return (
     <AdminLayout titlePrefix="Notifications">
       <div>
-        <p className="custom-heading1">Notifications</p>
+        <div className="flex flex-col gap-2 my-4 sm:items-center sm:justify-between sm:flex-row">
+          <p className="custom-heading1">Notifications</p>
+
+          <DateRangePicker />
+        </div>
+
         <>
           {!notifications ? (
             <ErrorContent

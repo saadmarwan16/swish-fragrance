@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx";
+import { TOrderStatusKeys } from "../../../shared/types/types";
 import { OrdersModel } from "./orders_model";
 import ordersProvider from "./orders_provider";
 
 export class OrdersController {
   orders: OrdersModel | null = null;
   loading = false;
-  filter = "all";
+  filter = "All";
 
   constructor() {
     makeAutoObservable(this);
@@ -13,7 +14,7 @@ export class OrdersController {
 
   updateFilter = async (filter: string, page?: number) => {
     this.filter = filter;
-    return await this.getOrders(undefined, filter);
+    return await this.getOrders(page, filter);
   };
 
   getOrder = async (id: string) => {
@@ -41,7 +42,13 @@ export class OrdersController {
 
   addOrder = async () => {};
 
-  updateOrder = async () => {};
+  updateOrderStatus = async (id: number, status: TOrderStatusKeys) => {
+    try {
+      return await ordersProvider.updateOrderStatus(id, status);
+    } catch (_) {
+      return null;
+    }
+  };
 
   deleteOrder = async () => {};
 }

@@ -9,12 +9,12 @@ interface OrdersTabsProps {
 const OrdersTabs: FunctionComponent<OrdersTabsProps> = ({ setOrders }) => {
   return (
     <div className="gap-2 pb-4 tabs">
-      <OrdersTab title="All" filter="all" setOrders={setOrders} />
-      <OrdersTab title="Dispatched" filter="dispatched" setOrders={setOrders} />
-      <OrdersTab title="Pending" filter="pending" setOrders={setOrders} />
-      <OrdersTab title="Completed" filter="completed" setOrders={setOrders} />
-      <OrdersTab title="Processing" filter="processing" setOrders={setOrders} />
-      <OrdersTab title="Cancelled" filter="cancelled" setOrders={setOrders} />
+      <OrdersTab title="All" setOrders={setOrders} />
+      <OrdersTab title="Dispatched" setOrders={setOrders} />
+      <OrdersTab title="Pending" setOrders={setOrders} />
+      <OrdersTab title="Completed" setOrders={setOrders} />
+      <OrdersTab title="Processing" setOrders={setOrders} />
+      <OrdersTab title="Cancelled" setOrders={setOrders} />
     </div>
   );
 };

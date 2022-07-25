@@ -1,51 +1,36 @@
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import brandsController from "../../../src/modules/admin/brands/brands_controller";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import LabelledInput from "../../../src/shared/components/LabelledInput";
 import UploadImageButton from "../../../src/shared/components/UploadImageButton";
+import Routes from "../../../src/shared/constants/routes";
+import { INewBrandInputs } from "../../../src/shared/types/interfaces";
 import http from "../../../src/shared/utils/http";
 
 interface NewBrandPageProps {}
 
 const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
   const [files, setFiles] = useState<FileList | null>(null);
+  const [isImageAdded, setIsImageAdded] = useState(false);
 
-  interface NewBrandInputs {
-    name: string;
-    image: FileList;
-  }
+  const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<NewBrandInputs>();
+  } = useForm<INewBrandInputs>();
 
-  const onSubmit: SubmitHandler<NewBrandInputs> = (data) => {
-    uploadImage(data.image);
-  };
-
-  const uploadImage = async (image: FileList) => {
-    http
-      .post("/upload", image.item(0))
-      .then((response) => {
-        const imageId = response.data[0].id;
-        console.log(response);
-        console.log(imageId);
-
-        http
-          .post("http://localhost:1337/people", { image: imageId })
-          .then((response) => {
-            //handle success
-          })
-          .catch((error) => {
-            //handle error
-          });
-      })
-      .catch((error) => {
-        //handle error
-      });
+  const onSubmit: SubmitHandler<INewBrandInputs> = async (data) => {
+    console.log(data);
+    // uploadImage(data.image);
+    const results = await brandsController.newBrand(data);
+    if (results === "success") {
+      router.push(Routes.BRANDS);
+    }
   };
 
   return (
@@ -53,7 +38,7 @@ const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <p className="custom-heading2">Create New Product</p>
+            <p className="custom-heading2">Create New Brand</p>
             <button
               className="!w-14 sm:!w-16 md:!w-20 custom-primary-button"
               type="submit"
@@ -68,10 +53,18 @@ const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
               accept="image/*"
               id="image"
               className="hidden"
-              {...register("image")}
+              {...register("image", {
+                onChange: (e) => {
+                  console.log("target", e.target.value);
+                  const str = "dkaf";
+                  str.split("");
+                  setIsImageAdded(true);
+                },
+              })}
             />
+
             <label htmlFor="image">
-              <UploadImageButton />
+              <UploadImageButton isImageAdded={isImageAdded} />
             </label>
           </div>
         </div>

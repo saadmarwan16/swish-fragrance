@@ -1,11 +1,11 @@
 import { FunctionComponent } from "react";
 import { UseFormRegister } from "react-hook-form";
-import { NewProductInputs } from "../types/interfaces";
+import { INewProductInputs } from "../types/interfaces";
 import { NewProductFieldType } from "../types/types";
 import LabelledInput from "./LabelledInput";
 
 interface ReactHookFormInputProps {
-  register: UseFormRegister<NewProductInputs>;
+  register: UseFormRegister<INewProductInputs>;
   isRequired: boolean;
   topFormText: string;
   placeholder: string;
@@ -22,7 +22,11 @@ const ReactHookFormInput: FunctionComponent<ReactHookFormInputProps> = ({
   topFormTextSuffix,
 }) => {
   return (
-    <LabelledInput isRequired={isRequired} topFormText={topFormText} topFormTextSuffix={topFormTextSuffix}>
+    <LabelledInput
+      isRequired={isRequired}
+      topFormText={topFormText}
+      topFormTextSuffix={topFormTextSuffix}
+    >
       <input
         className="custom-input"
         placeholder={placeholder}

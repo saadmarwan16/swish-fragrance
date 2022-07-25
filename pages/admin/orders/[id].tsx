@@ -4,6 +4,7 @@ import ordersController from "../../../src/modules/admin/orders/orders_controlle
 import { OrderModel } from "../../../src/modules/admin/orders/order_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
+import SingleOrderContent from "../../../src/modules/admin/orders/components/SingleOrderContent";
 
 interface OrderDetailsProps {
   id: string;
@@ -14,21 +15,17 @@ const OrderDetails: FunctionComponent<OrderDetailsProps> = (props) => {
   const [order, setOrder] = useState(props.order);
 
   return (
-    <AdminLayout titlePrefix="Brand Details">
+    <AdminLayout titlePrefix={`Order with order id of #${props.id}`}>
       <div className="">
         {!order ? (
           <ErrorContent
-            title="Orde"
+            title="Order"
             setContent={() =>
               ordersController.getOrder(props.id).then((res) => setOrder(res))
             }
           />
         ) : (
-          <div>
-            <div>
-                <p className="custom-heading2">ORDER ID: #{order.data.id}</p>
-            </div>
-          </div>
+          <SingleOrderContent order={order} />
         )}
       </div>
     </AdminLayout>
@@ -36,11 +33,12 @@ const OrderDetails: FunctionComponent<OrderDetailsProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const order = await ordersController.getOrder(query.id as string);
+  const id = query.id as string;
+  const order = await ordersController.getOrder(id);
 
   return {
     props: {
-      id: query.id,
+      id,
       order,
     },
   };

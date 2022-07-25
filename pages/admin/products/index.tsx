@@ -42,7 +42,7 @@ const Products: NextPage<ProductsPageProps> = (props) => {
           </div>
         </div>
         <p className="custom-subtitle1">
-          Manage your products and increase sales
+          Manage your products to increase sales
         </p>
 
         <div className="custom-categories-products-container">

@@ -1,4 +1,7 @@
 import { makeAutoObservable } from "mobx";
+import Router from "next/router";
+import Routes from "../../../shared/constants/routes";
+import { INewBrandInputs } from "../../../shared/types/interfaces";
 import { BrandsModel } from "./brands_model";
 import brandsProvider from "./brands_provider";
 
@@ -11,6 +14,16 @@ export class BrandsController {
   constructor() {
     makeAutoObservable(this);
   }
+
+  newBrand = async (data: INewBrandInputs) => {
+    try {
+      await brandsProvider.newBrand(data);
+      
+      return "success";
+    } catch (_) {
+      return null;
+    }
+  };
 
   getBrands = async (page?: number) => {
     try {

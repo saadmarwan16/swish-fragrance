@@ -3,31 +3,31 @@ import { TOrderStatusKeys } from "../types/types";
 const getOrderStatusColor = (key: TOrderStatusKeys, colorType: string) => {
   if (colorType === "border") {
     const orderStatusColors = {
-      pending: `border-warning`,
-      processing: "border-info",
-      dispatched: "border-success",
-      completed: "border-gray-400",
-      cancelled: "border-error",
+      Pending: `border-warning`,
+      Processing: "border-info",
+      Dispatched: "border-success",
+      Completed: "border-gray-400",
+      Cancelled: "border-error",
     };
 
     return orderStatusColors[key];
   } else if (colorType === "bg") {
     const orderStatusColors = {
-      pending: `bg-warning`,
-      processing: "bg-info",
-      dispatched: "bg-success",
-      completed: "bg-gray-400",
-      cancelled: "bg-error",
+      Pending: `bg-warning`,
+      Processing: "bg-info",
+      Dispatched: "bg-success",
+      Completed: "bg-gray-400",
+      Cancelled: "bg-error",
     };
 
     return orderStatusColors[key];
   } else {
     const orderStatusColors = {
-      pending: `text-warning`,
-      processing: "text-info",
-      dispatched: "text-success",
-      completed: "text-gray-400",
-      cancelled: "text-error",
+      Pending: `text-warning`,
+      Processing: "text-info",
+      Dispatched: "text-success",
+      Completed: "text-gray-400",
+      Cancelled: "text-error",
     };
 
     return orderStatusColors[key];

@@ -4,22 +4,20 @@ import ordersController from "../orders_controller";
 
 interface OrdersTabProps {
   title: string;
-  filter: string;
   setOrders: (filter: string) => void;
 }
 
 const OrdersTab: FunctionComponent<OrdersTabProps> = ({
   title,
-  filter,
   setOrders,
 }) => {
   return (
     <a
       className={`tab tab-bordered ${
-        ordersController.filter === filter &&
+        ordersController.filter === title &&
         " tab-active !border-primary text-primary"
       }`}
-      onClick={() => setOrders(filter)}
+      onClick={() => setOrders(title)}
     >
       {title}
     </a>

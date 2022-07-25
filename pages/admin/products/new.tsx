@@ -3,13 +3,13 @@ import AdminLayout from "../../../src/shared/components/AdminLayout";
 import { RiImageAddFill } from "react-icons/ri";
 import LabelledInput from "../../../src/shared/components/LabelledInput";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { NewProductInputs } from "../../../src/shared/types/interfaces";
 import ReactHookFormInput from "../../../src/shared/components/ReactHookFormInput";
 import http from "../../../src/shared/utils/http";
 import { BrandsModel } from "../../../src/modules/admin/brands/brands_model";
 import { CategoriesModel } from "../../../src/modules/admin/categories/categories_model";
 import { AiFillDelete } from "react-icons/ai";
 import UploadImageButton from "../../../src/shared/components/UploadImageButton";
+import { INewProductInputs } from "../../../src/shared/types/interfaces";
 
 interface NewProductPageProps {
   brands: BrandsModel;
@@ -22,13 +22,14 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<NewProductInputs>();
+  } = useForm<INewProductInputs>();
   const { fields, append, remove } = useFieldArray({
     name: "categories",
     control,
   });
 
-  const onSubmit: SubmitHandler<NewProductInputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<INewProductInputs> = (data) =>
+    console.log(data);
 
   return (
     <AdminLayout titlePrefix="New Product">
@@ -44,7 +45,7 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
             </button>
           </div>
 
-          <UploadImageButton />
+          <UploadImageButton isImageAdded={false} />
         </div>
 
         <div className="flex flex-col gap-2 pt-4">
@@ -148,7 +149,7 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
 
           <div className="pt-2 sm:pt-4">
             {fields.map((field, index) => (
-              <div key={field.id} className='flex items-center gap-2'>
+              <div key={field.id} className="flex items-center gap-2">
                 <LabelledInput isRequired={true} topFormText="Category">
                   <select
                     className="custom-select"
@@ -164,7 +165,10 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
                     ))}
                   </select>
                 </LabelledInput>
-                <button className="btn btn-primary md:btn-square"  onClick={() => remove(index)}>
+                <button
+                  className="btn btn-primary md:btn-square"
+                  onClick={() => remove(index)}
+                >
                   <AiFillDelete className="text-2xl" />
                 </button>
               </div>

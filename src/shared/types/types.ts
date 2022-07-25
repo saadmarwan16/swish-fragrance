@@ -14,8 +14,8 @@ export type NewProductFieldType =
   | "categories";
 
 export type TOrderStatusKeys =
-  | "pending"
-  | "processing"
-  | "dispatched"
-  | "completed"
-  | "cancelled";
+  | "Pending"
+  | "Processing"
+  | "Dispatched"
+  | "Completed"
+  | "Cancelled";

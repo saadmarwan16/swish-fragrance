@@ -16,23 +16,31 @@ const CategoriesTableView: FunctionComponent<CategoriesTableViewProps> = ({
       <thead>
         <tr>
           <th>Name</th>
-          <th>Remaining</th>
           <th>Sold</th>
+          <th>Profit</th>
           <th>Revenue</th>
         </tr>
       </thead>
       <tbody>
         {categories.data.map(({ id, attributes }) => {
-          const { numberOfProducts, sold, revenue } = getCategoryDetails(
-            attributes.products
-          );
+          const { profit, sold, revenue } = getCategoryDetails(attributes.products);
 
           return (
             <Link key={id} href={Routes.CATEGORY_DETAILS(id)}>
               <tr className="hover hover:cursor-pointer">
-                <td>{attributes.name}</td>
-                <td>{numberOfProducts}</td>
+                <td>
+                  <div>
+                    <div className="font-bold">{attributes.name}</div>
+                    <div className="text-sm text-gray-500">
+                      Items:{" "}
+                      <span className="font-semibold !text-base-content">
+                        {attributes.products.data.length}
+                      </span>
+                    </div>
+                  </div>
+                </td>
                 <td>{sold}</td>
+                <td>GH¢{profit}</td>
                 <td>GH¢{revenue}</td>
               </tr>
             </Link>

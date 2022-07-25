@@ -1,7 +1,7 @@
 import qs from "qs";
 
 const getOrderStatusFilterQuery = (filter: string) => {
-  if (filter === "all") {
+  if (filter === "All") {
     return qs.stringify(
       {
         filters: {

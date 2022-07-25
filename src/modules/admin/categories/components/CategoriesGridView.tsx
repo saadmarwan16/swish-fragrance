@@ -14,7 +14,7 @@ const CategoriesGridView: FunctionComponent<CategoriesGridViewProps> = ({
   return (
     <div className="custom-grid-1234">
       {categories.data.map(({ id, attributes }) => {
-        const { numberOfProducts, sold, revenue } = getCategoryDetails(
+        const { profit, sold, revenue } = getCategoryDetails(
           attributes.products
         );
 
@@ -22,20 +22,26 @@ const CategoriesGridView: FunctionComponent<CategoriesGridViewProps> = ({
           <Link key={id} href={Routes.CATEGORY_DETAILS(id)}>
             <a className="custom-category-product-link">
               <div className="custom-category-product-container">
-                <p className="custom-heading2 text-primary">
-                  {attributes.name}
-                </p>
+                <div className="flex flex-col justify-center">
+                  <p className="custom-heading2 text-primary">
+                    {attributes.name}
+                  </p>
+                  <div className="text-sm text-gray-500">
+                    Items:{" "}
+                    <span className="font-semibold !text-base-content">
+                      {attributes.products.data.length}
+                    </span>
+                  </div>
+                </div>
 
                 <div>
                   <div>
-                    <span className="text-lg font-semibold">
-                      {numberOfProducts} {""}
-                    </span>
-                    <span className="text-sm text-gray-500">product(s)</span>
-                  </div>
-                  <div>
                     <span className="text-lg font-semibold">{sold} </span>
                     <span className="text-sm text-gray-500">sold</span>
+                  </div>
+                  <div>
+                    <span className="text-lg font-semibold">GH¢{profit} </span>
+                    <span className="text-sm text-gray-500">in profit</span>
                   </div>
                   <div>
                     <span className="text-lg font-semibold">GH¢{revenue} </span>

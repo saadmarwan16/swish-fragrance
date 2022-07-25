@@ -55,6 +55,11 @@ const AdminHeader: FunctionComponent<AdminHeaderProps> = () => {
                 <a>New Category</a>
               </Link>
             </li>
+            <li>
+              <Link href={Routes.NEW_BRAND}>
+                <a>New Brand</a>
+              </Link>
+            </li>
           </ul>
         </div>
 

@@ -19,7 +19,7 @@ const History: NextPage<HistoryPageProps> = (props) => {
   return (
     <AdminLayout titlePrefix="History">
       <div>
-        <p className="custom-heading1">History</p>
+        <p className="mb-6 custom-heading1">History</p>
         <>
           {!histories ? (
             <ErrorContent
@@ -96,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   return {
     props: {
-      histories,
+      histories: null,
     },
   };
 };

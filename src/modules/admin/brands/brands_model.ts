@@ -10,60 +10,29 @@ export interface BrandsModel {
 }
 
 export interface BrandsModelDatum {
-  id: number;
+  id:         number;
   attributes: PurpleAttributes;
 }
 
 export interface PurpleAttributes {
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  name:        string;
+  createdAt:   Date;
+  updatedAt:   Date;
   publishedAt: Date;
-  products: Products;
-  image: Image;
+  image:       Image;
+  products:    Products;
 }
 
 export interface Image {
-  data: ImageDatum[] | null;
+  data: Data | null;
 }
 
-export interface ImageDatum {
-  id: number;
-  attributes: FluffyAttributes;
+export interface Data {
+  id:         number;
+  attributes: DataAttributes;
 }
 
-export interface FluffyAttributes {
-  name: string;
-  alternativeText: string;
-  caption: string;
-  width: number;
-  height: number;
-  formats: Formats;
-  hash: string;
-  ext: string;
-  mime: string;
-  size: number;
-  url: string;
-  previewUrl: null;
-  provider: string;
-  provider_metadata: null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface Formats {
-  thumbnail: Thumbnail;
-}
-
-export interface Thumbnail {
-  name: string;
-  hash: string;
-  ext: string;
-  mime: string;
-  path: null;
-  width: number;
-  height: number;
-  size: number;
+export interface DataAttributes {
   url: string;
 }
 
@@ -72,24 +41,25 @@ export interface Products {
 }
 
 export interface ProductsDatum {
-  id: number;
-  attributes: TentacledAttributes;
+  id:         number;
+  attributes: FluffyAttributes;
 }
 
-export interface TentacledAttributes {
-  name: string;
-  is_discounted: boolean;
-  in_stock: number;
-  number_sold: number;
+export interface FluffyAttributes {
+  name:              string;
+  in_stock:          number;
+  number_sold:       number;
   revenue_generated: number;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date;
-  discount: number;
-  selling_price: number;
-  size: string;
-  cost_price: number;
-  restock_point: number;
+  createdAt:         Date;
+  updatedAt:         Date;
+  publishedAt:       Date;
+  discount:          number;
+  selling_price:     number;
+  size:              string;
+  cost_price:        number;
+  restock_point:     number;
+  profit:            number;
+  image:             Image;
 }
 
 export interface Meta {
@@ -97,19 +67,19 @@ export interface Meta {
 }
 
 export interface Pagination {
-  page: number;
-  pageSize: number;
+  page:      number;
+  pageSize:  number;
   pageCount: number;
-  total: number;
+  total:     number;
 }
 
 // Converts JSON strings to/from your types
 export class ConvertBrandsModel {
   public static toBrandsModel(json: string): BrandsModel {
-    return JSON.parse(json);
+      return JSON.parse(json);
   }
 
   public static brandsModelToJson(value: BrandsModel): string {
-    return JSON.stringify(value);
+      return JSON.stringify(value);
   }
 }

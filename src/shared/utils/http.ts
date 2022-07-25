@@ -1,7 +1,8 @@
 import axios from "axios";
+import { BASE_API_URL } from "../constants/urls";
 
 export default axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_API_URL,
+  baseURL: BASE_API_URL,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

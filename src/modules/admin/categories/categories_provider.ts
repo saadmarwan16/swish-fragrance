@@ -1,3 +1,4 @@
+import getCategoryPopulateQuery from "../../../shared/queries/getCategoryPopulateQuery";
 import getPaginationQuery from "../../../shared/queries/getPaginationQuery";
 import getSearchQuery from "../../../shared/queries/getSearchQuery";
 import http from "../../../shared/utils/http";
@@ -7,7 +8,7 @@ export class CategoriesProvider {
   async getCategories(page: number, searchQuery?: string) {
     if (!searchQuery) {
       const response = await http.get(
-        `/categories?${getPaginationQuery(page)}&populate=*`
+        `/categories?${getPaginationQuery(page)}&${getCategoryPopulateQuery()}`
       );
 
       return ConvertCategoriesModel.toCategoriesModel(
@@ -15,7 +16,10 @@ export class CategoriesProvider {
       );
     } else {
       const response = await http.get(
-        `/categories?${getSearchQuery(page, searchQuery)}&populate=*`
+        `/categories?${getSearchQuery(
+          page,
+          searchQuery
+        )}&${getCategoryPopulateQuery()}`
       );
 
       return ConvertCategoriesModel.toCategoriesModel(

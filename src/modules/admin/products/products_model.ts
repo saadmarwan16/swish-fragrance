@@ -11,12 +11,11 @@ export interface ProductsModel {
 
 export interface Datum {
   id:         number;
-  attributes: Attributes;
+  attributes: DatumAttributes;
 }
 
-export interface Attributes {
+export interface DatumAttributes {
   name:              string;
-  is_discounted:     boolean;
   in_stock:          number;
   number_sold:       number;
   revenue_generated: number;
@@ -25,9 +24,24 @@ export interface Attributes {
   publishedAt:       Date;
   discount:          number;
   selling_price:     number;
+  profit:     number;
   size:              string;
   cost_price:        number;
   restock_point:     number;
+  image:             Image;
+}
+
+export interface Image {
+  data: Data | null;
+}
+
+export interface Data {
+  id:         number;
+  attributes: DataAttributes;
+}
+
+export interface DataAttributes {
+  url: string;
 }
 
 export interface Meta {

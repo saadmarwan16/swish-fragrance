@@ -3,7 +3,7 @@ export interface ILoginInputs {
   password: string;
 }
 
-export interface NewProductInputs {
+export interface INewProductInputs {
   name: string;
   images: string[];
   number_sold: number;
@@ -20,4 +20,9 @@ export interface NewProductInputs {
     name: "string";
   }[];
   // categories: number[];
+}
+
+export interface INewBrandInputs {
+  name: string;
+  image: FileList;
 }

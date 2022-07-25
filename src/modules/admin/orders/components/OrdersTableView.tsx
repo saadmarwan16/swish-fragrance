@@ -1,8 +1,11 @@
 import dayjs from "dayjs";
 import Link from "next/link";
 import { FunctionComponent } from "react";
+import Avatar from "../../../../shared/components/Avatar";
 import LogoAvatar from "../../../../shared/components/LogoAvatar";
 import Routes from "../../../../shared/constants/routes";
+import { BASE_URL } from "../../../../shared/constants/urls";
+import getFormattedDate from "../../../../shared/utils/getFormattedDate";
 import getOrderStatusColor from "../../../../shared/utils/getOrderStatusColor";
 import { OrdersModel } from "../orders_model";
 
@@ -19,7 +22,7 @@ const OrdersTableView: FunctionComponent<OrdersTableViewProps> = ({
         <thead>
           <tr>
             <th>Recipient</th>
-            <th>Amount</th>
+            <th>Total</th>
             <th>Date</th>
             <th>Payment</th>
             <th>Payment Status</th>
@@ -31,24 +34,35 @@ const OrdersTableView: FunctionComponent<OrdersTableViewProps> = ({
             ({
               id,
               attributes: {
-                amount,
+                total,
                 createdAt,
                 payment_method,
                 payment_status,
                 products,
                 status,
+                user,
               },
             }) => (
               <Link key={id} href={Routes.ORDER_DETAILS(id)}>
                 <tr className="hover hover:cursor-pointer">
                   <td>
                     <div className="flex items-center space-x-3">
-                      <LogoAvatar />
+                      <Avatar
+                        alt="Product Author Image"
+                        url={
+                          user.data.attributes.image.data
+                            ? `${BASE_URL}${user.data.attributes.image.data.attributes.url}`
+                            : "/images/no_profile_image.webp"
+                        }
+                        width="w-14"
+                      />
 
                       <div>
-                        <div className="font-bold">Abdul Rahman</div>
+                        <div className="font-bold">
+                          {user.data.attributes.name}
+                        </div>
                         <div className="text-sm text-gray-500">
-                          items:{" "}
+                          Items:{" "}
                           <span className="font-semibold !text-base-content">
                             {products.data.length}
                           </span>
@@ -56,8 +70,8 @@ const OrdersTableView: FunctionComponent<OrdersTableViewProps> = ({
                       </div>
                     </div>
                   </td>
-                  <td>GH¢{amount}</td>
-                  <td>{dayjs(createdAt).format("DD MMM YYYY")}</td>
+                  <td>GH¢{total}</td>
+                  <td>{getFormattedDate(createdAt)}</td>
                   <td>{payment_method}</td>
                   <td>
                     <span
