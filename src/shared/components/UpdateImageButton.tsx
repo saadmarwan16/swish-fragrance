@@ -3,8 +3,9 @@ import { RiImageEditFill } from "react-icons/ri";
 import Image from "next/image";
 import { IImageDetails } from "../types/interfaces";
 import { BASE_URL } from "../constants/urls";
-import brandsController from "../../modules/admin/brands/brands_controller";
+import brandsController from "../../modules/brands/controllers/brands_controller";
 import { BRAND_IMAGE_LOCAL_STORAGE_KEY } from "../constants/strings";
+import imagesController from "../controllers/images_controller";
 
 interface UpdateImageButtonProps {
   imageLocalStorageKey: string;
@@ -32,7 +33,7 @@ const UpdateImageButton: FunctionComponent<UpdateImageButtonProps> = ({
 
           const formData = new FormData();
           formData.append("files", files[0]);
-          brandsController.uploadImage(formData).then((res) => {
+          imagesController.create(formData).then((res) => {
             if (res !== null) {
               const previousImageId = imageDetails.id;
 
@@ -45,7 +46,7 @@ const UpdateImageButton: FunctionComponent<UpdateImageButtonProps> = ({
                   url: res[0].url,
                 })
               );
-              brandsController.deleteImage(previousImageId);
+              imagesController.delete(previousImageId.toString());
             }
           });
         }}

@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import brandsController from "../../../src/modules/admin/brands/brands_controller";
+import brandsController from "../../../src/modules/brands/controllers/brands_controller";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import LabelledInput from "../../../src/shared/components/LabelledInput";
 import UploadImageButton from "../../../src/shared/components/UploadImageButton";

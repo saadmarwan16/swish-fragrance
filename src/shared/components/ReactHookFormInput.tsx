@@ -18,6 +18,7 @@ interface ReactHookFormInputProps {
   topFormTextSuffix?: string;
   errorMessage?: string;
   errors?: FieldErrorsImpl<DeepRequired<INewProductInputs>>;
+  type?: string;
 }
 
 const ReactHookFormInput: FunctionComponent<ReactHookFormInputProps> = ({
@@ -29,6 +30,7 @@ const ReactHookFormInput: FunctionComponent<ReactHookFormInputProps> = ({
   topFormTextSuffix,
   errorMessage,
   errors,
+  type,
 }) => {
   return (
     <LabelledInput
@@ -37,6 +39,7 @@ const ReactHookFormInput: FunctionComponent<ReactHookFormInputProps> = ({
       topFormTextSuffix={topFormTextSuffix}
     >
       <input
+        type={type ?? "text"}
         className={`custom-input ${errors?.[field] && "!border-error"}`}
         placeholder={placeholder}
         {...register(field, {

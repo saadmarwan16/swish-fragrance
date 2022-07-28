@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite";
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import brandsController from "../../../src/modules/admin/brands/brands_controller";
-import { BrandsModel } from "../../../src/modules/admin/brands/brands_model";
-import BrandsGridView from "../../../src/modules/admin/brands/components/BrandsGridView";
-import BrandsTableView from "../../../src/modules/admin/brands/components/BrandsTableView";
-import BrandsTitleSearch from "../../../src/modules/admin/brands/components/BrandsTitleSearch";
+import brandsController from "../../../src/modules/brands/controllers/brands_controller";
+import { BrandsModel } from "../../../src/modules/brands/data/models/brands_model";
+import BrandsGridView from "../../../src/modules/brands/components/BrandsGridView";
+import BrandsTableView from "../../../src/modules/brands/components/BrandsTableView";
+import BrandsTitleSearch from "../../../src/modules/brands/components/BrandsTitleSearch";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
 import PaginationTabs from "../../../src/shared/components/PaginationTabs";

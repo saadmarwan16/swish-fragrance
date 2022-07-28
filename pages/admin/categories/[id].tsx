@@ -1,12 +1,10 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import categoriesController from "../../../src/modules/admin/categories/categories_controller";
-import { CategoryModel } from "../../../src/modules/admin/categories/category_model";
-import UpdateCategoryModal from "../../../src/modules/admin/categories/components/UpdateCategoryModal";
+import UpdateCategoryModal from "../../../src/modules/categories/components/UpdateCategoryModal";
+import categoriesController from "../../../src/modules/categories/controllers/categories_controller";
+import { CategoryModel } from "../../../src/modules/categories/data/models/category_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
-import ErrorContent from "../../../src/shared/components/ErrorContent";
-import ProductsContainer from "../../../src/shared/components/ProductsContainer";
 
 interface CategoryDetailsPageProps {
   category: CategoryModel | null;

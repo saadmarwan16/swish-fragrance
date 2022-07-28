@@ -1,6 +1,4 @@
 import type { GetServerSideProps, NextPage } from "next";
-import historyController from "../../src/modules/admin/history/history_controller";
-import { HistoryModel } from "../../src/modules/admin/history/history_model";
 import AdminLayout from "../../src/shared/components/AdminLayout";
 import { GrHistory, GrClose } from "react-icons/gr";
 import { useState } from "react";
@@ -8,6 +6,8 @@ import dayjs from "dayjs";
 import PaginationTabs from "../../src/shared/components/PaginationTabs";
 import EmptyContent from "../../src/shared/components/EmptyContent";
 import ErrorContent from "../../src/shared/components/ErrorContent";
+import { HistoryModel } from "../../src/modules/history/data/models/history_model";
+import historyController from "../../src/modules/history/controllers/history_controller";
 
 interface HistoryPageProps {
   histories: HistoryModel | null;

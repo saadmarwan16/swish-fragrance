@@ -1,4 +1,4 @@
-import { Products } from "../../modules/admin/brands/brands_model";
+import { Products } from "../../modules/brands/data/models/brands_model";
 
 const getCategoryDetails = (products: Products) => {
   let sold = 0;

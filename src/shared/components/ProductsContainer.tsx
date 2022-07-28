@@ -1,8 +1,8 @@
 import { Dispatch, FunctionComponent, SetStateAction } from "react";
-import ProductsGridView from "../../modules/admin/products/components/ProductsGridView";
-import ProductsTableView from "../../modules/admin/products/components/ProductsTableView";
-import ProductsTitleSearch from "../../modules/admin/products/components/ProductsTitleSearch";
-import { ProductsModel } from "../../modules/admin/products/products_model";
+import ProductsGridView from "../../modules/products/components/ProductsGridView";
+import ProductsTableView from "../../modules/products/components/ProductsTableView";
+import ProductsTitleSearch from "../../modules/products/components/ProductsTitleSearch";
+import { ProductsModel } from "../../modules/products/data/models/products_model";
 import EmptyContent from "./EmptyContent";
 import LoaderContent from "./LoaderContent";
 import PaginationTabs from "./PaginationTabs";
@@ -20,7 +20,7 @@ const ProductsContainer: FunctionComponent<ProductsContainerProps> = ({
   isTableView,
   setContent,
   products,
-  setProducts
+  setProducts,
 }) => {
   return (
     <>

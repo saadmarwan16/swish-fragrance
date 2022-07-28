@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite";
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import OrdersHeader from "../../../src/modules/admin/orders/components/OrdersHeader";
-import OrdersTableView from "../../../src/modules/admin/orders/components/OrdersTableView";
-import OrdersTabs from "../../../src/modules/admin/orders/components/OrdersTabs";
-import ordersController from "../../../src/modules/admin/orders/orders_controller";
-import { OrdersModel } from "../../../src/modules/admin/orders/orders_model";
+import OrdersHeader from "../../../src/modules/orders/components/OrdersHeader";
+import OrdersTableView from "../../../src/modules/orders/components/OrdersTableView";
+import OrdersTabs from "../../../src/modules/orders/components/OrdersTabs";
+import ordersController from "../../../src/modules/orders/controllers/orders_controller";
+import { OrdersModel } from "../../../src/modules/orders/data/models/orders_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import EmptyContent from "../../../src/shared/components/EmptyContent";
 import ErrorContent from "../../../src/shared/components/ErrorContent";

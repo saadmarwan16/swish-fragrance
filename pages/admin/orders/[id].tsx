@@ -1,10 +1,10 @@
 import { GetServerSideProps } from "next";
 import { FunctionComponent, useState } from "react";
-import ordersController from "../../../src/modules/admin/orders/orders_controller";
-import { OrderModel } from "../../../src/modules/admin/orders/order_model";
+import SingleOrderContent from "../../../src/modules/orders/components/SingleOrderContent";
+import ordersController from "../../../src/modules/orders/controllers/orders_controller";
+import { OrderModel } from "../../../src/modules/orders/data/models/order_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
-import SingleOrderContent from "../../../src/modules/admin/orders/components/SingleOrderContent";
 
 interface OrderDetailsProps {
   id: string;

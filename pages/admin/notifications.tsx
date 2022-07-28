@@ -3,14 +3,14 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
 import { AiFillNotification } from "react-icons/ai";
 import { GrClose } from "react-icons/gr";
-import notificationsController from "../../src/modules/admin/notifications/notifications_controller";
-import { NotificationsModel } from "../../src/modules/admin/notifications/notifications_model";
 import AdminLayout from "../../src/shared/components/AdminLayout";
 import EmptyContent from "../../src/shared/components/EmptyContent";
 import ErrorContent from "../../src/shared/components/ErrorContent";
 import PaginationTabs from "../../src/shared/components/PaginationTabs";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DateRangePicker from "../../src/shared/components/DateRangePicker";
+import { NotificationsModel } from "../../src/modules/notifications/data/models/notifications_model";
+import notificationsController from "../../src/modules/notifications/controllers/notifications_controller";
 
 interface NotificationsPageProps {
   notifications: NotificationsModel | null;

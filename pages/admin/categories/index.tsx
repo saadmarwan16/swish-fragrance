@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite";
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import categoriesController from "../../../src/modules/admin/categories/categories_controller";
-import { CategoriesModel } from "../../../src/modules/admin/categories/categories_model";
-import CategoriesTableView from "../../../src/modules/admin/categories/components/CategoriesTableView";
-import CategoriesTitleSearch from "../../../src/modules/admin/categories/components/CategoriesTitleSearch";
-import NewCategoryModal from "../../../src/modules/admin/categories/components/NewCategoryModal";
+import CategoriesTableView from "../../../src/modules/categories/components/CategoriesTableView";
+import CategoriesTitleSearch from "../../../src/modules/categories/components/CategoriesTitleSearch";
+import NewCategoryModal from "../../../src/modules/categories/components/NewCategoryModal";
+import categoriesController from "../../../src/modules/categories/controllers/categories_controller";
+import { CategoriesModel } from "../../../src/modules/categories/data/models/categories_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import EmptyContent from "../../../src/shared/components/EmptyContent";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
