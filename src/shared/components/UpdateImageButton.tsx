@@ -1,21 +1,26 @@
 import { FunctionComponent } from "react";
-import { RiImageAddFill, RiImageEditFill } from "react-icons/ri";
+import { RiImageEditFill } from "react-icons/ri";
+import Image from "next/image";
+import { IImageDetails } from "../types/interfaces";
+import { BASE_URL } from "../constants/urls";
 import brandsController from "../../modules/admin/brands/brands_controller";
 import { BRAND_IMAGE_LOCAL_STORAGE_KEY } from "../constants/strings";
 
-interface UploadImageButtonProps {
+interface UpdateImageButtonProps {
   imageLocalStorageKey: string;
+  imageDetails: IImageDetails;
   setIsImageAdded: () => void;
   setImageDetails: (id: number, url: string) => void;
 }
 
-const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
+const UpdateImageButton: FunctionComponent<UpdateImageButtonProps> = ({
   imageLocalStorageKey,
+  imageDetails,
   setIsImageAdded,
   setImageDetails,
 }) => {
   return (
-    <div className="w-60 h-60 sm:w-72 sm:h-72">
+    <div className="h-60 sm:w-72 sm:h-72 w-60">
       <input
         type="file"
         accept="image/*"
@@ -29,6 +34,8 @@ const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
           formData.append("files", files[0]);
           brandsController.uploadImage(formData).then((res) => {
             if (res !== null) {
+              const previousImageId = imageDetails.id;
+
               setImageDetails(res[0].id, res[0].url);
               setIsImageAdded();
               localStorage.setItem(
@@ -38,19 +45,34 @@ const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
                   url: res[0].url,
                 })
               );
+              brandsController.deleteImage(previousImageId);
             }
           });
         }}
       />
 
       <label htmlFor="image">
-        <div className="flex-col gap-2 px-2 py-8 border rounded-lg h-60 sm:h-72 custom-flex-center border-base-300 sm:py-16 text-secondary hover:bg-base-200 hover:cursor-pointer">
-          <RiImageAddFill className="text-3xl" />
-          <p className="font-semibold text-gray-600">Click to add an image</p>
+        <div className="shadow-xl h-60 sm:h-72 card bg-base-100 image-full">
+          <figure>
+            <Image
+              src={`${BASE_URL}${imageDetails.url}`}
+              layout="fill"
+              alt="Brand Image"
+            />
+          </figure>
+
+          <div className="items-center justify-center card-body">
+            <div className="flex flex-col items-center cursor-pointer hover:text-base-100">
+              <RiImageEditFill
+                className={`text-4xl cursor-pointer hover:text-base-100`}
+              />
+              <p>Click to update image</p>
+            </div>
+          </div>
         </div>
       </label>
     </div>
   );
 };
 
-export default UploadImageButton;
+export default UpdateImageButton;

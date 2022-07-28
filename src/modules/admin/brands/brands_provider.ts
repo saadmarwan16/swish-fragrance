@@ -15,47 +15,28 @@ export class BrandsProvider {
       return ConvertBrandsModel.toBrandsModel(JSON.stringify(response.data));
     } else {
       const response = await http.get(
-        `/brands?${getSearchQuery(page, searchQuery)}&${getBrandPopulateQuery()}`
+        `/brands?${getSearchQuery(
+          page,
+          searchQuery
+        )}&${getBrandPopulateQuery()}`
       );
 
       return ConvertBrandsModel.toBrandsModel(JSON.stringify(response.data));
     }
   }
 
-  newBrand = async (data: INewBrandInputs) => {
-    // const uploadImage = async (image: FileList) => {
-    //   http
-    //     .post("/upload", image.item(0))
-    //     .then((response) => {
-    //       const imageId = response.data[0].id;
-    //       console.log(response);
-    //       console.log(imageId);
+  uploadImage = async (formData: FormData) => {
+    const response = await http.post("/upload", formData);
 
-    //       http
-    //         .post("http://localhost:1337/people", { image: imageId })
-    //         .then((response) => {
-    //           //handle success
-    //         })
-    //         .catch((error) => {
-    //           //handle error
-    //         });
-    //     })
-    //     .catch((error) => {
-    //       //handle error
-    //     });
-    // };
+    return response.data;
+  };
 
-    const formData = new FormData();
-    formData.append("files", data.image[0]);
-    const imageUploadResponse = await http.post("/upload", formData);
-    console.log(imageUploadResponse);
-    console.log(imageUploadResponse.data[0].id);
-    await http.post("/brands", {
-      data: {
-        image: imageUploadResponse.data[0].id,
-        name: data.name,
-      },
-    });
+  deleteImage = async (id: number) => {
+    await http.delete(`/upload/files/${id}`);
+  };
+
+  newBrand = async (data: string) => {
+    await http.post("/brands", data);
   };
 }
 

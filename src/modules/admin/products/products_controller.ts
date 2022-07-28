@@ -12,6 +12,15 @@ export class ProductsController {
     makeAutoObservable(this);
   }
 
+  newProduct = async (data: string) => {
+    try {
+      await productsProvider.newProduct(data);
+      return "success";
+    } catch (_) {
+      return null;
+    }
+  };
+
   getProducts = async (page?: number) => {
     try {
       this.loading = true;

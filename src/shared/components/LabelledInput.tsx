@@ -1,5 +1,4 @@
 import { FunctionComponent, ReactNode } from "react";
-import FormBottomLabel from "./FormBottomLabel";
 import FormTopLabel from "./FormTopLabel";
 
 interface LabelledInputProps {
@@ -26,12 +25,7 @@ const LabelledInput: FunctionComponent<LabelledInputProps> = ({
           </>
         }
       />
-
       {children}
-
-      {/* {errors.identifier && (
-        <FormBottomLabel message={errors.identifier.message!} />
-      )} */}
     </div>
   );
 };

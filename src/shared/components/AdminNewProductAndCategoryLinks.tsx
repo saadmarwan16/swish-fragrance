@@ -16,10 +16,10 @@ const AdminNewProductAndCategoryLinks: FunctionComponent<
           New Product
         </a>
       </Link>
-      <Link href={Routes.NEW_CATEGORY}>
+      <Link href={Routes.NEW_BRAND}>
         <a className="gap-2 font-medium btn btn-primary">
           <AiOutlinePlus className="text-2xl" />
-          New Category
+          New Brand
         </a>
       </Link>
     </div>

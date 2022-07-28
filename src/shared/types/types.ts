@@ -1,6 +1,5 @@
 export type NewProductFieldType =
   | "name"
-  | "images"
   | "number_sold"
   | "revenue_generated"
   | "discount"
@@ -8,10 +7,8 @@ export type NewProductFieldType =
   | "size"
   | "cost_price"
   | "restock_point"
-  | "is_discounted"
   | "in_stock"
-  | "brand"
-  | "categories";
+  | "profit";
 
 export type TOrderStatusKeys =
   | "Pending"

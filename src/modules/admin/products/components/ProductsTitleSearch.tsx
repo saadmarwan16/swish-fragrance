@@ -7,7 +7,6 @@ import {
 } from "react";
 import productsController from "../products_controller";
 import { Pagination, ProductsModel } from "../products_model";
-import { IoFilter } from "react-icons/io5";
 import debounce from "lodash.debounce";
 
 interface ProductsTitleSearchProps {

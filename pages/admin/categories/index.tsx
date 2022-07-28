@@ -3,11 +3,10 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
 import categoriesController from "../../../src/modules/admin/categories/categories_controller";
 import { CategoriesModel } from "../../../src/modules/admin/categories/categories_model";
-import CategoriesGridView from "../../../src/modules/admin/categories/components/CategoriesGridView";
 import CategoriesTableView from "../../../src/modules/admin/categories/components/CategoriesTableView";
 import CategoriesTitleSearch from "../../../src/modules/admin/categories/components/CategoriesTitleSearch";
+import NewCategoryModal from "../../../src/modules/admin/categories/components/NewCategoryModal";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
-import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
 import EmptyContent from "../../../src/shared/components/EmptyContent";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
 import LoaderContent from "../../../src/shared/components/LoaderContent";
@@ -26,19 +25,9 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
         <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
           <p className="custom-heading1">Categories</p>
 
-          <div className="flex gap-4">
-            <CategoriesProductsSelectView
-              title="Table View"
-              isActive={categoriesController.isTableView}
-              setIsActive={() => categoriesController.setIsTableView(true)}
-            />
-
-            <CategoriesProductsSelectView
-              title="Grid View"
-              isActive={!categoriesController.isTableView}
-              setIsActive={() => categoriesController.setIsTableView(false)}
-            />
-          </div>
+          <NewCategoryModal
+            setCategories={(categories) => setCategories(categories)}
+          />
         </div>
         <p className="custom-subtitle1">
           Manage your categories to increase sales
@@ -69,11 +58,7 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
                     <EmptyContent title="Categories" content="categories" />
                   ) : (
                     <>
-                      {categoriesController.isTableView ? (
-                        <CategoriesTableView categories={categories} />
-                      ) : (
-                        <CategoriesGridView categories={categories} />
-                      )}
+                      <CategoriesTableView categories={categories} />
 
                       <PaginationTabs
                         pagination={categories.meta.pagination}

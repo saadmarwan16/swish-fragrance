@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import Routes from "../../../../shared/constants/routes";
 import getCategoryDetails from "../../../../shared/utils/getCategoryDetails";
 import { CategoriesModel } from "../categories_model";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 interface CategoriesTableViewProps {
   categories: CategoriesModel;
@@ -23,7 +24,9 @@ const CategoriesTableView: FunctionComponent<CategoriesTableViewProps> = ({
       </thead>
       <tbody>
         {categories.data.map(({ id, attributes }) => {
-          const { profit, sold, revenue } = getCategoryDetails(attributes.products);
+          const { profit, sold, revenue } = getCategoryDetails(
+            attributes.products
+          );
 
           return (
             <Link key={id} href={Routes.CATEGORY_DETAILS(id)}>

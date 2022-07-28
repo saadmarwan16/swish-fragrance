@@ -4,13 +4,33 @@ import categoriesProvider from "./categories_provider";
 
 export class CategoriesController {
   categories: CategoriesModel | null = null;
-  isTableView = true;
+  isTableView = false;
   loading = false;
   searchQuery = "";
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  newCategory = async (name: string) => {
+    await categoriesProvider.newCategory(name);
+    return await this.getCategories();
+  };
+
+  updateCategory = async (id: number, name: string) => {
+    await categoriesProvider.updateCategory(id, name);
+    return await this.getCategory(id.toString());
+  };
+
+  getCategory = async (id: string) => {
+    try {
+      const category = await categoriesProvider.getCategory(id);
+
+      return category;
+    } catch (_) {
+      return null;
+    }
+  };
 
   getCategories = async (page?: number) => {
     try {

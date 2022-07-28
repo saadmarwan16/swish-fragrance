@@ -5,7 +5,6 @@ export interface ILoginInputs {
 
 export interface INewProductInputs {
   name: string;
-  images: string[];
   number_sold: number;
   revenue_generated: number;
   discount: number;
@@ -13,16 +12,15 @@ export interface INewProductInputs {
   size: string;
   cost_price: number;
   restock_point: number;
-  is_discounted: boolean;
   in_stock: number;
-  brand: number;
-  categories: {
-    name: "string";
-  }[];
-  // categories: number[];
+  profit: number;
 }
 
 export interface INewBrandInputs {
   name: string;
-  image: FileList;
+}
+
+export interface IImageDetails {
+  id: number;
+  url: string;
 }

@@ -1,35 +1,77 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
-import { RiImageAddFill } from "react-icons/ri";
 import LabelledInput from "../../../src/shared/components/LabelledInput";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import ReactHookFormInput from "../../../src/shared/components/ReactHookFormInput";
 import http from "../../../src/shared/utils/http";
-import { BrandsModel } from "../../../src/modules/admin/brands/brands_model";
-import { CategoriesModel } from "../../../src/modules/admin/categories/categories_model";
-import { AiFillDelete } from "react-icons/ai";
 import UploadImageButton from "../../../src/shared/components/UploadImageButton";
-import { INewProductInputs } from "../../../src/shared/types/interfaces";
+import {
+  IImageDetails,
+  INewProductInputs,
+} from "../../../src/shared/types/interfaces";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Routes from "../../../src/shared/constants/routes";
+import { PRODUCT_IMAGE_LOCAL_STORAGE_KEY } from "../../../src/shared/constants/strings";
+import UpdateImageButton from "../../../src/shared/components/UpdateImageButton";
+import FormBottomLabel from "../../../src/shared/components/FormBottomLabel";
+import productsController from "../../../src/modules/admin/products/products_controller";
 
-interface NewProductPageProps {
-  brands: BrandsModel;
-  categories: CategoriesModel;
-}
+interface NewProductPageProps {}
 
-const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
+const NewProduct: NextPage<NewProductPageProps> = () => {
+  const [isImageAdded, setIsImageAdded] = useState(false);
+  const [imageDetails, setImageDetails] = useState<IImageDetails | null>(null);
+
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm<INewProductInputs>();
-  const { fields, append, remove } = useFieldArray({
-    name: "categories",
-    control,
-  });
 
-  const onSubmit: SubmitHandler<INewProductInputs> = (data) =>
-    console.log(data);
+  console.log("errors: ", errors);
+
+  //   Size: 15
+  // Size: 30
+  // Size: 50
+  // Size: 100
+
+  const onSubmit: SubmitHandler<INewProductInputs> = async (data) => {
+    console.log("data: ", data);
+    let updatedData;
+    if (imageDetails?.id) {
+      updatedData = {
+        data: {
+          ...data,
+          image: imageDetails?.id,
+        },
+      };
+    } else {
+      updatedData = {
+        data: {
+          ...data,
+        },
+      };
+    }
+
+    const results = await productsController.newProduct(JSON.stringify(updatedData));
+    if (results === "success") {
+      localStorage.removeItem(PRODUCT_IMAGE_LOCAL_STORAGE_KEY);
+      router.push(Routes.PRODUCTS);
+    }
+  };
+
+  useEffect(() => {
+    const imageDetailsString = localStorage.getItem(
+      PRODUCT_IMAGE_LOCAL_STORAGE_KEY
+    );
+    if (imageDetailsString !== null) {
+      setImageDetails(JSON.parse(imageDetailsString));
+      setIsImageAdded(true);
+    }
+  }, []);
 
   return (
     <AdminLayout titlePrefix="New Product">
@@ -45,7 +87,20 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
             </button>
           </div>
 
-          <UploadImageButton isImageAdded={false} />
+          {isImageAdded && imageDetails ? (
+            <UpdateImageButton
+              imageLocalStorageKey={PRODUCT_IMAGE_LOCAL_STORAGE_KEY}
+              imageDetails={imageDetails}
+              setIsImageAdded={() => setIsImageAdded(true)}
+              setImageDetails={(id, url) => setImageDetails({ id, url })}
+            />
+          ) : (
+            <UploadImageButton
+              imageLocalStorageKey={PRODUCT_IMAGE_LOCAL_STORAGE_KEY}
+              setImageDetails={(id, url) => setImageDetails({ id, url })}
+              setIsImageAdded={() => setIsImageAdded(true)}
+            />
+          )}
         </div>
 
         <div className="flex flex-col gap-2 pt-4">
@@ -55,19 +110,28 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
               isRequired={true}
               topFormText="Name"
               field="name"
+              errors={errors}
+              errorMessage="Product name must contain at least 3 characters"
               placeholder="Enter name here"
             />
 
             <LabelledInput isRequired={true} topFormText="Size">
-              <select className="custom-select" {...register("size")}>
-                <option disabled selected>
-                  Choose a size
-                </option>
+              <select
+                className={`custom-select ${errors.size && "!border-error"}`}
+                {...register("size", {
+                  required: "Product size cannot be empty",
+                })}
+              >
+                <option disabled>Choose a size</option>
                 <option>15 ML</option>
                 <option>30 ML</option>
                 <option>50 ML</option>
                 <option>100 ML</option>
               </select>
+
+              {errors?.size && (
+                <FormBottomLabel message={errors.size.message!} />
+              )}
             </LabelledInput>
           </div>
           <div className="new-product-layout">
@@ -76,6 +140,8 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
               isRequired={true}
               topFormText="Cost Price"
               field="cost_price"
+              errors={errors}
+              errorMessage="Product cost price cannot be empty"
               placeholder="Enter cost price here"
             />
 
@@ -84,6 +150,8 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
               isRequired={true}
               topFormText="Selling Price"
               field="selling_price"
+              errors={errors}
+              errorMessage="Product selling price cannot be empty"
               placeholder="Enter selling here"
             />
           </div>
@@ -135,71 +203,19 @@ const NewProduct: NextPage<NewProductPageProps> = ({ brands, categories }) => {
               topFormTextSuffix="(Defaults to 0)"
             />
 
-            <LabelledInput isRequired={true} topFormText="Brand">
-              <select className="custom-select">
-                <option disabled selected>
-                  Choose a brand
-                </option>
-                {brands.data.map((brand) => (
-                  <option key={brand.id}>{brand.attributes.name}</option>
-                ))}
-              </select>
-            </LabelledInput>
-          </div>
-
-          <div className="pt-2 sm:pt-4">
-            {fields.map((field, index) => (
-              <div key={field.id} className="flex items-center gap-2">
-                <LabelledInput isRequired={true} topFormText="Category">
-                  <select
-                    className="custom-select"
-                    {...register(`categories.${index}.name`)}
-                  >
-                    <option disabled selected>
-                      Choose a category
-                    </option>
-                    {categories.data.map((category) => (
-                      <option key={category.id}>
-                        {category.attributes.name}
-                      </option>
-                    ))}
-                  </select>
-                </LabelledInput>
-                <button
-                  className="btn btn-primary md:btn-square"
-                  onClick={() => remove(index)}
-                >
-                  <AiFillDelete className="text-2xl" />
-                </button>
-              </div>
-            ))}
-            <button
-              className="btn btn-primary"
-              onClick={() =>
-                append({
-                  name: "string",
-                })
-              }
-            >
-              Append Category
-            </button>
+            <ReactHookFormInput
+              register={register}
+              isRequired={false}
+              topFormText="Profit"
+              field="profit"
+              placeholder="Enter profit here"
+              topFormTextSuffix="(Defaults to 0)"
+            />
           </div>
         </div>
       </form>
     </AdminLayout>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const brands = await http.get("/brands");
-  const categories = await http.get("categories");
-
-  return {
-    props: {
-      brands: brands.data,
-      categories: categories.data,
-    },
-  };
 };
 
 export default NewProduct;

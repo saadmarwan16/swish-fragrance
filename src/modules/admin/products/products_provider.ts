@@ -5,6 +5,10 @@ import http from "../../../shared/utils/http";
 import { ConvertProductsModel } from "./products_model";
 
 export class ProductsProvider {
+  newProduct = async (data: string) => {
+    await http.post("/products", data);
+  };
+
   getProducts = async (page: number, searchQuery?: string) => {
     if (!searchQuery) {
       const response = await http.get(

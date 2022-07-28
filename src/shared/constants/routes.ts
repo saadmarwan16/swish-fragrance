@@ -8,7 +8,6 @@ abstract class Routes {
   static readonly PROFILE = "/admin/profile";
   static readonly NOTIFICATIONS = "/admin/notifications";
   static readonly NEW_PRODUCT = "/admin/products/new";
-  static readonly NEW_CATEGORY = "/admin/categories/new";
   static readonly NEW_BRAND = "/admin/brands/new";
   static readonly ADMIN_LOGIN = "/admin/login";
   static readonly FORGOT_PASSWORD = "/admin/forgot-password";

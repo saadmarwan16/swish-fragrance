@@ -1,7 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import Router from "next/router";
-import Routes from "../../../shared/constants/routes";
-import { INewBrandInputs } from "../../../shared/types/interfaces";
 import { BrandsModel } from "./brands_model";
 import brandsProvider from "./brands_provider";
 
@@ -15,10 +12,10 @@ export class BrandsController {
     makeAutoObservable(this);
   }
 
-  newBrand = async (data: INewBrandInputs) => {
+  newBrand = async (data: string) => {
     try {
       await brandsProvider.newBrand(data);
-      
+
       return "success";
     } catch (_) {
       return null;
@@ -36,6 +33,22 @@ export class BrandsController {
       return null;
     } finally {
       this.loading = false;
+    }
+  };
+
+  uploadImage = async (formData: FormData) => {
+    try {
+      return await brandsProvider.uploadImage(formData);
+    } catch (_) {
+      return null;
+    }
+  };
+
+  deleteImage = async (id: number) => {
+    try {
+      await brandsProvider.deleteImage(id);
+    } catch (_) {
+      return null;
     }
   };
 

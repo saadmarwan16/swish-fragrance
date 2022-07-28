@@ -1,7 +1,12 @@
 import { FunctionComponent } from "react";
-import { UseFormRegister } from "react-hook-form";
+import {
+  DeepRequired,
+  FieldErrorsImpl,
+  UseFormRegister,
+} from "react-hook-form";
 import { INewProductInputs } from "../types/interfaces";
 import { NewProductFieldType } from "../types/types";
+import FormBottomLabel from "./FormBottomLabel";
 import LabelledInput from "./LabelledInput";
 
 interface ReactHookFormInputProps {
@@ -11,6 +16,8 @@ interface ReactHookFormInputProps {
   placeholder: string;
   field: NewProductFieldType;
   topFormTextSuffix?: string;
+  errorMessage?: string;
+  errors?: FieldErrorsImpl<DeepRequired<INewProductInputs>>;
 }
 
 const ReactHookFormInput: FunctionComponent<ReactHookFormInputProps> = ({
@@ -20,6 +27,8 @@ const ReactHookFormInput: FunctionComponent<ReactHookFormInputProps> = ({
   field,
   placeholder,
   topFormTextSuffix,
+  errorMessage,
+  errors,
 }) => {
   return (
     <LabelledInput
@@ -28,10 +37,17 @@ const ReactHookFormInput: FunctionComponent<ReactHookFormInputProps> = ({
       topFormTextSuffix={topFormTextSuffix}
     >
       <input
-        className="custom-input"
+        className={`custom-input ${errors?.[field] && "!border-error"}`}
         placeholder={placeholder}
-        {...register(field)}
+        {...register(field, {
+          required: isRequired ? errorMessage : false,
+          min: 38,
+        })}
       />
+
+      {errors?.[field] && (
+        <FormBottomLabel message={errors?.[field]?.message!} />
+      )}
     </LabelledInput>
   );
 };
