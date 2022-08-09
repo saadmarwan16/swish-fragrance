@@ -3,10 +3,13 @@ import historyProvider from "../data/providers/history_provider";
 
 export class HistoryController {
   histories: HistoryModel | null = null;
+  loading = false;
 
   getHistories = async (page?: number) => {
+    this.loading = true;
     const histories = await historyProvider.getHistories(page ?? 1);
     this.histories = histories;
+    this.loading = false;
 
     return histories;
   };

@@ -7,10 +7,12 @@ import AdminLayout from "../../src/shared/components/AdminLayout";
 import EmptyContent from "../../src/shared/components/EmptyContent";
 import ErrorContent from "../../src/shared/components/ErrorContent";
 import PaginationTabs from "../../src/shared/components/PaginationTabs";
-import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
 import DateRangePicker from "../../src/shared/components/DateRangePicker";
 import { NotificationsModel } from "../../src/modules/notifications/data/models/notifications_model";
 import notificationsController from "../../src/modules/notifications/controllers/notifications_controller";
+import { observer } from "mobx-react-lite";
+import LoaderContent from "../../src/shared/components/LoaderContent";
 
 interface NotificationsPageProps {
   notifications: NotificationsModel | null;
@@ -25,7 +27,16 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
         <div className="flex flex-col gap-2 my-4 sm:items-center sm:justify-between sm:flex-row">
           <p className="custom-heading1">Notifications</p>
 
-          <DateRangePicker />
+          <DateRangePicker
+            onChange={(value) => {
+              notificationsController.updateDayRange(value);
+              if (value.from && value.to) {
+                notificationsController
+                  .getMany(1)
+                  .then((res) => setNotifications(res));
+              }
+            }}
+          />
         </div>
 
         <>
@@ -34,52 +45,61 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
               title="notifications"
               setContent={() =>
                 notificationsController
-                  .getNotifications()
+                  .getAll()
                   .then((res) => setNotifications(res))
               }
             />
           ) : (
             <>
-              {notifications.data.length === 0 ? (
-                <EmptyContent title="Notifications" content="notifications" />
+              {notificationsController.loading ? (
+                <LoaderContent />
               ) : (
                 <>
-                  {notifications.data.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className="flex items-center justify-between gap-4 py-4 border-b border-base-300"
-                    >
-                      <div className="flex items-center gap-2">
-                        <AiFillNotification className="w-20 custom-heading2 text-primary" />
-                        <div>
-                          <p>{notification.attributes.content}</p>
-                          <p className="pt-2 text-xs text-gray-500 sm:text-sm">
-                            {dayjs(notification.attributes.createdAt).format(
-                              "hh:mm a, MMM D, YYYY"
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        className="btn btn-square btn-sm btn-ghost"
-                        onClick={() => {
-                          let page = notifications.meta.pagination.page;
-                          if (
-                            notifications.meta.pagination.total > 1 &&
-                            notifications.data.length === 1
-                          ) {
-                            page = page - 1;
-                          }
+                  {notifications.data.length === 0 ? (
+                    <EmptyContent
+                      title="Notifications"
+                      content="notifications"
+                    />
+                  ) : (
+                    <>
+                      {notifications.data.map((notification) => (
+                        <div
+                          key={notification.id}
+                          className="flex items-center justify-between gap-4 py-4 border-b border-base-300"
+                        >
+                          <div className="flex items-center gap-2">
+                            <AiFillNotification className="w-20 custom-heading2 text-primary" />
+                            <div>
+                              <p>{notification.attributes.content}</p>
+                              <p className="pt-2 text-xs text-gray-500 sm:text-sm">
+                                {dayjs(
+                                  notification.attributes.createdAt
+                                ).format("hh:mm a, MMM D, YYYY")}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            className="btn btn-square btn-sm btn-ghost"
+                            onClick={() => {
+                              let page = notifications.meta.pagination.page;
+                              if (
+                                notifications.meta.pagination.total > 1 &&
+                                notifications.data.length === 1
+                              ) {
+                                page = page - 1;
+                              }
 
-                          notificationsController
-                            .deleteNotification(notification.id, page)
-                            .then((res) => setNotifications(res));
-                        }}
-                      >
-                        <GrClose className="custom-heading2" />
-                      </button>
-                    </div>
-                  ))}
+                              notificationsController
+                                .delete(notification.id.toString(), page)
+                                .then((res) => setNotifications(res));
+                            }}
+                          >
+                            <GrClose className="custom-heading2" />
+                          </button>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </>
               )}
 
@@ -87,7 +107,7 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
                 pagination={notifications.meta.pagination}
                 setContent={(page) => {
                   notificationsController
-                    .getNotifications(page)
+                    .getAll(page)
                     .then((res) => setNotifications(res));
                 }}
               />
@@ -100,7 +120,7 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const notifications = await notificationsController.getNotifications();
+  const notifications = await notificationsController.getAll();
 
   return {
     props: {
@@ -109,4 +129,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export default Notifications;
+export default observer(Notifications);
