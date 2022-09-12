@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 
 interface FormBottomLabelProps {
-  message: string;
+  message?: string;
 }
 
 const FormBottomLabel: FunctionComponent<FormBottomLabelProps> = ({ message }) => {

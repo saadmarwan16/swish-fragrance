@@ -1,15 +1,11 @@
 import qs from "qs";
 
-const getSearchQuery = (page: number, searchQuery: string) => {
+const getSearchQuery = (searchString: string) => {
   return qs.stringify(
     {
-      pagination: {
-        page: page,
-        pageSize: 1,
-      },
       filters: {
         name: {
-          $containsi: searchQuery,
+          $containsi: searchString,
         },
       },
     },

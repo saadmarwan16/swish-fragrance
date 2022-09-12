@@ -1,23 +1,26 @@
 import { observer } from "mobx-react-lite";
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import categoriesController from "../../../src/modules/admin/categories/categories_controller";
-import { CategoriesModel } from "../../../src/modules/admin/categories/categories_model";
-import CategoriesTableView from "../../../src/modules/admin/categories/components/CategoriesTableView";
-import CategoriesTitleSearch from "../../../src/modules/admin/categories/components/CategoriesTitleSearch";
-import NewCategoryModal from "../../../src/modules/admin/categories/components/NewCategoryModal";
+import CategoriesTableView from "../../../src/modules/categories/components/CategoriesTableView";
+import CategoriesTitleSearch from "../../../src/modules/categories/components/CategoriesTitleSearch";
+import NewCategoryModal from "../../../src/modules/categories/components/NewCategoryModal";
+import categoriesController from "../../../src/modules/categories/controllers/categories_controller";
+import { CategoriesModel } from "../../../src/modules/categories/data/models/categories_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import EmptyContent from "../../../src/shared/components/EmptyContent";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
 import LoaderContent from "../../../src/shared/components/LoaderContent";
 import PaginationTabs from "../../../src/shared/components/PaginationTabs";
+import { ErrorModel } from "../../../src/shared/data/models/errror_model";
 
 interface CategoriesPageProps {
   categories: CategoriesModel | null;
+  error: ErrorModel | null;
 }
 
 const Categories: NextPage<CategoriesPageProps> = (props) => {
   const [categories, setCategories] = useState(props.categories);
+  const [error, setError] = useState(props.error);
 
   return (
     <AdminLayout titlePrefix="Categories">
@@ -36,10 +39,14 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
           {!categories ? (
             <ErrorContent
               title="Categories"
+              errorName={error?.name}
+              errorMessage={error?.message}
               setContent={() =>
-                categoriesController
-                  .getCategories()
-                  .then((res) => setCategories(res))
+                categoriesController.getAll().then((res) => {
+                  const { error, categories } = res;
+                  setError(error);
+                  setCategories(categories);
+                })
               }
             />
           ) : (
@@ -47,6 +54,7 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
               <CategoriesTitleSearch
                 itemsCount={categories.data.length}
                 pagination={categories.meta.pagination}
+                setError={(value) => setError(value)}
                 setContent={(value) => setCategories(value)}
               />
 
@@ -63,14 +71,20 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
                       <PaginationTabs
                         pagination={categories.meta.pagination}
                         setContent={(page) => {
-                          if (categoriesController.searchQuery === "") {
-                            categoriesController
-                              .getCategories(page)
-                              .then((res) => setCategories(res));
+                          if (categoriesController.searchString === "") {
+                            categoriesController.getAll(page).then((res) => {
+                              const { error, categories } = res;
+                              setError(error);
+                              setCategories(categories);
+                            });
                           } else {
                             categoriesController
                               .changeSearchedCategoriesPage(page)
-                              .then((res) => setCategories(res));
+                              .then((res) => {
+                                const { error, categories } = res;
+                                setError(error);
+                                setCategories(categories);
+                              });
                           }
                         }}
                       />
@@ -87,12 +101,10 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const categories = await categoriesController.getCategories();
+  const results = await categoriesController.getAll();
 
   return {
-    props: {
-      categories,
-    },
+    props: results,
   };
 };
 

@@ -1,18 +1,19 @@
 import { FunctionComponent } from "react";
-import { RiImageAddFill, RiImageEditFill } from "react-icons/ri";
-import brandsController from "../../modules/admin/brands/brands_controller";
-import { BRAND_IMAGE_LOCAL_STORAGE_KEY } from "../constants/strings";
+import { RiImageAddFill } from "react-icons/ri";
+import imagesController from "../controllers/images_controller";
 
 interface UploadImageButtonProps {
   imageLocalStorageKey: string;
   setIsImageAdded: () => void;
   setImageDetails: (id: number, url: string) => void;
+  setValue: (value?: number) => void;
 }
 
 const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
   imageLocalStorageKey,
   setIsImageAdded,
   setImageDetails,
+  setValue,
 }) => {
   return (
     <div className="w-60 h-60 sm:w-72 sm:h-72">
@@ -27,10 +28,11 @@ const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
 
           const formData = new FormData();
           formData.append("files", files[0]);
-          brandsController.uploadImage(formData).then((res) => {
+          imagesController.create(formData).then((res) => {
             if (res !== null) {
               setImageDetails(res[0].id, res[0].url);
               setIsImageAdded();
+              setValue(res[0].id);
               localStorage.setItem(
                 imageLocalStorageKey,
                 JSON.stringify({

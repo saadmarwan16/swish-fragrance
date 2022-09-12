@@ -1,6 +1,6 @@
-import { UnexpectedLoginError } from "../errors/errors";
+import { ErrorModel } from "../data/models/errror_model";
 
-const getUnexpectedError = (): UnexpectedLoginError => {
+const getUnexpectedError = (): ErrorModel => {
   return { name: "UnexpectedError", message: "An unexpected error occured" };
 };
 

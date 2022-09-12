@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import type { NextPage } from "next";
-import homeController from "../../src/modules/admin/home/controllers/home_controller";
+import homeController from "../../src/modules/home/controllers/home_controller";
 import AdminLayout from "../../src/shared/components/AdminLayout";
 import { HOME_TAB_MONTHLY, HOME_TAB_WEEKLY, HOME_TAB_YEARLY } from "../../src/shared/constants/strings";
 // import { MdDashboard } from "react-icons/md";

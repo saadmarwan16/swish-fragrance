@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import MetaTags from "../../src/shared/components/MetaTags";
 import { useState } from "react";
-import loginController from "../../src/modules/admin/login/login_controller";
 import { observer } from "mobx-react-lite";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormBottomLabel from "../../src/shared/components/FormBottomLabel";
@@ -11,6 +10,7 @@ import LoginHeader from "../../src/shared/components/LoginHeader";
 import PasswordVisibilityButton from "../../src/shared/components/PasswordVisibilityButton";
 import FormSubmitButton from "../../src/shared/components/FormSubmitButton";
 import LoginForgotPasswordLink from "../../src/shared/components/LoginForgotPasswordLink";
+import loginController from "../../src/modules/login/controllers/login_controller";
 
 interface AdminLoginPageProps {}
 

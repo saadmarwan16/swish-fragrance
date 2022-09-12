@@ -4,10 +4,15 @@ import DatePicker, {
   utils,
 } from "@amir04lm26/react-modern-calendar-date-picker";
 import getWeekBeforeDate from "../utils/getWeekBeforeDate";
+import { getPaddedDate } from "../utils/getFormattedDate";
 
-interface DateRangePickerProps {}
+interface DateRangePickerProps {
+  onChange: (value: DayRange) => void;
+}
 
-const DateRangePicker: FunctionComponent<DateRangePickerProps> = () => {
+const DateRangePicker: FunctionComponent<DateRangePickerProps> = ({
+  onChange,
+}) => {
   const { getToday } = utils("en");
   const [dayRange, setDayRange] = useState<DayRange>({
     from: getWeekBeforeDate(),
@@ -21,20 +26,16 @@ const DateRangePicker: FunctionComponent<DateRangePickerProps> = () => {
       placeholder="Select date range"
       value={
         dayRange && dayRange.from && dayRange.to
-          ? `${dayRange.from.year
-              .toString()
-              .padStart(2, "0")}-${dayRange.from.month
-              .toString()
-              .padStart(2, "0")}-${dayRange.from.day
-              .toString()
-              .padStart(2, "0")} to ${dayRange.to.year
-              .toString()
-              .padStart(2, "0")}-${dayRange.to.month
-              .toString()
-              .padStart(2, "0")}-${dayRange.to.day.toString().padStart(2, "0")}`
+          ? `${dayRange.from.year}-${getPaddedDate(
+              dayRange.from.month
+            )}-${getPaddedDate(dayRange.from.day)} to ${
+              dayRange.to.year
+            }-${getPaddedDate(dayRange.to.month)}-${getPaddedDate(
+              dayRange.to.day
+            )}`
           : "Selecting..."
       }
-      className="px-0 py-1 text-center border rounded-lg w-44 custom-subtitle1 border-base-300 sm:w-52"
+      className="py-1 text-center border rounded-lg w-44 custom-subtitle1 border-base-300 sm:w-52 hover:cursor-pointer sm:py-2"
     />
   );
 
@@ -46,19 +47,10 @@ const DateRangePicker: FunctionComponent<DateRangePickerProps> = () => {
       colorPrimaryLight="#59C3C333"
       renderInput={renderCustomInput}
       maximumDate={getToday()}
-      onChange={setDayRange}
-      renderFooter={() => (
-        <div
-          className="hover:cursor-pointer text-primary"
-          style={{
-            display: "flex",
-            justifyContent: "end",
-            padding: "1rem 2rem",
-          }}
-        >
-          <button className="w-20 btn btn-primary btn-sm">Apply</button>
-        </div>
-      )}
+      onChange={(value) => {
+        setDayRange(value);
+        onChange(value);
+      }}
     />
   );
 };

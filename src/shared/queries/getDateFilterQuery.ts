@@ -1,12 +1,12 @@
 import qs from "qs";
 
 const getDateFilterQuery = (start: string, end: string) => {
-  const query = qs.stringify(
+  return qs.stringify(
     {
       sort: ["createdAt:desc"],
-      filter: {
+      filters: {
         createdAt: {
-          $eq: "2022-07-23",
+          $between: [start, end],
         },
       },
     },
@@ -14,9 +14,6 @@ const getDateFilterQuery = (start: string, end: string) => {
       encodeValuesOnly: true,
     }
   );
-  console.log(query);
-
-  return query;
 };
 
 export default getDateFilterQuery;

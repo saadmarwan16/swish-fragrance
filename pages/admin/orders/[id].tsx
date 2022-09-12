@@ -1,18 +1,21 @@
 import { GetServerSideProps } from "next";
 import { FunctionComponent, useState } from "react";
-import ordersController from "../../../src/modules/admin/orders/orders_controller";
-import { OrderModel } from "../../../src/modules/admin/orders/order_model";
+import SingleOrderContent from "../../../src/modules/orders/components/SingleOrderContent";
+import orderController from "../../../src/modules/orders/controllers/order_controller";
+import { OrderModel } from "../../../src/modules/orders/data/models/order_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
-import SingleOrderContent from "../../../src/modules/admin/orders/components/SingleOrderContent";
+import { ErrorModel } from "../../../src/shared/data/models/errror_model";
 
 interface OrderDetailsProps {
   id: string;
   order: OrderModel | null;
+  error: ErrorModel | null;
 }
 
 const OrderDetails: FunctionComponent<OrderDetailsProps> = (props) => {
   const [order, setOrder] = useState(props.order);
+  const [error, setError] = useState(props.error);
 
   return (
     <AdminLayout titlePrefix={`Order with order id of #${props.id}`}>
@@ -20,9 +23,15 @@ const OrderDetails: FunctionComponent<OrderDetailsProps> = (props) => {
         {!order ? (
           <ErrorContent
             title="Order"
-            setContent={() =>
-              ordersController.getOrder(props.id).then((res) => setOrder(res))
-            }
+            errorName={error?.name}
+            errorMessage={error?.message}
+            setContent={() => {
+              orderController.getOne(props.id).then((res) => {
+                const { error, order } = res;
+                setError(error);
+                setOrder(order);
+              });
+            }}
           />
         ) : (
           <SingleOrderContent order={order} />
@@ -34,12 +43,12 @@ const OrderDetails: FunctionComponent<OrderDetailsProps> = (props) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id = query.id as string;
-  const order = await ordersController.getOrder(id);
+  const results = await orderController.getOne(id);
 
   return {
     props: {
       id,
-      order,
+      ...results,
     },
   };
 };

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { FunctionComponent } from "react";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { Pagination } from "../../modules/admin/products/products_model";
+import { Pagination } from "../../modules/products/data/models/products_model";
 
 interface PaginationTabsProps {
   pagination: Pagination;
