@@ -12,7 +12,7 @@ const CategoriesTableView: FunctionComponent<CategoriesTableViewProps> = ({
   categories,
 }) => (
   <div className="overflow-x-auto">
-    <table className="table w-full">
+    <table className="table w-full table-compact">
       <thead>
         <tr>
           <th>Name</th>
@@ -28,24 +28,26 @@ const CategoriesTableView: FunctionComponent<CategoriesTableViewProps> = ({
           );
 
           return (
-            <Link key={id} href={Routes.CATEGORY_DETAILS(id)}>
-              <tr className="hover hover:cursor-pointer">
-                <td>
-                  <div>
-                    <div className="font-bold">{attributes.name}</div>
-                    <div className="text-sm text-gray-500">
-                      Items:{" "}
-                      <span className="font-semibold !text-base-content">
-                        {attributes.products.data.length}
-                      </span>
+            <tr key={id} className="hover">
+              <td>
+                <Link href={Routes.CATEGORY_DETAILS(id)}>
+                  <a>
+                    <div className=" hover:cursor-pointer hover:text-primary">
+                      <div className="font-bold">{attributes.name}</div>
+                      <div className="text-sm text-gray-500">
+                        Items:{" "}
+                        <span className="font-semibold !text-base-content">
+                          {attributes.products.data.length}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>{sold}</td>
-                <td>GH¢{profit}</td>
-                <td>GH¢{revenue}</td>
-              </tr>
-            </Link>
+                  </a>
+                </Link>
+              </td>
+              <td>{sold}</td>
+              <td>GH¢{profit}</td>
+              <td>GH¢{revenue}</td>
+            </tr>
           );
         })}
       </tbody>

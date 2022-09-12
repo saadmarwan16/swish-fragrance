@@ -15,7 +15,7 @@ const ProductsTableView: FunctionComponent<ProductsTableViewProps> = ({
 }) => {
   return (
     <div className="w-full overflow-x-auto">
-      <table className="table w-full">
+      <table className="table w-full table-compact">
         <thead>
           <tr>
             <th></th>
@@ -40,45 +40,48 @@ const ProductsTableView: FunctionComponent<ProductsTableViewProps> = ({
                 image,
               },
             }) => (
-              <Link key={id} href={Routes.PRODUCT_DETAILS(id)}>
-                <tr className="hover hover:cursor-pointer">
-                  <td className="w-4 px-2">
-                    <div
-                      className={`w-1 p-1 rounded-full ${getProductStockStatusColor(
-                        in_stock,
-                        restock_point
-                      )}`}
-                    ></div>
-                  </td>
-                  <td>
-                    <div className="flex items-center space-x-3">
-                      <Avatar
-                        alt="Product Image"
-                        width="w-14"
-                        url={
-                          image.data
-                            ? `${BASE_URL}${image.data.attributes.url}`
-                            : "/images/no_image.jpg"
-                        }
-                      />
+              <tr key={id} className="hover">
+                <td className="w-4 px-2">
+                  <div
+                    className={`w-1 p-1 rounded-full ${getProductStockStatusColor(
+                      in_stock,
+                      restock_point
+                    )}`}
+                  ></div>
+                </td>
 
-                      <div>
-                        <div className="font-bold">{name}</div>
-                        <div className="text-sm text-gray-500">
-                          Re-stock point:{" "}
-                          <span className="font-semibold !text-base-content">
-                            {restock_point}
-                          </span>
+                <td>
+                  <Link href={Routes.PRODUCT_DETAILS(id)}>
+                    <a>
+                      <div className="flex items-center space-x-3 hover:cursor-pointer hover:text-primary">
+                        <Avatar
+                          alt="Product Image"
+                          width="w-14"
+                          url={
+                            image.data
+                              ? `${BASE_URL}${image.data.attributes.url}`
+                              : "/images/no_image.jpg"
+                          }
+                        />
+
+                        <div>
+                          <div className="font-bold">{name}</div>
+                          <div className="text-sm text-gray-500">
+                            Re-stock point:{" "}
+                            <span className="font-semibold !text-base-content">
+                              {restock_point}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>{in_stock}</td>
-                  <td>{number_sold}</td>
-                  <td>GH¢{profit}</td>
-                  <td>GH¢{revenue_generated}</td>
-                </tr>
-              </Link>
+                    </a>
+                  </Link>
+                </td>
+                <td>{in_stock}</td>
+                <td>{number_sold}</td>
+                <td>GH¢{profit}</td>
+                <td>GH¢{revenue_generated}</td>
+              </tr>
             )
           )}
         </tbody>

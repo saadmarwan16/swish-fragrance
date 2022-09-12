@@ -35,7 +35,7 @@ const DateRangePicker: FunctionComponent<DateRangePickerProps> = ({
             )}`
           : "Selecting..."
       }
-      className="text-center border rounded-lg w-44 custom-subtitle1 border-base-300 sm:w-52"
+      className="py-1 text-center border rounded-lg w-44 custom-subtitle1 border-base-300 sm:w-52 hover:cursor-pointer sm:py-2"
     />
   );
 

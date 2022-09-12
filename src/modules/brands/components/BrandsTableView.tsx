@@ -14,7 +14,7 @@ const BrandsTableView: FunctionComponent<BrandsTableViewProps> = ({
   brands,
 }) => (
   <div className="overflow-x-auto">
-    <table className="table w-full">
+    <table className="table w-full table-compact">
       <thead>
         <tr>
           <th>Name</th>
@@ -25,39 +25,43 @@ const BrandsTableView: FunctionComponent<BrandsTableViewProps> = ({
       </thead>
       <tbody>
         {brands.data.map(({ id, attributes }) => {
-          const { sold, revenue, profit } = getCategoryDetails(attributes.products);
+          const { sold, revenue, profit } = getCategoryDetails(
+            attributes.products
+          );
 
           return (
-            <Link key={id} passHref={true} href={Routes.BRAND_DETAILS(id)}>
-              <tr className="hover hover:cursor-pointer">
-                <td>
-                  <div className="flex items-center space-x-3">
-                    <Avatar
-                      alt="Brand Image"
-                      url={
-                        attributes.image.data
-                          ? `${BASE_URL}${attributes.image.data.attributes.url}`
-                          : "/images/no_image.jpg"
-                      }
-                      width="w-14"
-                    />
+            <tr key={id} className="hover">
+              <td>
+                <Link passHref={true} href={Routes.BRAND_DETAILS(id)}>
+                  <a>
+                    <div className="flex items-center space-x-3 hover:cursor-pointer hover:text-primary">
+                      <Avatar
+                        alt="Brand Image"
+                        url={
+                          attributes.image.data
+                            ? `${BASE_URL}${attributes.image.data.attributes.url}`
+                            : "/images/no_image.jpg"
+                        }
+                        width="w-14"
+                      />
 
-                    <div>
-                      <div className="font-bold">{attributes.name}</div>
-                      <div className="text-sm text-gray-500">
-                        Items:{" "}
-                        <span className="font-semibold !text-base-content">
-                          {attributes.products.data.length}
-                        </span>
+                      <div>
+                        <div className="font-bold">{attributes.name}</div>
+                        <div className="text-sm text-gray-500">
+                          Items:{" "}
+                          <span className="font-semibold !text-base-content">
+                            {attributes.products.data.length}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td>{sold}</td>
-                <td>GH¢{profit}</td>
-                <td>GH¢{revenue}</td>
-              </tr>
-            </Link>
+                  </a>
+                </Link>
+              </td>
+              <td>{sold}</td>
+              <td>GH¢{profit}</td>
+              <td>GH¢{revenue}</td>
+            </tr>
           );
         })}
       </tbody>

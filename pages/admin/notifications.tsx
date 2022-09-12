@@ -13,13 +13,17 @@ import { NotificationsModel } from "../../src/modules/notifications/data/models/
 import notificationsController from "../../src/modules/notifications/controllers/notifications_controller";
 import { observer } from "mobx-react-lite";
 import LoaderContent from "../../src/shared/components/LoaderContent";
+import { ErrorModel } from "../../src/shared/data/models/errror_model";
+import errorToast from "../../src/shared/utils/errorToast";
 
 interface NotificationsPageProps {
   notifications: NotificationsModel | null;
+  error: ErrorModel | null;
 }
 
 const Notifications: NextPage<NotificationsPageProps> = (props) => {
   const [notifications, setNotifications] = useState(props.notifications);
+  const [error, setError] = useState(props.error);
 
   return (
     <AdminLayout titlePrefix="Notifications">
@@ -31,9 +35,16 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
             onChange={(value) => {
               notificationsController.updateDayRange(value);
               if (value.from && value.to) {
-                notificationsController
-                  .getMany(1)
-                  .then((res) => setNotifications(res));
+                notificationsController.getAll(1).then((res) => {
+                  const { error, notifications } = res;
+                  if (error) {
+                    errorToast(error.name, error.message);
+
+                    return;
+                  }
+
+                  setNotifications(notifications);
+                });
               }
             }}
           />
@@ -43,11 +54,18 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
           {!notifications ? (
             <ErrorContent
               title="notifications"
-              setContent={() =>
-                notificationsController
-                  .getAll()
-                  .then((res) => setNotifications(res))
-              }
+              errorName={error?.name}
+              errorMessage={error?.message}
+              setContent={() => {
+                notificationsController.getAll().then((res) => {
+                  const { error } = res;
+                  if (error) {
+                    errorToast(error.name, error.message);
+
+                    setError(error);
+                  }
+                });
+              }}
             />
           ) : (
             <>
@@ -91,7 +109,16 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
 
                               notificationsController
                                 .delete(notification.id.toString(), page)
-                                .then((res) => setNotifications(res));
+                                .then((res) => {
+                                  const { error, notifications } = res;
+                                  if (error) {
+                                    errorToast(error.name, error.message);
+
+                                    return;
+                                  }
+
+                                  setNotifications(notifications);
+                                });
                             }}
                           >
                             <GrClose className="custom-heading2" />
@@ -106,9 +133,16 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
               <PaginationTabs
                 pagination={notifications.meta.pagination}
                 setContent={(page) => {
-                  notificationsController
-                    .getAll(page)
-                    .then((res) => setNotifications(res));
+                  notificationsController.getAll(page).then((res) => {
+                    const { error, notifications } = res;
+                    if (error) {
+                      errorToast(error.name, error.message);
+
+                      return;
+                    }
+
+                    setNotifications(notifications);
+                  });
                 }}
               />
             </>
@@ -120,12 +154,10 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const notifications = await notificationsController.getAll();
+  const results = await notificationsController.getAll();
 
   return {
-    props: {
-      notifications,
-    },
+    props: results,
   };
 };
 

@@ -1,6 +1,7 @@
 import getPaginationQuery from "../../../../shared/queries/getPaginationQuery";
 import getProductPopulateQuery from "../../../../shared/queries/getProductPopulateQuery";
 import getSearchQuery from "../../../../shared/queries/getSearchQuery";
+import getSortAlphabetical from "../../../../shared/queries/getSortAlphabetical";
 import http from "../../../../shared/utils/http";
 import { ConvertProductsModel } from "../models/products_model";
 
@@ -12,7 +13,9 @@ export class ProductsProvider {
   getProducts = async (page: number, searchQuery?: string) => {
     if (!searchQuery) {
       const response = await http.get(
-        `/products?${getPaginationQuery(page)}&${getProductPopulateQuery()}`
+        `/products?${getPaginationQuery(
+          page
+        )}&${getProductPopulateQuery()}&${getSortAlphabetical()}`
       );
 
       return ConvertProductsModel.toProductsModel(
@@ -21,9 +24,8 @@ export class ProductsProvider {
     } else {
       const response = await http.get(
         `/products?${getSearchQuery(
-          page,
           searchQuery
-        )}&${getProductPopulateQuery()}`
+        )}&${getProductPopulateQuery()}&${getPaginationQuery(page)}`
       );
 
       return ConvertProductsModel.toProductsModel(

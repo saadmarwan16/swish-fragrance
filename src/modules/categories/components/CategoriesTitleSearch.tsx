@@ -1,5 +1,6 @@
 import debounce from "lodash.debounce";
 import { FunctionComponent, useCallback } from "react";
+import { ErrorModel } from "../../../shared/data/models/errror_model";
 import { Pagination } from "../../products/data/models/products_model";
 import categoriesController from "../controllers/categories_controller";
 import { CategoriesModel } from "../data/models/categories_model";
@@ -7,20 +8,24 @@ import { CategoriesModel } from "../data/models/categories_model";
 interface CategoriesTitleSearchProps {
   itemsCount: number;
   pagination: Pagination;
+  setError: (value: ErrorModel | null) => void;
   setContent: (value: CategoriesModel | null) => void;
 }
 
 const CategoriesTitleSearch: FunctionComponent<CategoriesTitleSearchProps> = ({
   itemsCount,
   pagination: { page, pageSize, total },
+  setError,
   setContent,
 }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSearchQueryChanged = useCallback(
     debounce((value: string) => {
-      categoriesController
-        .getCategoriesBySearch(value)
-        .then((res) => setContent(res));
+      categoriesController.getMany(value).then((res) => {
+        const { error, categories } = res;
+        setError(error);
+        setContent(categories);
+      });
     }, 500),
     []
   );

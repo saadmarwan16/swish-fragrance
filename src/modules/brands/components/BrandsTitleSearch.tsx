@@ -1,5 +1,6 @@
 import debounce from "lodash.debounce";
 import { FunctionComponent, useCallback } from "react";
+import errorToast from "../../../shared/utils/errorToast";
 import { Pagination } from "../../products/data/models/products_model";
 import brandsController from "../controllers/brands_controller";
 import { BrandsModel } from "../data/models/brands_model";
@@ -18,7 +19,14 @@ const BrandsTitleSearch: FunctionComponent<BrandsTitleSearchProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSearchQueryChanged = useCallback(
     debounce((value: string) => {
-      brandsController.getBrandsBySearch(value).then((res) => setContent(res));
+      brandsController.getMany(value).then((res) => {
+        const { error, brands } = res;
+        if (error) {
+          errorToast(error.name, error.message);
+        }
+
+        setContent(brands);
+      });
     }, 500),
     []
   );

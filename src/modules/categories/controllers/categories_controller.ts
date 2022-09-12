@@ -1,69 +1,75 @@
 import { makeAutoObservable } from "mobx";
+import { ICategoryInputs } from "../../../shared/types/interfaces";
 import { CategoriesModel } from "../data/models/categories_model";
-import categoriesProvider from "../data/providers/categories_provider";
+import categoriesRepository from "../data/repositories/categories_repository";
 
 export class CategoriesController {
   categories: CategoriesModel | null = null;
   isTableView = false;
   loading = false;
-  searchQuery = "";
+  searchString = "";
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  newCategory = async (name: string) => {
-    await categoriesProvider.newCategory(name);
-    return await this.getCategories();
-  };
-
-  updateCategory = async (id: number, name: string) => {
-    await categoriesProvider.updateCategory(id, name);
-    return await this.getCategory(id.toString());
-  };
-
-  getCategory = async (id: string) => {
-    try {
-      const category = await categoriesProvider.getCategory(id);
-
-      return category;
-    } catch (_) {
-      return null;
-    }
-  };
-
-  getCategories = async (page?: number) => {
-    try {
-      this.loading = true;
-      const categories = await categoriesProvider.getCategories(page ?? 1);
-      this.categories = categories;
-
-      return categories;
-    } catch (_) {
-      return null;
-    } finally {
+  create = async (data: ICategoryInputs) => {
+    this.loading = true;
+    const { error, results } = await categoriesRepository.create(data);
+    if (!error) {
+      const { error, categories } = await this.getAll();
       this.loading = false;
+
+      return {
+        error,
+        categories,
+      };
     }
+
+    this.loading = false;
+
+    return {
+      error,
+      categories: results,
+    };
   };
 
-  getCategoriesBySearch = async (value: string, page?: number) => {
-    this.searchQuery = value;
+  getMany = async (value: string, page?: number) => {
+    this.searchString = value;
     if (value === "" && this.categories !== null) {
-      return this.categories;
+      return {
+        error: null,
+        categories: this.categories,
+      };
     }
 
-    try {
-      this.loading = true;
-      return await categoriesProvider.getCategories(page ?? 1, value);
-    } catch (_) {
-      return null;
-    } finally {
-      this.loading = false;
-    }
+    this.loading = true;
+    const { error, results } = await categoriesRepository.getMany(
+      page ?? 1,
+      value
+    );
+    this.loading = false;
+
+    return {
+      error,
+      categories: results,
+    };
+  };
+
+  getAll = async (page?: number) => {
+    this.loading = true;
+    const { error, results } = await categoriesRepository.getAll(page ?? 1);
+    this.categories = results;
+    this.loading = false;
+
+    return {
+      error,
+      categories: results,
+    };
   };
 
   changeSearchedCategoriesPage = async (page: number) => {
-    return await this.getCategoriesBySearch(this.searchQuery, page);
+    return await this.getMany(this.searchString, page);
   };
 
   setIsTableView = (value: boolean) => (this.isTableView = value);

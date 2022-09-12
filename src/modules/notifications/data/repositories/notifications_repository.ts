@@ -1,3 +1,5 @@
+import { SUCCESS } from "../../../../shared/constants/strings";
+import handleError from "../../../../shared/errors/handleError";
 import getDateFilterQuery from "../../../../shared/queries/getDateFilterQuery";
 import getPaginationQuery from "../../../../shared/queries/getPaginationQuery";
 import notificationsProvider from "../providers/notifications_provider";
@@ -5,26 +7,34 @@ import notificationsProvider from "../providers/notifications_provider";
 export class NoficationsRepository {
   create = async (data: string) => {};
 
-  getOne = async (id: string) => {};
-
-  getMany = async (page: number, startDate: string, endDate: string) => {
-    const query =
-      getPaginationQuery(page) + "&" + getDateFilterQuery(startDate, endDate);
-
-    return notificationsProvider.getMany(query);
-  };
-
   getAll = async (page: number, startDate: string, endDate: string) => {
-    const query =
-      getPaginationQuery(page) + "&" + getDateFilterQuery(startDate, endDate);
+    try {
+      const query = `${getPaginationQuery(page)}&${getDateFilterQuery(
+        startDate,
+        endDate
+      )}`;
+      const results = await notificationsProvider.getAll(query);
 
-    return notificationsProvider.getAll(query);
+      return {
+        error: null,
+        results,
+      };
+    } catch (err) {
+      return handleError(err);
+    }
   };
-
-  update = async (id: string, data: string) => {};
 
   delete = async (id: string) => {
-    await notificationsProvider.delete(id);
+    try {
+      await notificationsProvider.delete(id);
+
+      return {
+        error: null,
+        results: SUCCESS,
+      };
+    } catch (err) {
+      return handleError(err);
+    }
   };
 }
 

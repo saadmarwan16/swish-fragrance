@@ -13,6 +13,7 @@ import { PRODUCT_IMAGE_LOCAL_STORAGE_KEY } from "../../../src/shared/constants/s
 import UpdateImageButton from "../../../src/shared/components/UpdateImageButton";
 import productsController from "../../../src/modules/products/controllers/products_controller";
 import NewProductInputs from "../../../src/modules/products/components/NewProductInputs";
+import { observer } from "mobx-react-lite";
 
 interface NewProductPageProps {}
 
@@ -58,10 +59,12 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
           <div className="flex items-center justify-between">
             <p className="custom-heading2">Create New Product</p>
             <button
-              className="!w-14 sm:!w-16 md:!w-20 custom-primary-button"
+              className={`!w-14 sm:!w-16 md:!w-20 custom-primary-button ${
+                productsController.loading && "loading"
+              }`}
               type="submit"
             >
-              Save
+              {productsController.loading ? "" : "Save"}
             </button>
           </div>
 
@@ -70,13 +73,15 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
               imageLocalStorageKey={PRODUCT_IMAGE_LOCAL_STORAGE_KEY}
               imageDetails={imageDetails}
               setIsImageAdded={() => setIsImageAdded(true)}
-              setImageDetails={(id, url) => setImageDetails({ id, url })}
+              setImageDetails={(value) => setImageDetails(value)}
+              setValue={() => {}}
             />
           ) : (
             <UploadImageButton
               imageLocalStorageKey={PRODUCT_IMAGE_LOCAL_STORAGE_KEY}
               setImageDetails={(id, url) => setImageDetails({ id, url })}
               setIsImageAdded={() => setIsImageAdded(true)}
+              setValue={() => {}}
             />
           )}
         </div>
@@ -87,4 +92,4 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
   );
 };
 
-export default NewProduct;
+export default observer(NewProduct);

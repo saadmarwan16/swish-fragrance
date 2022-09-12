@@ -5,7 +5,7 @@ const getPaginationQuery = (page: number) => {
     {
       pagination: {
         page: page,
-        pageSize: 2,
+        pageSize: 12,
       },
     },
     {

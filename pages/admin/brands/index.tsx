@@ -12,13 +12,17 @@ import PaginationTabs from "../../../src/shared/components/PaginationTabs";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
 import EmptyContent from "../../../src/shared/components/EmptyContent";
 import LoaderContent from "../../../src/shared/components/LoaderContent";
+import { ErrorModel } from "../../../src/shared/data/models/errror_model";
+import errorToast from "../../../src/shared/utils/errorToast";
 
 interface CategoriesPageProps {
   brands: BrandsModel | null;
+  error: ErrorModel | null;
 }
 
 const Categories: NextPage<CategoriesPageProps> = (props) => {
   const [brands, setBrands] = useState(props.brands);
+  const [error, setError] = useState(props.error);
 
   return (
     <AdminLayout titlePrefix="Brands">
@@ -45,9 +49,20 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
           {!brands ? (
             <ErrorContent
               title="brands"
-              setContent={() =>
-                brandsController.getBrands().then((res) => setBrands(res))
-              }
+              errorMessage={error?.message}
+              errorName={error?.name}
+              setContent={() => {
+                brandsController.getAll().then((res) => {
+                  const { error, brands } = res;
+                  if (error) {
+                    setError(error);
+                    errorToast(error.name, error.message);
+                    return;
+                  }
+
+                  setBrands(brands);
+                });
+              }}
             />
           ) : (
             <>
@@ -74,14 +89,26 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
                       <PaginationTabs
                         pagination={brands.meta.pagination}
                         setContent={(page) => {
-                          if (brandsController.searchQuery === "") {
-                            brandsController
-                              .getBrands(page)
-                              .then((res) => setBrands(res));
+                          if (brandsController.queryString === "") {
+                            brandsController.getAll(page).then((res) => {
+                              const { error, brands } = res;
+                              if (error) {
+                                errorToast(error.name, error.message);
+                              }
+
+                              setBrands(brands);
+                            });
                           } else {
                             brandsController
                               .changeSearchedBrandsPage(page)
-                              .then((res) => setBrands(res));
+                              .then((res) => {
+                                const { error, brands } = res;
+                                if (error) {
+                                  errorToast(error.name, error.message);
+                                }
+
+                                setBrands(brands);
+                              });
                           }
                         }}
                       />
@@ -98,12 +125,8 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const brands = await brandsController.getBrands();
-
   return {
-    props: {
-      brands,
-    },
+    props: await brandsController.getAll(),
   };
 };
 

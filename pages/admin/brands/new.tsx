@@ -9,11 +9,17 @@ import UploadImageButton from "../../../src/shared/components/UploadImageButton"
 import Routes from "../../../src/shared/constants/routes";
 import {
   IImageDetails,
-  INewBrandInputs,
+  IBrandInputs,
 } from "../../../src/shared/types/interfaces";
 import UpdateImageButton from "../../../src/shared/components/UpdateImageButton";
-import { BRAND_IMAGE_LOCAL_STORAGE_KEY } from "../../../src/shared/constants/strings";
+import {
+  BRAND_IMAGE_LOCAL_STORAGE_KEY,
+  SUCCESS,
+} from "../../../src/shared/constants/strings";
 import FormBottomLabel from "../../../src/shared/components/FormBottomLabel";
+import { observer } from "mobx-react-lite";
+import SizedSaveButton from "../../../src/shared/components/SizedSaveButton";
+import errorToast from "../../../src/shared/utils/errorToast";
 
 interface NewBrandPageProps {}
 
@@ -26,22 +32,26 @@ const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<INewBrandInputs>();
+    setValue,
+    formState: { errors, isDirty },
+  } = useForm<IBrandInputs>();
 
-  const onSubmit: SubmitHandler<INewBrandInputs> = async (data) => {
-    const results = await brandsController.newBrand(
-      JSON.stringify({
-        data: {
-          name: data.name,
-          image: imageDetails?.id,
-        },
-      })
-    );
-    if (results === "success") {
+  const onSubmit: SubmitHandler<IBrandInputs> = async (data) => {
+    const { error, results } = await brandsController.create(data);
+    if (error) {
+      errorToast(error.name, error.message);
+    }
+
+    if (results === SUCCESS) {
       localStorage.removeItem(BRAND_IMAGE_LOCAL_STORAGE_KEY);
       router.push(Routes.BRANDS);
     }
+  };
+
+  const customSetValue = (id?: number) => {
+    setValue("image", id, {
+      shouldDirty: true,
+    });
   };
 
   useEffect(() => {
@@ -49,9 +59,12 @@ const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
       BRAND_IMAGE_LOCAL_STORAGE_KEY
     );
     if (imageDetailsString !== null) {
-      setImageDetails(JSON.parse(imageDetailsString));
+      const imageDetails = JSON.parse(imageDetailsString) as IImageDetails;
+      setImageDetails(imageDetails);
       setIsImageAdded(true);
+      customSetValue(imageDetails.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -60,26 +73,27 @@ const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="custom-heading2">Create New Brand</p>
-            <button
-              className="!w-14 sm:!w-16 md:!w-20 custom-primary-button"
-              type="submit"
-            >
-              Save
-            </button>
+            <SizedSaveButton
+              isLoading={brandsController.loading}
+              title="Save"
+              isDisabled={!isDirty}
+            />
           </div>
 
           {isImageAdded && imageDetails !== null ? (
             <UpdateImageButton
               imageLocalStorageKey={BRAND_IMAGE_LOCAL_STORAGE_KEY}
               imageDetails={imageDetails}
-              setIsImageAdded={() => setIsImageAdded(true)}
-              setImageDetails={(id, url) => setImageDetails({ id, url })}
+              setIsImageAdded={(value) => setIsImageAdded(value)}
+              setImageDetails={(value) => setImageDetails(value)}
+              setValue={(value) => customSetValue(value)}
             />
           ) : (
             <UploadImageButton
               imageLocalStorageKey={BRAND_IMAGE_LOCAL_STORAGE_KEY}
               setImageDetails={(id, url) => setImageDetails({ id, url })}
               setIsImageAdded={() => setIsImageAdded(true)}
+              setValue={(value) => customSetValue(value)}
             />
           )}
         </div>
@@ -93,8 +107,11 @@ const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
                 }`}
                 placeholder="Enter name here"
                 {...register("name", {
-                  required: "Brand name must contain at least 3 characters",
-                  minLength: 3,
+                  required: "Brand name is required",
+                  minLength: {
+                    value: 3,
+                    message: "Brand name must contain at least 3 characters",
+                  },
                 })}
               />
 
@@ -109,4 +126,4 @@ const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
   );
 };
 
-export default NewBrand;
+export default observer(NewBrand);

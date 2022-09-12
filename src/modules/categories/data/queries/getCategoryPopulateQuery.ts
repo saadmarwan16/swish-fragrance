@@ -1,7 +1,7 @@
 import qs from "qs";
 
 const getCategoryPopulateQuery = () => {
-  const query = qs.stringify(
+  return qs.stringify(
     {
       populate: {
         meta: {
@@ -20,9 +20,6 @@ const getCategoryPopulateQuery = () => {
       encodeValuesOnly: true,
     }
   );
-
-  console.log(query);
-  return query;
 };
 
 export default getCategoryPopulateQuery;

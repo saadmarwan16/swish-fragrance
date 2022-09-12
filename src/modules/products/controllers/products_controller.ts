@@ -14,11 +14,14 @@ export class ProductsController {
 
   newProduct = async (data: string) => {
     try {
+      this.loading = true;
       await productsProvider.newProduct(data);
       return "success";
     } catch (e) {
       console.log(e);
       return null;
+    } finally {
+      this.loading = false;
     }
   };
 

@@ -9,26 +9,59 @@ import ErrorContent from "../../src/shared/components/ErrorContent";
 import { HistoryModel } from "../../src/modules/history/data/models/history_model";
 import historyController from "../../src/modules/history/controllers/history_controller";
 import LoaderContent from "../../src/shared/components/LoaderContent";
+import DateRangePicker from "../../src/shared/components/DateRangePicker";
+import { ErrorModel } from "../../src/shared/data/models/errror_model";
+import errorToast from "../../src/shared/utils/errorToast";
 
 interface HistoryPageProps {
   histories: HistoryModel | null;
+  error: ErrorModel | null;
 }
 
 const History: NextPage<HistoryPageProps> = (props) => {
   const [histories, setHistories] = useState(props.histories);
+  const [error, setError] = useState(props.error);
 
   return (
     <AdminLayout titlePrefix="History">
       <div>
-        <p className="mb-6 custom-heading1">History</p>
+        <div className="flex flex-col gap-2 my-4 sm:items-center sm:justify-between sm:flex-row">
+          <p className="mb-6 custom-heading1">History</p>
+
+          <DateRangePicker
+            onChange={(value) => {
+              historyController.updateDayRange(value);
+              if (value.from && value.to) {
+                historyController.getAll(1).then((res) => {
+                  const { error, histories } = res;
+                  if (error) {
+                    errorToast(error.name, error.message);
+
+                    return;
+                  }
+
+                  setHistories(histories);
+                });
+              }
+            }}
+          />
+        </div>
+
         <>
           {!histories ? (
             <ErrorContent
               title="history"
+              errorName={error?.name}
+              errorMessage={error?.message}
               setContent={() =>
-                historyController
-                  .getHistories()
-                  .then((res) => setHistories(res))
+                historyController.getAll().then((res) => {
+                  const { error } = res;
+                  if (error) {
+                    errorToast(error.name, error.message);
+
+                    setError(error);
+                  }
+                })
               }
             />
           ) : (
@@ -69,8 +102,17 @@ const History: NextPage<HistoryPageProps> = (props) => {
                               }
 
                               historyController
-                                .deleteHistory(history.id, page)
-                                .then((res) => setHistories(res));
+                                .delete(history.id.toString(), page)
+                                .then((res) => {
+                                  const { error, histories } = res;
+                                  if (error) {
+                                    errorToast(error.name, error.message);
+
+                                    return;
+                                  }
+
+                                  setHistories(histories);
+                                });
                             }}
                           >
                             <GrClose className="custom-heading2" />
@@ -85,9 +127,16 @@ const History: NextPage<HistoryPageProps> = (props) => {
               <PaginationTabs
                 pagination={histories.meta.pagination}
                 setContent={(page) => {
-                  historyController
-                    .getHistories(page)
-                    .then((res) => setHistories(res));
+                  historyController.getAll(page).then((res) => {
+                    const { error, histories } = res;
+                    if (error) {
+                      errorToast(error.name, error.message);
+
+                      return;
+                    }
+
+                    setHistories(histories);
+                  });
                 }}
               />
             </>
@@ -99,12 +148,10 @@ const History: NextPage<HistoryPageProps> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const histories = await historyController.getHistories();
+  const results = await historyController.getAll();
 
   return {
-    props: {
-      histories: null,
-    },
+    props: results,
   };
 };
 

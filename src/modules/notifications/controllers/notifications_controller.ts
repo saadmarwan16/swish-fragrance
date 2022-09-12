@@ -20,60 +20,36 @@ export class NotificationsController {
 
   create = async (data: string) => {};
 
-  getOne = async (id: string) => {};
-
-  getMany = async (page: number) => {
-    try {
-      this.loading = true;
-      const notifications = await notificationsRepository.getAll(
-        page,
-        getFormattedQueryDate(this.dayRange.from),
-        getFormattedQueryDate(this.dayRange.to)
-      );
-      this.notifications = notifications;
-
-      return notifications;
-    } catch (_) {
-      return null;
-    } finally {
-      this.loading = false;
-    }
-  };
-
   getAll = async (page?: number) => {
-    try {
-      this.loading = true;
-      const notifications = await notificationsRepository.getAll(
-        page ?? 1,
-        getFormattedQueryDate(this.dayRange.from),
-        getFormattedQueryDate(this.dayRange.to)
-      );
-      this.notifications = notifications;
+    this.loading = true;
+    const { error, results } = await notificationsRepository.getAll(
+      page ?? 1,
+      getFormattedQueryDate(this.dayRange.from),
+      getFormattedQueryDate(this.dayRange.to)
+    );
+    this.notifications = results;
+    this.loading = false;
 
-      return notifications;
-    } catch (_) {
-      return null;
-    } finally {
-      this.loading = false;
-    }
+    return { error, notifications: results };
   };
-
-  update = async (id: string, data: string) => {};
 
   delete = async (id: string, page: number) => {
-    try {
-      await notificationsRepository.delete(id);
-      const notifications = await notificationsRepository.getMany(
+    const { error, results } = await notificationsRepository.delete(id);
+    if (!error) {
+      const { error, results } = await notificationsRepository.getAll(
         page,
         getFormattedQueryDate(this.dayRange.from),
         getFormattedQueryDate(this.dayRange.to)
       );
-      this.notifications = notifications;
+      this.notifications = results;
 
-      return notifications;
-    } catch (_) {
-      return null;
+      return {
+        error,
+        notifications: results,
+      };
     }
+
+    return { error, notifications: results };
   };
 
   updateDayRange = (value: DayRange) => (this.dayRange = value);

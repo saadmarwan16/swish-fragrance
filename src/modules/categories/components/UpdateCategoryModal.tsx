@@ -72,9 +72,9 @@ const UpdateCategoryModal: FunctionComponent<UpdateCategoryModalProps> = ({
                 }
 
                 if (value.length >= 3) {
-                  categoriesController.updateCategory(id, value).then((res) => {
-                    setCategory(res);
-                  });
+                  // categoriesController.updateCategory(id, value).then((res) => {
+                  //   setCategory(res);
+                  // });
                 }
               }}
             >

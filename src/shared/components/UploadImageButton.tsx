@@ -6,12 +6,14 @@ interface UploadImageButtonProps {
   imageLocalStorageKey: string;
   setIsImageAdded: () => void;
   setImageDetails: (id: number, url: string) => void;
+  setValue: (value?: number) => void;
 }
 
 const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
   imageLocalStorageKey,
   setIsImageAdded,
   setImageDetails,
+  setValue,
 }) => {
   return (
     <div className="w-60 h-60 sm:w-72 sm:h-72">
@@ -30,6 +32,7 @@ const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
             if (res !== null) {
               setImageDetails(res[0].id, res[0].url);
               setIsImageAdded();
+              setValue(res[0].id);
               localStorage.setItem(
                 imageLocalStorageKey,
                 JSON.stringify({

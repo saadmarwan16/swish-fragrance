@@ -1,24 +1,55 @@
+import { DayRange, utils } from "@amir04lm26/react-modern-calendar-date-picker";
+import { getFormattedQueryDate } from "../../../shared/utils/getFormattedDate";
+import getWeekBeforeDate from "../../../shared/utils/getWeekBeforeDate";
 import { HistoryModel } from "../data/models/history_model";
-import historyProvider from "../data/providers/history_provider";
+import historyRepository from "../data/repositories/history_repository";
 
 export class HistoryController {
   histories: HistoryModel | null = null;
   loading = false;
+  dayRange: DayRange = {
+    from: getWeekBeforeDate(),
+    to: utils("en").getToday(),
+  };
 
-  getHistories = async (page?: number) => {
+  create = async (data: string) => {};
+
+  getAll = async (page?: number) => {
     this.loading = true;
-    const histories = await historyProvider.getHistories(page ?? 1);
-    this.histories = histories;
+    const { error, results } = await historyRepository.getAll(
+      page ?? 1,
+      getFormattedQueryDate(this.dayRange.from),
+      getFormattedQueryDate(this.dayRange.to)
+    );
+    this.histories = results;
     this.loading = false;
 
-    return histories;
+    return {
+      error,
+      histories: results,
+    };
   };
 
-  addHistory = async () => {};
+  delete = async (id: string, page: number) => {
+    const { error, results } = await historyRepository.delete(id);
+    if (!error) {
+      const { error, results } = await historyRepository.getAll(
+        page,
+        getFormattedQueryDate(this.dayRange.from),
+        getFormattedQueryDate(this.dayRange.to)
+      );
+      this.histories = results;
 
-  deleteHistory = async (id: number, page: number) => {
-    return await historyProvider.deleteHistory(id, page);
+      return {
+        error,
+        histories: results,
+      };
+    }
+
+    return { error, histories: results };
   };
+
+  updateDayRange = (value: DayRange) => (this.dayRange = value);
 }
 
 const historyController = new HistoryController();

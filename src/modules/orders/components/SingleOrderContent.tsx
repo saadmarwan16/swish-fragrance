@@ -1,13 +1,15 @@
 import { FunctionComponent, useState } from "react";
 import { FaShippingFast } from "react-icons/fa";
 import { OrderModel } from "../data/models/order_model";
-import ordersController from "../controllers/orders_controller";
 import { TOrderStatusKeys } from "../../../shared/types/types";
 import getFormattedDate from "../../../shared/utils/getFormattedDate";
 import getIsDateBefore from "../../../shared/utils/getIsDateBefore";
 import Avatar from "../../../shared/components/Avatar";
 import { BASE_URL } from "../../../shared/constants/urls";
 import getOrderStatusColor from "../../../shared/utils/getOrderStatusColor";
+import orderController from "../controllers/order_controller";
+import errorToast from "../../../shared/utils/errorToast";
+import successToast from "../../../shared/utils/successToast";
 
 interface SingleOrderContentProps {
   order: OrderModel;
@@ -45,9 +47,20 @@ const SingleOrderContent: FunctionComponent<SingleOrderContentProps> = (
   } = order;
 
   const updateOrderStatus = (id: number, status: TOrderStatusKeys) => {
-    ordersController.updateOrderStatus(id, status).then((res) => {
-      if (res !== null) {
-        setOrder(res);
+    orderController.update(id.toString(), status).then((res) => {
+      const { error, order } = res;
+      if (error) {
+        errorToast(error.name, error.message);
+
+        return;
+      }
+
+      if (order) {
+        successToast(
+          "Updated Successfully",
+          `The order status successfully updated to ${status}`
+        );
+        setOrder(order);
       }
     });
   };

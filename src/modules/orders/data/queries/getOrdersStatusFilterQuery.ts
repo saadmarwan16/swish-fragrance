@@ -1,6 +1,6 @@
 import qs from "qs";
 
-const getOrderStatusFilterQuery = (filter: string) => {
+const getOrdersStatusFilterQuery = (filter: string) => {
   if (filter === "All") {
     return qs.stringify(
       {
@@ -28,4 +28,4 @@ const getOrderStatusFilterQuery = (filter: string) => {
   }
 };
 
-export default getOrderStatusFilterQuery;
+export default getOrdersStatusFilterQuery;

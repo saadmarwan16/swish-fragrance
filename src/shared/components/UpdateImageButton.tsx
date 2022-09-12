@@ -3,15 +3,15 @@ import { RiImageEditFill } from "react-icons/ri";
 import Image from "next/image";
 import { IImageDetails } from "../types/interfaces";
 import { BASE_URL } from "../constants/urls";
-import brandsController from "../../modules/brands/controllers/brands_controller";
-import { BRAND_IMAGE_LOCAL_STORAGE_KEY } from "../constants/strings";
 import imagesController from "../controllers/images_controller";
+import { MdDelete } from "react-icons/md";
 
 interface UpdateImageButtonProps {
   imageLocalStorageKey: string;
   imageDetails: IImageDetails;
-  setIsImageAdded: () => void;
-  setImageDetails: (id: number, url: string) => void;
+  setIsImageAdded: (value: boolean) => void;
+  setImageDetails: (value: IImageDetails | null) => void;
+  setValue: (value?: number) => void;
 }
 
 const UpdateImageButton: FunctionComponent<UpdateImageButtonProps> = ({
@@ -19,6 +19,7 @@ const UpdateImageButton: FunctionComponent<UpdateImageButtonProps> = ({
   imageDetails,
   setIsImageAdded,
   setImageDetails,
+  setValue,
 }) => {
   return (
     <div className="h-60 sm:w-72 sm:h-72 w-60">
@@ -37,8 +38,9 @@ const UpdateImageButton: FunctionComponent<UpdateImageButtonProps> = ({
             if (res !== null) {
               const previousImageId = imageDetails.id;
 
-              setImageDetails(res[0].id, res[0].url);
-              setIsImageAdded();
+              setImageDetails({ id: res[0].id, url: res[0].url });
+              setIsImageAdded(true);
+              setValue(res[0].id);
               localStorage.setItem(
                 imageLocalStorageKey,
                 JSON.stringify({
@@ -52,26 +54,37 @@ const UpdateImageButton: FunctionComponent<UpdateImageButtonProps> = ({
         }}
       />
 
-      <label htmlFor="image">
-        <div className="shadow-xl h-60 sm:h-72 card bg-base-100 image-full">
-          <figure>
-            <Image
-              src={`${BASE_URL}${imageDetails.url}`}
-              layout="fill"
-              alt="Brand Image"
-            />
-          </figure>
+      <div className="shadow-xl h-60 sm:h-72 card bg-base-100 image-full">
+        <figure>
+          <Image
+            src={`${BASE_URL}${imageDetails.url}`}
+            layout="fill"
+            alt="Brand Image"
+          />
+        </figure>
 
-          <div className="items-center justify-center card-body">
-            <div className="flex flex-col items-center cursor-pointer hover:text-base-100">
-              <RiImageEditFill
-                className={`text-4xl cursor-pointer hover:text-base-100`}
-              />
-              <p>Click to update image</p>
-            </div>
+        <div className="items-center justify-center card-body">
+          <div className="flex items-center gap-4">
+            <label htmlFor="image">
+              <RiImageEditFill className="text-4xl cursor-pointer hover:text-base-100" />
+            </label>
+
+            <MdDelete
+              className="text-4xl cursor-pointer hover:text-base-100"
+              onClick={() => {
+                imagesController
+                  .delete(imageDetails.id.toString())
+                  .then((_) => {
+                    setIsImageAdded(false);
+                    setImageDetails(null);
+                    setValue(undefined)
+                    localStorage.removeItem(imageLocalStorageKey);
+                  });
+              }}
+            />
           </div>
         </div>
-      </label>
+      </div>
     </div>
   );
 };
