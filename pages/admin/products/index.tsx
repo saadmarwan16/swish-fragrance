@@ -8,6 +8,7 @@ import AdminLayout from "../../../src/shared/components/AdminLayout";
 import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
 import ProductsContainer from "../../../src/shared/components/ProductsContainer";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 
 interface ProductsPageProps {
   products: ProductsModel | null;
@@ -73,28 +74,14 @@ const Products: NextPage<ProductsPageProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const products = await productsController.getProducts();
-
-  // const jwt = parseCookies(context.req).jwt;
-  // const jwt = nookies.get(context.res);
-  // console.log(jwt);
-  // console.log(context.req.cookies.jwt);
-
-  // if (!context.req.cookies) {
-  //   return {
-  //     redirect: {
-  //       destination: Routes.ADMIN_LOGIN,
-  //       permanent: false,
-  //     },
-  //   };
-  // }
-
-  return {
-    props: {
-      products,
-    },
-  };
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    return {
+      props: {
+        products: await productsController.getProducts(),
+      },
+    };
+  });
 };
 
 export default observer(Products);

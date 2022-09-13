@@ -10,20 +10,46 @@ import LoginHeader from "../../src/shared/components/LoginHeader";
 import PasswordVisibilityButton from "../../src/shared/components/PasswordVisibilityButton";
 import FormSubmitButton from "../../src/shared/components/FormSubmitButton";
 import LoginForgotPasswordLink from "../../src/shared/components/LoginForgotPasswordLink";
-import loginController from "../../src/modules/login/controllers/login_controller";
+import authController from "../../src/modules/auth/controllers/auth_controller";
+import errorToast from "../../src/shared/utils/errorToast";
+import { useAuthContext } from "../../src/modules/auth/AuthContext";
+import { useRouter } from "next/router";
+import Routes from "../../src/shared/constants/routes";
 
 interface AdminLoginPageProps {}
 
 const AdminLogin: NextPage<AdminLoginPageProps> = ({}) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+  const router = useRouter();
+  const { setUser } = useAuthContext();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ILoginInputs>();
 
-  const onSubmit: SubmitHandler<ILoginInputs> = (data) =>
-    loginController.onLoginButtonClicked(data);
+  const onSubmit: SubmitHandler<ILoginInputs> = (data) => {
+    authController.login(data).then((res) => {
+      const { error, results } = res;
+      if (error) {
+        errorToast(error.name, error.message);
+
+        return;
+      }
+
+      if (
+        results?.role?.name !== "Admin" &&
+        results?.role?.name !== "Super Admin"
+      ) {
+        errorToast("Not an Admin", "This account does not belong to an admin");
+
+        return;
+      }
+
+      setUser(results);
+      router.push(Routes.ADMIN_DASHBOARD);
+    });
+  };
   const togglePasswordVisibility = () =>
     setIsPasswordVisible(!isPasswordVisible);
 

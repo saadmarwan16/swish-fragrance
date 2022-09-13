@@ -8,6 +8,7 @@ import { CategoryModel } from "../../../src/modules/categories/data/models/categ
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
 import { ErrorModel } from "../../../src/shared/data/models/errror_model";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 
 interface CategoryDetailsPageProps {
   id: string;
@@ -94,16 +95,18 @@ const CategoryDetails: NextPage<CategoryDetailsPageProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id = query.id as string;
-  const results = await categoryController.getOne(id);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    const id = ctx.query.id as string;
+    const results = await categoryController.getOne(id);
 
-  return {
-    props: {
-      id,
-      ...results,
-    },
-  };
+    return {
+      props: {
+        id,
+        ...results,
+      },
+    };
+  });
 };
 
 export default observer(CategoryDetails);

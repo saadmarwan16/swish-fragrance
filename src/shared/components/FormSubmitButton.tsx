@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { FunctionComponent } from "react";
+import authController from "../../modules/auth/controllers/auth_controller";
 import loginController from "../../modules/login/controllers/login_controller";
 
 interface FormSubmitButtonProps {}
@@ -8,9 +9,7 @@ const FormSubmitButton: FunctionComponent<FormSubmitButtonProps> = () => {
   return (
     <button
       type="submit"
-      className={`custom-primary-button ${
-        loginController.isLoggingIn && "loading"
-      }`}
+      className={`custom-primary-button ${authController.loading && "loading"}`}
     >
       Login
     </button>

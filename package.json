@@ -11,6 +11,7 @@
   "dependencies": {
     "@amir04lm26/react-modern-calendar-date-picker": "^1.0.1",
     "axios": "^0.27.2",
+    "cryptr": "^6.0.3",
     "dayjs": "^1.11.4",
     "init": "^0.1.2",
     "lodash.debounce": "^4.0.8",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.4.0",
+    "@types/cryptr": "^4.0.1",
     "@types/lodash.debounce": "^4.0.7",
     "@types/node": "18.0.0",
     "@types/qs": "^6.9.7",

@@ -19,7 +19,7 @@ const BrandsGridView: FunctionComponent<BrandsGridViewProps> = ({ brands }) => {
         );
 
         return (
-          <Link key={id} href={Routes.BRAND_DETAILS(id)}>
+          <Link key={id} href={Routes.BRAND_DETAILS(id.toString())}>
             <a className="custom-category-product-link">
               <div className="custom-category-product-container">
                 <div className="flex justify-center">

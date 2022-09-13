@@ -12,6 +12,7 @@ import ErrorContent from "../../../src/shared/components/ErrorContent";
 import LoaderContent from "../../../src/shared/components/LoaderContent";
 import PaginationTabs from "../../../src/shared/components/PaginationTabs";
 import { ErrorModel } from "../../../src/shared/data/models/errror_model";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 
 interface CategoriesPageProps {
   categories: CategoriesModel | null;
@@ -100,12 +101,12 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const results = await categoriesController.getAll();
-
-  return {
-    props: results,
-  };
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    return {
+      props: await categoriesController.getAll(),
+    };
+  });
 };
 
 export default observer(Categories);

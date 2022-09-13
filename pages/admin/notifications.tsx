@@ -15,6 +15,7 @@ import { observer } from "mobx-react-lite";
 import LoaderContent from "../../src/shared/components/LoaderContent";
 import { ErrorModel } from "../../src/shared/data/models/errror_model";
 import errorToast from "../../src/shared/utils/errorToast";
+import adminServerProps from "../../src/shared/utils/adminServerProps";
 
 interface NotificationsPageProps {
   notifications: NotificationsModel | null;
@@ -153,12 +154,12 @@ const Notifications: NextPage<NotificationsPageProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const results = await notificationsController.getAll();
-
-  return {
-    props: results,
-  };
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    return {
+      props: await notificationsController.getAll(),
+    };
+  });
 };
 
 export default observer(Notifications);

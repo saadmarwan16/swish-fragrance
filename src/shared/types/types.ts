@@ -20,3 +20,5 @@ export type TOrderStatusKeys =
   | "Dispatched"
   | "Completed"
   | "Cancelled";
+
+export type TDashboardDuration = "week" | "month" | "year";

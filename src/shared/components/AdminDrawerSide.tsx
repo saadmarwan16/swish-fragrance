@@ -13,7 +13,7 @@ const AdminDrawerSide: FunctionComponent<AdminDrawerSideProps> = () => {
   const router = useRouter();
 
   const logoutClicked = () => {
-    destroyCookie(null, "jwt");
+    destroyCookie(null, "user");
     router.reload();
   };
 

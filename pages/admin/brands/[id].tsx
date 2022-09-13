@@ -23,6 +23,7 @@ import {
   IImageDetails,
   IBrandInputs,
 } from "../../../src/shared/types/interfaces";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 import errorToast from "../../../src/shared/utils/errorToast";
 
 interface BrandDetailsPageProps {
@@ -232,16 +233,18 @@ const BrandDetails: NextPage<BrandDetailsPageProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id = query.id as string;
-  const results = await brandController.getOne(id);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    const id = ctx.query.id as string;
+    const results = await brandController.getOne(id);
 
-  return {
-    props: {
-      id,
-      ...results,
-    },
-  };
+    return {
+      props: {
+        id,
+        ...results,
+      },
+    };
+  });
 };
 
 export default observer(BrandDetails);

@@ -8,8 +8,6 @@ interface AvatarProps {
 }
 
 const Avatar: FunctionComponent<AvatarProps> = ({ url, alt, width }) => {
-  console.log(url);
-
   return (
     <div className="avatar">
       <div className={width}>

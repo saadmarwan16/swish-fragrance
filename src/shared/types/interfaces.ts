@@ -1,3 +1,5 @@
+import { UserModel } from "../../modules/auth/data/models/user_model";
+
 export interface ILoginInputs {
   identifier: string;
   password: string;
@@ -29,4 +31,9 @@ export interface IBrandInputs {
 export interface IImageDetails {
   id: number;
   url: string;
+}
+
+export interface IAuthContext {
+  user: UserModel | null;
+  setUser: (user: UserModel | null) => void;
 }

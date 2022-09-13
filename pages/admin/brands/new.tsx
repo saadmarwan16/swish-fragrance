@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -20,6 +20,7 @@ import FormBottomLabel from "../../../src/shared/components/FormBottomLabel";
 import { observer } from "mobx-react-lite";
 import SizedSaveButton from "../../../src/shared/components/SizedSaveButton";
 import errorToast from "../../../src/shared/utils/errorToast";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 
 interface NewBrandPageProps {}
 
@@ -124,6 +125,14 @@ const NewBrand: NextPage<NewBrandPageProps> = ({}) => {
       </form>
     </AdminLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    return {
+      props: {},
+    };
+  });
 };
 
 export default observer(NewBrand);

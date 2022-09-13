@@ -14,6 +14,7 @@ import EmptyContent from "../../../src/shared/components/EmptyContent";
 import LoaderContent from "../../../src/shared/components/LoaderContent";
 import { ErrorModel } from "../../../src/shared/data/models/errror_model";
 import errorToast from "../../../src/shared/utils/errorToast";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 
 interface CategoriesPageProps {
   brands: BrandsModel | null;
@@ -124,10 +125,12 @@ const Categories: NextPage<CategoriesPageProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  return {
-    props: await brandsController.getAll(),
-  };
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    return {
+      props: await brandsController.getAll(),
+    };
+  });
 };
 
 export default observer(Categories);

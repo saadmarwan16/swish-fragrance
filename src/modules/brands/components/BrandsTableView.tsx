@@ -32,7 +32,7 @@ const BrandsTableView: FunctionComponent<BrandsTableViewProps> = ({
           return (
             <tr key={id} className="hover">
               <td>
-                <Link passHref={true} href={Routes.BRAND_DETAILS(id)}>
+                <Link passHref={true} href={Routes.BRAND_DETAILS(id.toString())}>
                   <a>
                     <div className="flex items-center space-x-3 hover:cursor-pointer hover:text-primary">
                       <Avatar
