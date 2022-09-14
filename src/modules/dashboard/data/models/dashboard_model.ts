@@ -34,8 +34,8 @@ export interface OrdersDatum {
 
 export interface FluffyAttributes {
   total: number;
-  status: string;
-  delivery_date: Date;
+  payment_status: string;
+  delivered_date: Date;
   cost_price: number;
   country: string;
   products: PurpleProducts;

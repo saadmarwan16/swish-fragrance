@@ -2,9 +2,7 @@ import dayjs from "dayjs";
 import handleError from "../../../../shared/errors/handleError";
 import { TDashboardDuration } from "../../../../shared/types/types";
 import dashboardProvider from "../providers/dashboard_provider";
-import getOrderQuery from "../queries/get_order_query";
-import getPreviousOrderQuery from "../queries/get_previous_order_query";
-import getProductQuery from "../queries/get_product_query";
+import getDashboardQuery from "../queries/get_dashboard_query";
 
 export class DashboardRepository {
   create = async (data: string) => {};
@@ -16,8 +14,6 @@ export class DashboardRepository {
   getAll = async (duration: TDashboardDuration) => {
     try {
       const results = await dashboardProvider.getAll(this.getQuery(duration));
-
-      console.log(results);
 
       return {
         error: null,
@@ -37,17 +33,16 @@ export class DashboardRepository {
     const currentEnd = dayjs().format("YYYY-MM-DD");
     const previousStart = dayjs()
       .startOf(duration)
-      .subtract(1, "day")
+      .subtract(1, duration)
       .format("YYYY-MM-DD");
     const previousEnd = dayjs()
       .startOf(duration)
-      .subtract(1, duration)
+      .subtract(1, "day")
       .format("YYYY-MM-DD");
 
-    return `${getPreviousOrderQuery(
+    return `${getDashboardQuery(
       previousStart,
-      previousEnd
-    )}&${getOrderQuery(currentStart, currentEnd)}&${getProductQuery(
+      previousEnd,
       currentStart,
       currentEnd
     )}`;

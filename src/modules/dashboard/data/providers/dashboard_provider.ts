@@ -9,7 +9,6 @@ export class DashboardProvider {
   getMany = async (query: string) => {};
 
   getAll = async (query: string) => {
-    console.log(query);
     const response = await http.get(`/admin?${query}`);
 
     return ConvertDashboardModel.toDashboardModel(

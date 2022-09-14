@@ -37,3 +37,11 @@ export interface IAuthContext {
   user: UserModel | null;
   setUser: (user: UserModel | null) => void;
 }
+
+export interface IDashboardItem {
+  icon: JSX.Element;
+  title: string;
+  value: string;
+  increased: boolean;
+  difference: string;
+}

@@ -29,9 +29,9 @@ export class DashboardController {
 
   delete = async (id: string) => {};
 
-  updateTab = (value: string, duration: TDashboardDuration) => {
+  updateTab = async (value: string, duration: TDashboardDuration) => {
     this.tab = value;
-    this.getAll(duration);
+    return await this.getAll(duration);
   };
 }
 

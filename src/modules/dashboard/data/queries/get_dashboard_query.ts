@@ -1,11 +1,22 @@
 import qs from "qs";
 
-const getDashboardQuery = () => {
+const getDashboardQuery = (
+  previousStart: string,
+  previousEnd: string,
+  currentStart: string,
+  currentEnd: string
+) => {
   return qs.stringify(
     {
       populate: {
         previous_orders: {
-          fields: ["total", "status", "delivery_date", "cost_price", "country"],
+          fields: [
+            "total",
+            "payment_status",
+            "delivered_date",
+            "cost_price",
+            "country",
+          ],
           populate: {
             products: {
               fields: ["name"],
@@ -20,13 +31,19 @@ const getDashboardQuery = () => {
             },
           },
           filters: {
-            createdAt: {
-              $between: ["2022-07-01", "2022-09-12"],
+            delivered_date: {
+              $between: [previousStart, previousEnd],
             },
           },
         },
         orders: {
-          fields: ["total", "status", "delivery_date", "cost_price", "country"],
+          fields: [
+            "total",
+            "payment_status",
+            "delivered_date",
+            "cost_price",
+            "country",
+          ],
           populate: {
             products: {
               fields: ["name"],
@@ -41,8 +58,8 @@ const getDashboardQuery = () => {
             },
           },
           filters: {
-            createdAt: {
-              $between: ["2022-07-01", "2022-09-12"],
+            delivered_date: {
+              $between: [currentStart, currentEnd],
             },
           },
         },
@@ -55,8 +72,8 @@ const getDashboardQuery = () => {
             },
           },
           filters: {
-            createdAt: {
-              $between: ["2022-07-01", "2022-09-12"],
+            updatedAt: {
+              $between: [currentStart, currentEnd],
             },
           },
         },

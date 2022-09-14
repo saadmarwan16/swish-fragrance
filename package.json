@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@amir04lm26/react-modern-calendar-date-picker": "^1.0.1",
+    "@hookform/resolvers": "^2.9.8",
     "axios": "^0.27.2",
     "cryptr": "^6.0.3",
     "dayjs": "^1.11.4",
@@ -26,7 +27,8 @@
     "react-icons": "^4.4.0",
     "react-spinners": "^0.13.3",
     "react-toastify": "^9.0.5",
-    "use-breakpoint": "^3.0.3"
+    "use-breakpoint": "^3.0.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.4.0",

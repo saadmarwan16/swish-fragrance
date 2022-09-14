@@ -28,7 +28,7 @@ const ProductsGridView: FunctionComponent<ProductsGridViewProps> = ({
             restock_point,
           },
         }) => (
-          <Link key={id} href={Routes.PRODUCT_DETAILS(id)}>
+          <Link key={id} href={Routes.PRODUCT_DETAILS(id.toString())}>
             <a className="custom-category-product-link">
               <div className="relative custom-category-product-container">
                 <div
