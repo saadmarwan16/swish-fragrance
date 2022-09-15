@@ -26,9 +26,9 @@ export class BrandController {
     };
   };
 
-  update = async (id: string, data: IBrandInputs) => {
+  update = async (id: string, imageId: number | undefined, data: IBrandInputs) => {
     this.loading = true;
-    const { error, results } = await brandRepository.update(id, data);
+    const { error, results } = await brandRepository.update(id, imageId, data);
     this.error = error;
     this.brand = results;
     this.loading = false;

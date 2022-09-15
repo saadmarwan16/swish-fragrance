@@ -1,4 +1,5 @@
 import { UserModel } from "../../modules/auth/data/models/user_model";
+import { TDashboardLevel } from "./types";
 
 export interface ILoginInputs {
   identifier: string;
@@ -7,7 +8,7 @@ export interface ILoginInputs {
 
 export interface INewProductInputs {
   name: string;
-  image?: number;
+  image: File | null;
   number_sold: number;
   revenue_generated: number;
   discount: number;
@@ -25,12 +26,7 @@ export interface ICategoryInputs {
 
 export interface IBrandInputs {
   name: string;
-  image?: number;
-}
-
-export interface IImageDetails {
-  id: number;
-  url: string;
+  image: File | null;
 }
 
 export interface IAuthContext {
@@ -42,6 +38,6 @@ export interface IDashboardItem {
   icon: JSX.Element;
   title: string;
   value: string;
-  increased: boolean;
+  level: TDashboardLevel;
   difference: string;
 }

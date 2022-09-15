@@ -1,4 +1,6 @@
+import { serialize } from "object-to-formdata";
 import { SUCCESS } from "../../../../shared/constants/strings";
+import imagesRepository from "../../../../shared/data/repositories/images_repository";
 import handleError from "../../../../shared/errors/handleError";
 import { IBrandInputs } from "../../../../shared/types/interfaces";
 import brandProvider from "../providers/brand_provider";
@@ -15,12 +17,32 @@ export class BrandRepository {
     }
   };
 
-  update = async (id: string, data: IBrandInputs) => {
+  update = async (
+    id: string,
+    imageId: number | undefined,
+    data: IBrandInputs
+  ) => {
     try {
+      let image: number | null | undefined = imageId;
+      if (data.image !== null) {
+        image = (
+          await imagesRepository.create(serialize({ files: data.image }))
+        )[0].id;
+      }
+
+      if (!image && data.image === null) {
+        image = null;
+      }
+
       const results = await brandProvider.update(
         id,
         this.getQuery(),
-        JSON.stringify({ data })
+        JSON.stringify({
+          data: {
+            ...data,
+            image,
+          },
+        })
       );
 
       return { error: null, results };

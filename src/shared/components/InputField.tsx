@@ -1,16 +1,24 @@
 import { FunctionComponent } from "react";
 import { FieldError, UseFormRegisterReturn } from "react-hook-form";
-import FormBottomLabel from "../../../shared/components/FormBottomLabel";
-import LabelledInput from "../../../shared/components/LabelledInput";
 
-interface NewProductSizeInputProps {
+interface InputFieldProps {
+  label: string;
+  placeholder: string;
+  error: FieldError | undefined;
   register: UseFormRegisterReturn;
-  error?: FieldError;
+  type?: string;
+  isRequired?: boolean;
+  step?: number;
 }
 
-const NewProductSizeInput: FunctionComponent<NewProductSizeInputProps> = ({
-  register,
+const InputField: FunctionComponent<InputFieldProps> = ({
+  label,
+  placeholder,
   error,
+  register,
+  type,
+  isRequired,
+  step,
 }) => {
   return (
     <div className="w-full form-control">
@@ -20,19 +28,8 @@ const NewProductSizeInput: FunctionComponent<NewProductSizeInputProps> = ({
         </span>
       </label>
 
-      <select
-        className={`custom-select ${error && "!border-error"}`}
-        {...register}
-      >
-        <option disabled>Choose a size</option>
-        <option>15 ML</option>
-        <option>30 ML</option>
-        <option>50 ML</option>
-        <option>100 ML</option>
-      </select>
-
       <input
-        type={type ?? "text"}
+        type={type ?? 'text'}
         placeholder={placeholder}
         min="0"
         step={step ?? 1}
@@ -49,4 +46,4 @@ const NewProductSizeInput: FunctionComponent<NewProductSizeInputProps> = ({
   );
 };
 
-export default NewProductSizeInput;
+export default InputField;

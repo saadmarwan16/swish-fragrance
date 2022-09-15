@@ -6,9 +6,13 @@ import http from "../../../../shared/utils/http";
 import { ConvertProductsModel } from "../models/products_model";
 
 export class ProductsProvider {
-  newProduct = async (data: string) => {
+  create = async (data: string) => {
     await http.post("/products", data);
   };
+
+  getMany = async (query: string) => {};
+
+  getAll = async () => {};
 
   getProducts = async (page: number, searchQuery?: string) => {
     if (!searchQuery) {

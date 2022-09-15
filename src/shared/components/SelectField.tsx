@@ -1,16 +1,18 @@
 import { FunctionComponent } from "react";
 import { FieldError, UseFormRegisterReturn } from "react-hook-form";
-import FormBottomLabel from "../../../shared/components/FormBottomLabel";
-import LabelledInput from "../../../shared/components/LabelledInput";
 
-interface NewProductSizeInputProps {
+interface SelectFieldProps {
+  label: string;
+  error: FieldError | undefined;
   register: UseFormRegisterReturn;
-  error?: FieldError;
+  isRequired?: boolean;
 }
 
-const NewProductSizeInput: FunctionComponent<NewProductSizeInputProps> = ({
-  register,
+const SelectField: FunctionComponent<SelectFieldProps> = ({
+  label,
   error,
+  register,
+  isRequired,
 }) => {
   return (
     <div className="w-full form-control">
@@ -31,14 +33,14 @@ const NewProductSizeInput: FunctionComponent<NewProductSizeInputProps> = ({
         <option>100 ML</option>
       </select>
 
-      <input
+      {/* <input
         type={type ?? "text"}
         placeholder={placeholder}
         min="0"
         step={step ?? 1}
         className={`custom-input ${error?.message && "!border-error"}`}
         {...register}
-      />
+      /> */}
 
       {error && (
         <label className="label">
@@ -49,4 +51,4 @@ const NewProductSizeInput: FunctionComponent<NewProductSizeInputProps> = ({
   );
 };
 
-export default NewProductSizeInput;
+export default SelectField;

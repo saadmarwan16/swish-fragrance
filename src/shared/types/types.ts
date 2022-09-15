@@ -22,3 +22,5 @@ export type TOrderStatusKeys =
   | "Cancelled";
 
 export type TDashboardDuration = "week" | "month" | "year";
+
+export type TDashboardLevel = "increased" | "decreased" | "maintained";

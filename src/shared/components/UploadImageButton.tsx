@@ -1,19 +1,13 @@
 import { FunctionComponent } from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
 import { RiImageAddFill } from "react-icons/ri";
-import imagesController from "../controllers/images_controller";
 
 interface UploadImageButtonProps {
-  imageLocalStorageKey: string;
-  setIsImageAdded: () => void;
-  setImageDetails: (id: number, url: string) => void;
-  setValue: (value?: number) => void;
+  register: UseFormRegisterReturn;
 }
 
 const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
-  imageLocalStorageKey,
-  setIsImageAdded,
-  setImageDetails,
-  setValue,
+  register,
 }) => {
   return (
     <div className="w-60 h-60 sm:w-72 sm:h-72">
@@ -22,27 +16,7 @@ const UploadImageButton: FunctionComponent<UploadImageButtonProps> = ({
         accept="image/*"
         id="image"
         className="hidden"
-        onChange={(e) => {
-          const files = e.target.files;
-          if (files === null) return;
-
-          const formData = new FormData();
-          formData.append("files", files[0]);
-          imagesController.create(formData).then((res) => {
-            if (res !== null) {
-              setImageDetails(res[0].id, res[0].url);
-              setIsImageAdded();
-              setValue(res[0].id);
-              localStorage.setItem(
-                imageLocalStorageKey,
-                JSON.stringify({
-                  id: res[0].id,
-                  url: res[0].url,
-                })
-              );
-            }
-          });
-        }}
+        {...register}
       />
 
       <label htmlFor="image">

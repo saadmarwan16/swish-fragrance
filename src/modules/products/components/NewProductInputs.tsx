@@ -4,6 +4,8 @@ import {
   FieldErrorsImpl,
   UseFormRegister,
 } from "react-hook-form";
+import InputField from "../../../shared/components/InputField";
+import SelectField from "../../../shared/components/SelectField";
 import { INewProductInputs } from "../../../shared/types/interfaces";
 import NewProductInput from "./NewProductInput";
 import NewProductSizeInput from "./NewProductSizeInput";
@@ -20,120 +22,98 @@ const NewProductInputs: FunctionComponent<NewProductInputsProps> = ({
   return (
     <div className="flex flex-col gap-2 pt-4">
       <div className="new-product-layout">
-        <NewProductInput
+        <InputField
           isRequired={true}
-          topLabel="Name"
-          placeholder="Enter name here"
-          type="text"
           error={errors.name}
-          register={register("name", {
-            required: "Product name is required",
-            minLength: {
-              value: 3,
-              message: "Product name must contain at least 3 characters",
-            },
-          })}
+          label="Product name"
+          placeholder="Enter product name here"
+          register={register("name")}
         />
-
-        <NewProductSizeInput
+        <SelectField
           error={errors.size}
-          register={register("size", {
-            required: "Product size cannot be empty",
-          })}
+          label="Size"
+          register={register("size")}
+          isRequired={true}
         />
       </div>
       <div className="new-product-layout">
-        <NewProductInput
+        <InputField
           isRequired={true}
-          topLabel="Cost Price"
+          label="Cost Price"
           placeholder="Enter cost price here"
-          type="number"
           error={errors.cost_price}
+          register={register("cost_price")}
+          type="number"
           step={0.01}
-          register={register("cost_price", {
-            valueAsNumber: true,
-          })}
         />
-
-        <NewProductInput
+        <InputField
           isRequired={true}
-          topLabel="Selling Price"
+          label="Selling Price"
           placeholder="Enter selling price here"
-          type="number"
           error={errors.selling_price}
+          register={register("selling_price")}
+          type="number"
           step={0.01}
-          register={register("selling_price", {
-            valueAsNumber: true,
-          })}
         />
       </div>
       <div className="new-product-layout">
-        <NewProductInput
-          isRequired={false}
-          topLabel="Number In Stock"
+        <InputField
+          isRequired={true}
+          label="Number In Stock"
           placeholder="Enter number in stock here"
+          error={errors.in_stock}
+          register={register("in_stock")}
           type="number"
           step={1}
-          register={register("in_stock", {
-            valueAsNumber: true,
-          })}
         />
-
-        <NewProductInput
-          isRequired={false}
-          topLabel="Re-stock Point"
+        <InputField
+          isRequired={true}
+          label="Re-stock Point"
           placeholder="Enter re-stock point here"
+          error={errors.restock_point}
+          register={register("restock_point")}
           type="number"
           step={1}
-          register={register("restock_point", {
-            valueAsNumber: true,
-          })}
         />
       </div>
       <div className="new-product-layout">
-        <NewProductInput
-          isRequired={false}
-          topLabel="Number Sold"
+        <InputField
+          isRequired={true}
+          label="Number Sold"
           placeholder="Enter number sold here"
+          error={errors.number_sold}
+          register={register("number_sold")}
           type="number"
           step={1}
-          register={register("number_sold", {
-            valueAsNumber: true,
-          })}
         />
-
-        <NewProductInput
-          isRequired={false}
-          topLabel="Revenue"
+        <InputField
+          isRequired={true}
+          label="Revenue"
           placeholder="Enter revenue generated here"
+          error={errors.revenue_generated}
+          register={register("revenue_generated")}
           type="number"
           step={0.01}
-          register={register("revenue_generated", {
-            valueAsNumber: true,
-          })}
         />
       </div>
       <div className="new-product-layout">
-        <NewProductInput
-          isRequired={false}
-          topLabel="Discount"
+        <InputField
+          isRequired={true}
+          label="Discount"
           placeholder="Enter discount here"
+          error={errors.discount}
+          register={register("discount")}
           type="number"
-          step={0.01}
-          register={register("discount", {
-            valueAsNumber: true,
-          })}
+          step={1}
         />
-
-        <NewProductInput
-          isRequired={false}
-          topLabel="Profit"
+        <InputField
+          isRequired={true}
+          label="Profit"
           placeholder="Enter profit here"
+          error={errors.profit}
+          register={register("profit")}
           type="number"
           step={0.01}
-          register={register("profit", {
-            valueAsNumber: true,
-          })}
         />
       </div>
     </div>

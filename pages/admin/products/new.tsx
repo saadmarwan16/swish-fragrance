@@ -2,55 +2,58 @@ import type { NextPage } from "next";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import { SubmitHandler, useForm } from "react-hook-form";
 import UploadImageButton from "../../../src/shared/components/UploadImageButton";
-import {
-  IImageDetails,
-  INewProductInputs,
-} from "../../../src/shared/types/interfaces";
-import { useEffect, useState } from "react";
+import { INewProductInputs } from "../../../src/shared/types/interfaces";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Routes from "../../../src/shared/constants/routes";
-import { PRODUCT_IMAGE_LOCAL_STORAGE_KEY } from "../../../src/shared/constants/strings";
+import { SUCCESS } from "../../../src/shared/constants/strings";
 import UpdateImageButton from "../../../src/shared/components/UpdateImageButton";
 import productsController from "../../../src/modules/products/controllers/products_controller";
 import NewProductInputs from "../../../src/modules/products/components/NewProductInputs";
 import { observer } from "mobx-react-lite";
+import { yupResolver } from "@hookform/resolvers/yup";
+import newProductSchema from "../../../src/shared/constants/schemas/new_product_schema";
+import errorToast from "../../../src/shared/utils/errorToast";
 
 interface NewProductPageProps {}
 
 const NewProduct: NextPage<NewProductPageProps> = () => {
-  const [isImageAdded, setIsImageAdded] = useState(false);
-  const [imageDetails, setImageDetails] = useState<IImageDetails | null>(null);
+  const [image, setImage] = useState<string | null>(null);
   const router = useRouter();
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<INewProductInputs>();
+  } = useForm<INewProductInputs>({
+    resolver: yupResolver(newProductSchema),
+  });
 
   const onSubmit: SubmitHandler<INewProductInputs> = async (data) => {
-    const results = await productsController.newProduct(
-      JSON.stringify({
-        data: {
-          ...data,
-          image: imageDetails?.id,
-        },
-      })
-    );
-    if (results === "success") {
-      localStorage.removeItem(PRODUCT_IMAGE_LOCAL_STORAGE_KEY);
+    const { error, results } = await productsController.create(data);
+    if (error) {
+      errorToast(error.name, error.message);
+    }
+
+    if (results === SUCCESS) {
       router.push(Routes.PRODUCTS);
     }
   };
 
-  useEffect(() => {
-    const imageDetailsString = localStorage.getItem(
-      PRODUCT_IMAGE_LOCAL_STORAGE_KEY
-    );
-    if (imageDetailsString !== null) {
-      setImageDetails(JSON.parse(imageDetailsString));
-      setIsImageAdded(true);
-    }
-  }, []);
+  const updateImage = (file: File) => {
+    convert2base64(file);
+    setValue("image", file, { shouldDirty: true });
+  };
+
+  const convert2base64 = (file: File) => {
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(reader.result?.toString() ?? null);
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   return (
     <AdminLayout titlePrefix="New Product">
@@ -68,20 +71,34 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
             </button>
           </div>
 
-          {isImageAdded && imageDetails ? (
+          {image ? (
             <UpdateImageButton
-              imageLocalStorageKey={PRODUCT_IMAGE_LOCAL_STORAGE_KEY}
-              imageDetails={imageDetails}
-              setIsImageAdded={() => setIsImageAdded(true)}
-              setImageDetails={(value) => setImageDetails(value)}
-              setValue={() => {}}
+              register={register("image", {
+                onChange: (e) => {
+                  const files = e.target.files;
+                  if (files !== null && files.length > 0) {
+                    updateImage(files[0]);
+                  }
+                },
+              })}
+              image={image}
+              removeImage={() => {
+                setImage(null);
+                setValue("image", null, {
+                  shouldDirty: true,
+                });
+              }}
             />
           ) : (
             <UploadImageButton
-              imageLocalStorageKey={PRODUCT_IMAGE_LOCAL_STORAGE_KEY}
-              setImageDetails={(id, url) => setImageDetails({ id, url })}
-              setIsImageAdded={() => setIsImageAdded(true)}
-              setValue={() => {}}
+              register={register("image", {
+                onChange: (e) => {
+                  const files = e.target.files;
+                  if (files !== null && files.length > 0) {
+                    updateImage(files[0]);
+                  }
+                },
+              })}
             />
           )}
         </div>

@@ -6,12 +6,8 @@ import {
   HOME_TAB_WEEKLY,
   HOME_TAB_YEARLY,
 } from "../../src/shared/constants/strings";
-import { MdOutlineAttachMoney } from "react-icons/md";
 import { IoMdArrowDropup, IoMdArrowDropdown } from "react-icons/io";
-import { GiShoppingCart } from "react-icons/gi";
 import { GrView } from "react-icons/gr";
-import { AiOutlineShopping } from "react-icons/ai";
-import { IoPricetagOutline, IoPricetagsOutline } from "react-icons/io5";
 import adminServerProps from "../../src/shared/utils/adminServerProps";
 import dashboardController from "../../src/modules/dashboard/controllers/dashboard_controller";
 import { ErrorModel } from "../../src/shared/data/models/errror_model";
@@ -24,56 +20,15 @@ import AdminDashboardProductsList from "../../src/modules/dashboard/components/A
 import getDashboardRevenue from "../../src/shared/utils/getDashboardRevenue";
 import { IDashboardItem } from "../../src/shared/types/interfaces";
 import getDashboardCost from "../../src/shared/utils/getDashboardCost";
+import getDashboardOrders from "../../src/shared/utils/getDashboardOrders";
+import { TbWaveSawTool } from "react-icons/tb";
+import getDashboardProducts from "../../src/shared/utils/getDashboardProducts";
+import getDashboardProfit from "../../src/shared/utils/getDashboardProfit";
 
 interface AdminDashboardPageProps {
   error: ErrorModel | null;
   results: DashboardModel | null;
 }
-
-const dashboardData: IDashboardItem[] = [
-  {
-    icon: <IoPricetagsOutline />,
-    title: "Revenue",
-    value: "GH$ 2,564",
-    increased: false,
-    difference: "-75%",
-  },
-  {
-    icon: <MdOutlineAttachMoney />,
-    title: "Profit",
-    value: "GH$ 2,564",
-    increased: false,
-    difference: "-75%",
-  },
-  {
-    icon: <IoPricetagOutline />,
-    title: "Cost",
-    value: "GH$ 2,564",
-    increased: false,
-    difference: "-75%",
-  },
-  {
-    icon: <GiShoppingCart />,
-    title: "Orders",
-    value: "GH$ 2,564",
-    increased: false,
-    difference: "-75%",
-  },
-  {
-    icon: <AiOutlineShopping />,
-    title: "Products",
-    value: "GH$ 2,564",
-    increased: false,
-    difference: "-75%",
-  },
-  {
-    icon: <GrView />,
-    title: "Visitors",
-    value: "GH$ 2,564",
-    increased: true,
-    difference: "+75%",
-  },
-];
 
 const AdminDashboard: NextPage<AdminDashboardPageProps> = ({
   error,
@@ -81,18 +36,35 @@ const AdminDashboard: NextPage<AdminDashboardPageProps> = ({
 }) => {
   const [dashboard, setDashboard] = useState(results);
   const dashboardItems = useMemo(() => {
-    const items: IDashboardItem[] = [];
-    const revenue = getDashboardRevenue(
-      dashboard?.data.attributes.previous_orders!,
-      dashboard?.data.attributes.orders!
-    );
-    const cost = getDashboardCost(
-      dashboard?.data.attributes.previous_orders!,
-      dashboard?.data.attributes.orders!
-    );
-
-    items.push(revenue);
-    items.push(cost);
+    const items: IDashboardItem[] = [
+      getDashboardRevenue(
+        dashboard?.data.attributes.previous_orders!,
+        dashboard?.data.attributes.orders!
+      ),
+      getDashboardProfit(
+        dashboard?.data.attributes.previous_orders!,
+        dashboard?.data.attributes.orders!
+      ),
+      getDashboardCost(
+        dashboard?.data.attributes.previous_orders!,
+        dashboard?.data.attributes.orders!
+      ),
+      getDashboardOrders(
+        dashboard?.data.attributes.previous_orders!,
+        dashboard?.data.attributes.orders!
+      ),
+      getDashboardProducts(
+        dashboard?.data.attributes.previous_orders!,
+        dashboard?.data.attributes.orders!
+      ),
+      {
+        icon: <GrView />,
+        title: "Visitors",
+        value: "2,564",
+        level: "decreased",
+        difference: "-15%",
+      },
+    ];
 
     return items;
   }, [dashboard]);
@@ -147,8 +119,8 @@ const AdminDashboard: NextPage<AdminDashboardPageProps> = ({
         {dashboardController.loading ? (
           <LoaderContent />
         ) : (
-          <div className="flex flex-col gap-12 mt-8 sm:mt-10 md:mt-12">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 sm:gap-6 md:gap-8 lg:gap-10">
+          <div className="statistics-grid-container">
+            <div className="statistics-grid">
               {dashboardItems.map((item, index) => (
                 <div
                   key={index}
@@ -161,18 +133,24 @@ const AdminDashboard: NextPage<AdminDashboardPageProps> = ({
                     <span className="text-2xl sm:text-3xl">{item.value}</span>
                     <div className="flex items-center gap-4 text-base text-gray-500 sm:text-lg">
                       <span>{item.title}</span>
-                      <small
-                        className={`flex items-center gap-0.5 ${
-                          item.increased ? "text-success" : "text-error"
-                        }`}
-                      >
-                        {item.increased ? (
+                      {item.level === "maintained" && (
+                        <small className="flex items-center gap-0.5 text-gray-500">
+                          <TbWaveSawTool />
+                          {item.difference}
+                        </small>
+                      )}
+                      {item.level === "increased" && (
+                        <small className="flex items-center gap-0.5 text-success">
                           <IoMdArrowDropup />
-                        ) : (
+                          {item.difference}
+                        </small>
+                      )}
+                      {item.level === "decreased" && (
+                        <small className="flex items-center gap-0.5 text-error">
                           <IoMdArrowDropdown />
-                        )}{" "}
-                        {item.difference}
-                      </small>
+                          {item.difference}
+                        </small>
+                      )}
                     </div>
                   </div>
                 </div>
