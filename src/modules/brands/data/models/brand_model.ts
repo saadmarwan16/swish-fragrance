@@ -5,39 +5,22 @@
 //   const brandModel = Convert.toBrandModel(json);
 
 export interface BrandModel {
-  data: BrandModelData;
+  data: Data;
   meta: Meta;
 }
 
-export interface BrandModelData {
-  id: number;
-  attributes: PurpleAttributes;
+export interface Data {
+  attributes: DataAttributes;
 }
 
-export interface PurpleAttributes {
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date;
-  image: Image;
-  products: Products;
+export interface DataAttributes {
+  entity: Entity;
+  all_products: AllProducts;
 }
 
-export interface Image {
-  data: ImageData | null;
-}
-
-export interface ImageData {
-  id: number;
-  attributes: FluffyAttributes;
-}
-
-export interface FluffyAttributes {
-  url: string;
-}
-
-export interface Products {
+export interface AllProducts {
   data: Datum[];
+  meta: Meta;
 }
 
 export interface Datum {
@@ -47,22 +30,29 @@ export interface Datum {
 
 export interface DatumAttributes {
   name: string;
-  in_stock: number;
-  number_sold: number;
-  revenue_generated: number;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date;
-  discount: number;
-  selling_price: number;
-  size: string;
-  cost_price: number;
-  restock_point: number;
-  profit: number;
-  image: Image;
 }
 
 export interface Meta {}
+
+export interface Entity {
+  id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date;
+  image: Image | null;
+  products: Product[];
+}
+
+export interface Image {
+  id: number;
+  url: string;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+}
 
 // Converts JSON strings to/from your types
 export class ConvertBrandModel {

@@ -7,8 +7,7 @@ import {
 import InputField from "../../../shared/components/InputField";
 import SelectField from "../../../shared/components/SelectField";
 import { INewProductInputs } from "../../../shared/types/interfaces";
-import NewProductInput from "./NewProductInput";
-import NewProductSizeInput from "./NewProductSizeInput";
+import getProductSizeOptions from "../../../shared/utils/getProductSizeOptions";
 
 interface NewProductInputsProps {
   register: UseFormRegister<INewProductInputs>;
@@ -34,6 +33,8 @@ const NewProductInputs: FunctionComponent<NewProductInputsProps> = ({
           label="Size"
           register={register("size")}
           isRequired={true}
+          disableText="Choose a size"
+          productSizeOptions={getProductSizeOptions()}
         />
       </div>
       <div className="new-product-layout">

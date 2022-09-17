@@ -66,9 +66,9 @@
   @apply flex flex-col items-center gap-4 p-4 text-center;
 }
 
-/* .new-product-layout {
+.new-product-layout {
   @apply flex flex-col gap-2 sm:flex-row;
-} */
+}
 
 .statistics-grid {
   @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 sm:gap-6 md:gap-8 lg:gap-10;

@@ -2,7 +2,7 @@ import { serialize } from "object-to-formdata";
 import { SUCCESS } from "../../../../shared/constants/strings";
 import imagesRepository from "../../../../shared/data/repositories/images_repository";
 import handleError from "../../../../shared/errors/handleError";
-import { IBrandInputs } from "../../../../shared/types/interfaces";
+import { IBrandInputsTransformed } from "../../../../shared/types/interfaces";
 import brandProvider from "../providers/brand_provider";
 import getBrandPopulateQuery from "../queries/getBrandPopulateQuery";
 
@@ -19,31 +19,46 @@ export class BrandRepository {
 
   update = async (
     id: string,
-    imageId: number | undefined,
-    data: IBrandInputs
+    isImageUpdated: boolean,
+    data: IBrandInputsTransformed
   ) => {
     try {
-      let image: number | null | undefined = imageId;
-      if (data.image !== null) {
-        image = (
-          await imagesRepository.create(serialize({ files: data.image }))
-        )[0].id;
-      }
+      let results;
 
-      if (!image && data.image === null) {
-        image = null;
-      }
+      if (isImageUpdated) {
+        let image;
+        if (data.image) {
+          image = (
+            await imagesRepository.create(serialize({ files: data.image }))
+          )[0].id;
+        } else {
+          image = null;
+        }
 
-      const results = await brandProvider.update(
-        id,
-        this.getQuery(),
-        JSON.stringify({
-          data: {
-            ...data,
-            image,
-          },
-        })
-      );
+        results = await brandProvider.update(
+          id,
+          this.getQuery(),
+          JSON.stringify({
+            data: {
+              ...data,
+              image,
+            },
+          })
+        );
+      } else {
+        let transformedData: any = data
+        delete transformedData['image']
+        
+        results = await brandProvider.update(
+          id,
+          this.getQuery(),
+          JSON.stringify({
+            data: {
+              ...transformedData,
+            },
+          })
+        );
+      }
 
       return { error: null, results };
     } catch (err) {

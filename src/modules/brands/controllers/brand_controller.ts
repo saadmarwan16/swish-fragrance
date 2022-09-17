@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { ErrorModel } from "../../../shared/data/models/errror_model";
-import { IBrandInputs } from "../../../shared/types/interfaces";
+import { IBrandInputs, IBrandInputsTransformed } from "../../../shared/types/interfaces";
 import { BrandModel } from "../data/models/brand_model";
 import brandRepository from "../data/repositories/brand_repository";
 
@@ -26,9 +26,9 @@ export class BrandController {
     };
   };
 
-  update = async (id: string, imageId: number | undefined, data: IBrandInputs) => {
+  update = async (id: string, isImageUpdated: boolean, data: IBrandInputsTransformed) => {
     this.loading = true;
-    const { error, results } = await brandRepository.update(id, imageId, data);
+    const { error, results } = await brandRepository.update(id, isImageUpdated, data);
     this.error = error;
     this.brand = results;
     this.loading = false;

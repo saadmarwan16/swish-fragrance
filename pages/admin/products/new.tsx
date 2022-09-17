@@ -30,14 +30,15 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
   });
 
   const onSubmit: SubmitHandler<INewProductInputs> = async (data) => {
-    const { error, results } = await productsController.create(data);
-    if (error) {
-      errorToast(error.name, error.message);
-    }
+    console.log(data);
+    // const { error, results } = await productsController.create(data);
+    // if (error) {
+    //   errorToast(error.name, error.message);
+    // }
 
-    if (results === SUCCESS) {
-      router.push(Routes.PRODUCTS);
-    }
+    // if (results === SUCCESS) {
+    //   router.push(Routes.PRODUCTS);
+    // }
   };
 
   const updateImage = (file: File) => {

@@ -1,3 +1,4 @@
+import { Id } from "react-toastify";
 import { UserModel } from "../../modules/auth/data/models/user_model";
 import { TDashboardLevel } from "./types";
 
@@ -26,7 +27,14 @@ export interface ICategoryInputs {
 
 export interface IBrandInputs {
   name: string;
-  image: File | null;
+  image: File | null | undefined;
+  products: IProductSizeOption[];
+}
+
+export interface IBrandInputsTransformed {
+  name: string;
+  image: File | null | undefined;
+  products: number[];
 }
 
 export interface IAuthContext {
@@ -40,4 +48,9 @@ export interface IDashboardItem {
   value: string;
   level: TDashboardLevel;
   difference: string;
+}
+
+export interface IProductSizeOption {
+  text: string;
+  value: number;
 }

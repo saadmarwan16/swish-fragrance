@@ -3,7 +3,7 @@ import { ConvertBrandModel } from "../models/brand_model";
 
 export class BrandProvider {
   getOne = async (id: string, query: string) => {
-    const response = await http.get(`/brands/${id}?${query}`);
+    const response = await http.get(`/get-brand-edit/${id}?${query}`);
 
     return ConvertBrandModel.toBrandModel(JSON.stringify(response.data));
   };
