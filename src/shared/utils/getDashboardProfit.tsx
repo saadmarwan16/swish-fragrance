@@ -16,10 +16,14 @@ const getDashboardProfit = (previousOrders: Orders, orders: Orders) => {
 
   let difference;
   let level: TDashboardLevel;
-  if (ordersSum > previousOrdersSum) {
+  if (ordersSum > previousOrdersSum && ordersSum > 0 && previousOrdersSum > 0) {
     level = "increased";
     difference = "+" + ((previousOrdersSum / ordersSum) * 100).toFixed(2) + "%";
-  } else if (previousOrdersSum > ordersSum) {
+  } else if (
+    previousOrdersSum > ordersSum &&
+    ordersSum > 0 &&
+    previousOrdersSum > 0
+  ) {
     level = "decreased";
     difference = "-" + ((ordersSum / previousOrdersSum) * 100).toFixed(2) + "%";
   } else {

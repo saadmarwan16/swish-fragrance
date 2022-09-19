@@ -16,11 +16,11 @@ const getDashboardProducts = (previousOrders: Orders, orders: Orders) => {
 
   let difference;
   let level: TDashboardLevel;
-  if (totalProducts > totalPreviousProducts) {
+  if (totalProducts > totalPreviousProducts && totalProducts > 0 && totalPreviousProducts > 0) {
     level = "increased";
     difference =
       "+" + ((totalPreviousProducts / totalProducts) * 100).toFixed(2) + "%";
-  } else if (totalPreviousProducts > totalProducts) {
+  } else if (totalPreviousProducts > totalProducts && totalProducts > 0 && totalPreviousProducts > 0) {
     level = "decreased";
     difference =
       "-" + ((totalProducts / totalPreviousProducts) * 100).toFixed(2) + "%";

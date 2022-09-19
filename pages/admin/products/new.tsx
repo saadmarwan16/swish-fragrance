@@ -14,6 +14,7 @@ import { observer } from "mobx-react-lite";
 import { yupResolver } from "@hookform/resolvers/yup";
 import newProductSchema from "../../../src/shared/constants/schemas/new_product_schema";
 import errorToast from "../../../src/shared/utils/errorToast";
+import SizedSaveButton from "../../../src/shared/components/SizedSaveButton";
 
 interface NewProductPageProps {}
 
@@ -30,15 +31,14 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
   });
 
   const onSubmit: SubmitHandler<INewProductInputs> = async (data) => {
-    console.log(data);
-    // const { error, results } = await productsController.create(data);
-    // if (error) {
-    //   errorToast(error.name, error.message);
-    // }
+    const { error, results } = await productsController.create(data);
+    if (error) {
+      errorToast(error.name, error.message);
+    }
 
-    // if (results === SUCCESS) {
-    //   router.push(Routes.PRODUCTS);
-    // }
+    if (results === SUCCESS) {
+      router.push(Routes.PRODUCTS);
+    }
   };
 
   const updateImage = (file: File) => {
@@ -62,14 +62,18 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="custom-heading2">Create New Product</p>
-            <button
+            <SizedSaveButton
+              isLoading={productsController.loading}
+              title="Save"
+            />
+            {/* <button
               className={`!w-14 sm:!w-16 md:!w-20 custom-primary-button ${
                 productsController.loading && "loading"
               }`}
               type="submit"
             >
               {productsController.loading ? "" : "Save"}
-            </button>
+            </button> */}
           </div>
 
           {image ? (

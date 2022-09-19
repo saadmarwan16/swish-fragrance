@@ -5,16 +5,16 @@ import SizedDeleteButton from "../../../shared/components/SizedDeleteButton";
 import SizedSaveButton from "../../../shared/components/SizedSaveButton";
 import Routes from "../../../shared/constants/routes";
 import errorToast from "../../../shared/utils/errorToast";
-import brandController from "../controllers/brand_controller";
-import { BrandModel } from "../data/models/brand_model";
+import categoryController from "../controllers/category_controller";
+import { CategoryModel } from "../data/models/category_model";
 
-interface BrandHeadingProps {
-  brand: BrandModel;
+interface CategoryHeadingProps {
+  category: CategoryModel;
   isDirty: boolean;
 }
 
-const BrandHeading: FunctionComponent<BrandHeadingProps> = ({
-  brand,
+const CategoryHeading: FunctionComponent<CategoryHeadingProps> = ({
+  category,
   isDirty,
 }) => {
   const router = useRouter();
@@ -22,34 +22,36 @@ const BrandHeading: FunctionComponent<BrandHeadingProps> = ({
   return (
     <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
       <div>
-        <p className="custom-heading1">{brand.data.attributes.entity.name}</p>
+        <p className="custom-heading1">
+          {category.data.attributes.entity.name}
+        </p>
 
         <p className="custom-subtitle1">
-          {brand.data.attributes.entity.products.length} product(s) found
+          {category.data.attributes.entity.products.length} product(s) found
         </p>
       </div>
 
       <div className="flex gap-3">
         <SizedDeleteButton
-          loading={brandController.deleting}
+          loading={categoryController.deleting}
           onClick={() => {
-            brandController
-              .delete(brand.data.attributes.entity.id.toString())
+            categoryController
+              .delete(category.data.attributes.entity.id.toString())
               .then((res) => {
-                const { error, results } = res;
+                const { error } = res;
                 if (error) {
                   errorToast(error.name, error.message);
 
                   return;
                 }
 
-                router.push(Routes.BRANDS);
+                router.push(Routes.CATEGORIES);
               });
           }}
         />
 
         <SizedSaveButton
-          isLoading={brandController.saving}
+          isLoading={categoryController.saving}
           title="Save"
           isDisabled={!isDirty}
         />
@@ -58,4 +60,4 @@ const BrandHeading: FunctionComponent<BrandHeadingProps> = ({
   );
 };
 
-export default observer(BrandHeading);
+export default observer(CategoryHeading);

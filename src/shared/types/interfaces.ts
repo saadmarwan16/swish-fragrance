@@ -22,6 +22,12 @@ export interface INewProductInputs {
 
 export interface ICategoryInputs {
   name: string;
+  products: IProductSizeOption[];
+}
+
+export interface ICategoryInputsTransformed {
+  name: string;
+  products: number[];
 }
 
 export interface IBrandInputs {

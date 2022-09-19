@@ -15,16 +15,22 @@ const getDashboardRevenue = (previousOrders: Orders, orders: Orders) => {
 
   let difference;
   let level: TDashboardLevel;
-  if (ordersSum > previousOrdersSum) {
+  console.log(ordersSum);
+  console.log(previousOrdersSum);
+  if (ordersSum > previousOrdersSum && ordersSum > 0 && previousOrdersSum > 0) {
     level = "increased";
-    difference = "+" + ((previousOrdersSum / ordersSum) * 100).toFixed(2) + '%';
-  } else if (previousOrdersSum > ordersSum) {
+    difference = "+" + ((previousOrdersSum / ordersSum) * 100).toFixed(2) + "%";
+  } else if (
+    previousOrdersSum > ordersSum &&
+    ordersSum > 0 &&
+    previousOrdersSum > 0
+  ) {
     level = "decreased";
-    difference = "-" + ((ordersSum / previousOrdersSum) * 100).toFixed(2) + '%';
+    difference = "-" + ((ordersSum / previousOrdersSum) * 100).toFixed(2) + "%";
   } else {
     level = "maintained";
     difference = 0;
-    difference = difference.toFixed(2) + '%';
+    difference = difference.toFixed(2) + "%";
   }
 
   return {
