@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { GrView } from "react-icons/gr";
-import brandsController from "../../../src/modules/brands/controllers/brands_controller";
 import brandController from "../../../src/modules/brands/controllers/brand_controller";
 import {
   BrandModel,
@@ -12,11 +11,6 @@ import {
 } from "../../../src/modules/brands/data/models/brand_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
-import InputField from "../../../src/shared/components/InputField";
-import SizedDeleteButton from "../../../src/shared/components/SizedDeleteButton";
-import SizedSaveButton from "../../../src/shared/components/SizedSaveButton";
-import UpdateImageButton from "../../../src/shared/components/UpdateImageButton";
-import UploadImageButton from "../../../src/shared/components/UploadImageButton";
 import Routes from "../../../src/shared/constants/routes";
 import { BASE_URL } from "../../../src/shared/constants/urls";
 import { ErrorModel } from "../../../src/shared/data/models/errror_model";
@@ -26,8 +20,12 @@ import {
 } from "../../../src/shared/types/interfaces";
 import adminServerProps from "../../../src/shared/utils/adminServerProps";
 import errorToast from "../../../src/shared/utils/errorToast";
-import { MdDelete } from "react-icons/md";
 import sortProducts from "../../../src/shared/utils/sortProducts";
+import BrandHeading from "../../../src/modules/brands/components/BrandHeading";
+import EntryImage from "../../../src/shared/components/EntryImage";
+import EntryProductSelect from "../../../src/shared/components/EntryProductSelect";
+import EntryProduct from "../../../src/shared/components/EntryProduct";
+import convert2base64 from "../../../src/shared/utils/convert2Base64";
 
 interface BrandDetailsPageProps {
   id: string;
@@ -104,7 +102,6 @@ const BrandDetails: NextPage<BrandDetailsPageProps> = (props) => {
   });
 
   const onSubmit: SubmitHandler<IBrandInputs> = async (data) => {
-    const imageId = brand?.data.attributes.entity.image?.id;
     const products: number[] = [];
     data.products.forEach((product) => {
       products.push(product.value);
@@ -134,19 +131,9 @@ const BrandDetails: NextPage<BrandDetailsPageProps> = (props) => {
   };
 
   const updateImage = (file: File) => {
-    convert2base64(file);
+    convert2base64(file, setImage);
     setIsImageUpdatd(true);
     setValue("image", file, { shouldDirty: true });
-  };
-
-  const convert2base64 = (file: File) => {
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImage(reader.result?.toString() ?? null);
-    };
-
-    reader.readAsDataURL(file);
   };
 
   return (
@@ -155,134 +142,57 @@ const BrandDetails: NextPage<BrandDetailsPageProps> = (props) => {
     >
       {brand && allProducts ? (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
-            <div>
-              <p className="custom-heading1">
-                {brand.data.attributes.entity.name}
-              </p>
-
-              <p className="custom-subtitle1">
-                {brand.data.attributes.entity.products.length} product(s) found
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <SizedDeleteButton
-                onClick={() => {
-                  brandController
-                    .delete(brand.data.attributes.entity.id.toString())
-                    .then((res) => {
-                      const { error, results } = res;
-                      if (error) {
-                        errorToast(error.name, error.message);
-                      }
-
-                      router.push(Routes.BRANDS);
-                    });
-                }}
-              />
-
-              <SizedSaveButton
-                isLoading={brandsController.loading}
-                title="Save"
-                isDisabled={!isDirty}
-              />
-            </div>
-          </div>
+          <BrandHeading brand={brand} isDirty={isDirty} />
 
           <div className="flex flex-col gap-4 mt-10 md:flex-row sm:gap-8 md:gap-12 lg:gap-16">
-            <div className="flex flex-col flex-1 gap-8">
-              {image ? (
-                <UpdateImageButton
-                  register={register("image", {
-                    onChange: (e) => {
-                      const files = e.target.files;
-                      if (files !== null && files.length > 0) {
-                        updateImage(files[0]);
-                      }
-                    },
-                  })}
-                  image={image}
-                  removeImage={() => {
-                    console.log('remove image');
-                    setImage(null);
-                    setIsImageUpdatd(true);
-                    setValue("image", undefined, {
-                      shouldDirty: true,
-                    });
-                  }}
-                />
-              ) : (
-                <UploadImageButton
-                  register={register("image", {
-                    onChange: (e) => {
-                      const files = e.target.files;
-                      if (files !== null && files.length > 0) {
-                        updateImage(files[0]);
-                      }
-                    },
-                  })}
-                />
-              )}
-
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <div className="w-full">
-                  <InputField
-                    type="text"
-                    error={errors.name}
-                    label="Brand name"
-                    placeholder="Enter brand name here"
-                    register={register("name")}
-                  />
-                </div>
-              </div>
-            </div>
+            <EntryImage
+              nameError={errors.name}
+              image={image}
+              registerName={register("name")}
+              registerUpdateImage={register("image", {
+                onChange: (e) => {
+                  const files = e.target.files;
+                  if (files !== null && files.length > 0) {
+                    updateImage(files[0]);
+                  }
+                },
+              })}
+              registerUploadImage={register("image", {
+                onChange: (e) => {
+                  const files = e.target.files;
+                  if (files !== null && files.length > 0) {
+                    updateImage(files[0]);
+                  }
+                },
+              })}
+              removeImage={() => {
+                setImage(null);
+                setIsImageUpdatd(true);
+                setValue("image", undefined, {
+                  shouldDirty: true,
+                });
+              }}
+            />
 
             <div className="flex flex-col flex-1 gap-6">
-              <div className="w-full form-control">
-                <label className="label">
-                  <span className="font-semibold label-text">
-                    Add product to brand
-                  </span>
-                </label>
+              <EntryProductSelect
+                allProducts={allProducts}
+                selectValueChanged={(e) => {
+                  const value = e.target.value;
 
-                <select
-                  className="custom-select"
-                  value="disabled"
-                  onChange={(e) => {
-                    const value = e.target.value;
-
-                    const product = allProducts.find(
-                      (product) => product.value === parseInt(value)
+                  const product = allProducts.find(
+                    (product) => product.value === parseInt(value)
+                  );
+                  if (product) {
+                    append(product);
+                    setAllProducts(() =>
+                      allProducts.filter(
+                        (product) => product.value !== parseInt(value)
+                      )
                     );
-                    if (product) {
-                      append(product);
-                      setAllProducts(() =>
-                        allProducts.filter(
-                          (product) => product.value !== parseInt(value)
-                        )
-                      );
-                    }
-                  }}
-                >
-                  <option value="disabled" disabled>
-                    Choose a product
-                  </option>
-                  {allProducts.map((option, index) => (
-                    <option key={index} value={option.value}>
-                      {option.text}
-                    </option>
-                  ))}
-                </select>
-
-                {error && (
-                  <label className="label">
-                    <span className="label-text-alt text-error">
-                      {error.message}
-                    </span>
-                  </label>
-                )}
-              </div>
+                  }
+                }}
+              />
 
               <div>
                 <span className="font-semibold">
@@ -290,44 +200,25 @@ const BrandDetails: NextPage<BrandDetailsPageProps> = (props) => {
                 </span>
                 <div className="flex flex-col gap-2 mt-2">
                   {fields?.map((product, index) => (
-                    <div
-                      key={product.value}
-                      className="flex items-center gap-4"
-                    >
-                      <div className="w-full form-control">
-                        <input
-                          type={"text"}
-                          className="!w-full custom-input"
-                          disabled
-                          {...register(`products.${index}.text`)}
-                        />
-                      </div>
+                    <EntryProduct
+                      key={product.id}
+                      register={register(`products.${index}.text`)}
+                      onDeleteClicked={() => {
+                        const productToDelete = fields.find(
+                          (field) => field.value === product.value
+                        );
+                        if (productToDelete) {
+                          remove(index);
+                          setAllProducts(() => {
+                            const products = [...allProducts, productToDelete];
 
-                      <button
-                        className="custom-primary-button !px-2 sm:px-3 sm:h-12 !w-fit"
-                        type={"button"}
-                        onClick={() => {
-                          const productToDelete = fields.find(
-                            (field) => field.value === product.value
-                          );
-                          if (productToDelete) {
-                            remove(index);
-                            setAllProducts(() => {
-                              const products = [
-                                ...allProducts,
-                                productToDelete,
-                              ];
+                            products.sort(sortProducts);
 
-                              products.sort(sortProducts);
-
-                              return products;
-                            });
-                          }
-                        }}
-                      >
-                        <MdDelete className="text-xl md:text-3xl sm:text-2xl" />
-                      </button>
-                    </div>
+                            return products;
+                          });
+                        }
+                      }}
+                    />
                   ))}
                 </div>
               </div>

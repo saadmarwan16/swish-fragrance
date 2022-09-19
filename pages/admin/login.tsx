@@ -3,11 +3,8 @@ import MetaTags from "../../src/shared/components/MetaTags";
 import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { SubmitHandler, useForm } from "react-hook-form";
-import FormBottomLabel from "../../src/shared/components/FormBottomLabel";
 import { ILoginInputs } from "../../src/shared/types/interfaces";
-import FormTopLabel from "../../src/shared/components/FormTopLabel";
 import LoginHeader from "../../src/shared/components/LoginHeader";
-import PasswordVisibilityButton from "../../src/shared/components/PasswordVisibilityButton";
 import FormSubmitButton from "../../src/shared/components/FormSubmitButton";
 import LoginForgotPasswordLink from "../../src/shared/components/LoginForgotPasswordLink";
 import authController from "../../src/modules/auth/controllers/auth_controller";
@@ -15,6 +12,10 @@ import errorToast from "../../src/shared/utils/errorToast";
 import { useAuthContext } from "../../src/modules/auth/AuthContext";
 import { useRouter } from "next/router";
 import Routes from "../../src/shared/constants/routes";
+import { yupResolver } from "@hookform/resolvers/yup";
+import loginSchema from "../../src/shared/constants/schemas/login_schema";
+import InputField from "../../src/shared/components/InputField";
+import PasswordInputGroupField from "../../src/shared/components/PasswordInputGroupField";
 
 interface AdminLoginPageProps {}
 
@@ -26,7 +27,9 @@ const AdminLogin: NextPage<AdminLoginPageProps> = ({}) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILoginInputs>();
+  } = useForm<ILoginInputs>({
+    resolver: yupResolver(loginSchema),
+  });
 
   const onSubmit: SubmitHandler<ILoginInputs> = (data) => {
     authController.login(data).then((res) => {
@@ -66,61 +69,24 @@ const AdminLogin: NextPage<AdminLoginPageProps> = ({}) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="flex flex-col w-full gap-3">
-              <div className="w-full form-control">
-                <FormTopLabel
-                  content={
-                    <>
-                      Identifier<span className="text-error">*</span>(Username
-                      or Email)
-                    </>
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Enter your username or email ..."
-                  {...register("identifier", {
-                    required: "Identifier is required",
-                  })}
-                  className={`custom-input ${
-                    errors.identifier && "!border-error"
-                  }`}
-                />
+              <InputField
+                label="Identifier(Username
+                      or Email)"
+                isRequired={true}
+                placeholder="Enter your username or email ..."
+                register={register("identifier")}
+                error={errors.identifier}
+              />
 
-                {errors.identifier && (
-                  <FormBottomLabel message={errors.identifier.message!} />
-                )}
-              </div>
-
-              <div className="w-full form-control ">
-                <FormTopLabel
-                  content={
-                    <>
-                      Password<span className="text-error">*</span>
-                    </>
-                  }
-                />
-                <div className="custom-input-group">
-                  <input
-                    type={isPasswordVisible ? "text" : "password"}
-                    placeholder="Enter password ..."
-                    {...register("password", {
-                      required: "Password is required",
-                    })}
-                    className={`custom-input ${
-                      errors.password && "!border-error"
-                    }`}
-                  />
-
-                  <PasswordVisibilityButton
-                    isPasswordVisible={isPasswordVisible}
-                    togglePasswordVisibility={togglePasswordVisibility}
-                  />
-                </div>
-
-                {errors.password && (
-                  <FormBottomLabel message={errors.password.message!} />
-                )}
-              </div>
+              <PasswordInputGroupField
+                label="Password"
+                isRequired={true}
+                placeholder="Enter your password ..."
+                register={register("password")}
+                error={errors.password}
+                state={isPasswordVisible}
+                toggleState={togglePasswordVisibility}
+              />
             </div>
 
             <FormSubmitButton />

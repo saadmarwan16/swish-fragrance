@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { FunctionComponent } from "react";
 import Routes from "../constants/routes";
 import LogoAvatar from "./LogoAvatar";

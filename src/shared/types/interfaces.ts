@@ -1,4 +1,3 @@
-import { Id } from "react-toastify";
 import { UserModel } from "../../modules/auth/data/models/user_model";
 import { TDashboardLevel } from "./types";
 

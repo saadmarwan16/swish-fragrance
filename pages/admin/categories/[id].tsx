@@ -61,35 +61,6 @@ const CategoryDetails: NextPage<CategoryDetailsPageProps> = (props) => {
         <p className="custom-subtitle1">
           Manage your products to increase sales
         </p>
-
-        {/* <div className="custom-categories-products-container">
-          {!category?.data.attributes.products ? (
-            <ErrorContent
-              title="Products"
-              setContent={() =>
-                productsController.getProducts().then((res) => setProducts(res))
-              }
-            />
-          ) : (
-            <ProductsContainer
-              setContent={(page) => {
-                if (productsController.searchQuery === "") {
-                  productsController
-                    .getProducts(page)
-                    .then((res) => setProducts(res));
-                } else {
-                  productsController
-                    .changeSearchedProductsPage(page)
-                    .then((res) => setProducts(res));
-                }
-              }}
-              isTableView={categoriesController.isTableView}
-              loading={categoriesController.loading}
-              products={category.data.attributes.products}
-              setProducts={setProducts}
-            />
-          )}
-        </div> */}
       </div>
     </AdminLayout>
   );
