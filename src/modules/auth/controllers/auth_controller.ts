@@ -9,8 +9,6 @@ export class AuthController {
     makeAutoObservable(this);
   }
 
-  adminLogin = async (data: string) => {};
-
   login = async (data: ILoginInputs) => {
     this.loading = true;
     const results = await authRepository.login(data);

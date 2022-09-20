@@ -6,18 +6,14 @@ export interface ILoginInputs {
   password: string;
 }
 
-export interface INewProductInputs {
+export interface IProductInputs {
   name: string;
-  image: File | null;
-  number_sold: number;
-  revenue_generated: number;
+  image: File | null | undefined;
   discount: number;
   selling_price: number;
-  size: string;
   cost_price: number;
   restock_point: number;
   in_stock: number;
-  profit: number;
 }
 
 export interface ICategoryInputs {

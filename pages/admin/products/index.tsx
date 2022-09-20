@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite";
 import type { GetServerSideProps, NextPage } from "next";
-import nookies, { parseCookies } from "nookies";
 import { useState } from "react";
 import productsController from "../../../src/modules/products/controllers/products_controller";
 import { ProductsModel } from "../../../src/modules/products/data/models/products_model";
@@ -8,14 +7,17 @@ import AdminLayout from "../../../src/shared/components/AdminLayout";
 import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
 import ProductsContainer from "../../../src/shared/components/ProductsContainer";
+import { ErrorModel } from "../../../src/shared/data/models/errror_model";
 import adminServerProps from "../../../src/shared/utils/adminServerProps";
 
 interface ProductsPageProps {
   products: ProductsModel | null;
+  error: ErrorModel | null;
 }
 
 const Products: NextPage<ProductsPageProps> = (props) => {
   const [products, setProducts] = useState(props.products);
+  const [error, setError] = useState(props.error);
 
   return (
     <AdminLayout titlePrefix="Products">
@@ -45,27 +47,55 @@ const Products: NextPage<ProductsPageProps> = (props) => {
           {!products ? (
             <ErrorContent
               title="Products"
-              setContent={() =>
-                productsController.getProducts().then((res) => setProducts(res))
-              }
+              errorName={error?.name}
+              errorMessage={error?.message}
+              setContent={() => {
+                productsController.getAll().then((res) => {
+                  const { error, products } = res;
+                  if (error) {
+                    setError(error);
+
+                    return;
+                  }
+
+                  setProducts(products);
+                });
+              }}
             />
           ) : (
             <ProductsContainer
               setContent={(page) => {
                 if (productsController.searchQuery === "") {
-                  productsController
-                    .getProducts(page)
-                    .then((res) => setProducts(res));
+                  productsController.getAll(page).then((res) => {
+                    const { error, products } = res;
+                    if (error) {
+                      setError(error);
+
+                      return;
+                    }
+
+                    setProducts(products);
+                  });
                 } else {
                   productsController
                     .changeSearchedProductsPage(page)
-                    .then((res) => setProducts(res));
+                    .then((res) => {
+                      const { error, products } = res;
+                      if (error) {
+                        setError(error);
+
+                        return;
+                      }
+
+                      setProducts(products);
+                    });
                 }
               }}
               isTableView={productsController.isTableView}
               loading={productsController.loading}
               products={products}
               setProducts={setProducts}
+              setError={setError}
             />
           )}
         </div>
@@ -76,10 +106,10 @@ const Products: NextPage<ProductsPageProps> = (props) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return adminServerProps(ctx, async () => {
+    const results = await productsController.getAll();
+
     return {
-      props: {
-        products: await productsController.getProducts(),
-      },
+      props: results,
     };
   });
 };

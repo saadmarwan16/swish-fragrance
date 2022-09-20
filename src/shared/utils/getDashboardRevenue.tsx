@@ -15,8 +15,6 @@ const getDashboardRevenue = (previousOrders: Orders, orders: Orders) => {
 
   let difference;
   let level: TDashboardLevel;
-  console.log(ordersSum);
-  console.log(previousOrdersSum);
   if (ordersSum > previousOrdersSum && ordersSum > 0 && previousOrdersSum > 0) {
     level = "increased";
     difference = "+" + ((previousOrdersSum / ordersSum) * 100).toFixed(2) + "%";

@@ -3,6 +3,7 @@ import ProductsGridView from "../../modules/products/components/ProductsGridView
 import ProductsTableView from "../../modules/products/components/ProductsTableView";
 import ProductsTitleSearch from "../../modules/products/components/ProductsTitleSearch";
 import { ProductsModel } from "../../modules/products/data/models/products_model";
+import { ErrorModel } from "../data/models/errror_model";
 import EmptyContent from "./EmptyContent";
 import LoaderContent from "./LoaderContent";
 import PaginationTabs from "./PaginationTabs";
@@ -13,6 +14,7 @@ interface ProductsContainerProps {
   setContent: (page: number) => void;
   products: ProductsModel;
   setProducts: Dispatch<SetStateAction<ProductsModel | null>>;
+  setError: Dispatch<SetStateAction<ErrorModel | null>>;
 }
 
 const ProductsContainer: FunctionComponent<ProductsContainerProps> = ({
@@ -21,6 +23,7 @@ const ProductsContainer: FunctionComponent<ProductsContainerProps> = ({
   setContent,
   products,
   setProducts,
+  setError
 }) => {
   return (
     <>
@@ -28,6 +31,7 @@ const ProductsContainer: FunctionComponent<ProductsContainerProps> = ({
         itemsCount={products.data.length}
         pagination={products.meta.pagination}
         setProducts={setProducts}
+        setError={setError}
       />
 
       {loading ? (

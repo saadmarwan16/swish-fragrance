@@ -1,7 +1,3 @@
-import getPaginationQuery from "../../../../shared/queries/getPaginationQuery";
-import getProductPopulateQuery from "../../../../shared/queries/getProductPopulateQuery";
-import getSearchQuery from "../../../../shared/queries/getSearchQuery";
-import getSortAlphabetical from "../../../../shared/queries/getSortAlphabetical";
 import http from "../../../../shared/utils/http";
 import { ConvertProductsModel } from "../models/products_model";
 
@@ -10,32 +6,16 @@ export class ProductsProvider {
     await http.post("/products", data);
   };
 
-  getMany = async (query: string) => {};
+  getMany = async (query: string) => {
+    const response = await http.get(`/products?${query}`);
 
-  getAll = async () => {};
+    return ConvertProductsModel.toProductsModel(JSON.stringify(response.data));
+  };
 
-  getProducts = async (page: number, searchQuery?: string) => {
-    if (!searchQuery) {
-      const response = await http.get(
-        `/products?${getPaginationQuery(
-          page
-        )}&${getProductPopulateQuery()}&${getSortAlphabetical()}`
-      );
+  getAll = async (query: string) => {
+    const response = await http.get(`/products?${query}`);
 
-      return ConvertProductsModel.toProductsModel(
-        JSON.stringify(response.data)
-      );
-    } else {
-      const response = await http.get(
-        `/products?${getSearchQuery(
-          searchQuery
-        )}&${getProductPopulateQuery()}&${getPaginationQuery(page)}`
-      );
-
-      return ConvertProductsModel.toProductsModel(
-        JSON.stringify(response.data)
-      );
-    }
+    return ConvertProductsModel.toProductsModel(JSON.stringify(response.data));
   };
 }
 

@@ -2,19 +2,19 @@ import type { NextPage } from "next";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import { SubmitHandler, useForm } from "react-hook-form";
 import UploadImageButton from "../../../src/shared/components/UploadImageButton";
-import { INewProductInputs } from "../../../src/shared/types/interfaces";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Routes from "../../../src/shared/constants/routes";
 import { SUCCESS } from "../../../src/shared/constants/strings";
 import UpdateImageButton from "../../../src/shared/components/UpdateImageButton";
 import productsController from "../../../src/modules/products/controllers/products_controller";
-import NewProductInputs from "../../../src/modules/products/components/NewProductInputs";
 import { observer } from "mobx-react-lite";
 import { yupResolver } from "@hookform/resolvers/yup";
-import newProductSchema from "../../../src/shared/constants/schemas/new_product_schema";
 import errorToast from "../../../src/shared/utils/errorToast";
 import SizedSaveButton from "../../../src/shared/components/SizedSaveButton";
+import productSchema from "../../../src/shared/constants/schemas/product_schema";
+import { IProductInputs } from "../../../src/shared/types/interfaces";
+import ProductInputs from "../../../src/modules/products/components/ProductInputs";
 
 interface NewProductPageProps {}
 
@@ -26,11 +26,11 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<INewProductInputs>({
-    resolver: yupResolver(newProductSchema),
+  } = useForm<IProductInputs>({
+    resolver: yupResolver(productSchema),
   });
 
-  const onSubmit: SubmitHandler<INewProductInputs> = async (data) => {
+  const onSubmit: SubmitHandler<IProductInputs> = async (data) => {
     const { error, results } = await productsController.create(data);
     if (error) {
       errorToast(error.name, error.message);
@@ -66,14 +66,6 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
               isLoading={productsController.loading}
               title="Save"
             />
-            {/* <button
-              className={`!w-14 sm:!w-16 md:!w-20 custom-primary-button ${
-                productsController.loading && "loading"
-              }`}
-              type="submit"
-            >
-              {productsController.loading ? "" : "Save"}
-            </button> */}
           </div>
 
           {image ? (
@@ -108,7 +100,7 @@ const NewProduct: NextPage<NewProductPageProps> = () => {
           )}
         </div>
 
-        <NewProductInputs register={register} errors={errors} />
+        <ProductInputs register={register} errors={errors} />
       </form>
     </AdminLayout>
   );

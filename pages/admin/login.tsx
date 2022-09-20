@@ -41,16 +41,14 @@ const AdminLogin: NextPage<AdminLoginPageProps> = ({}) => {
       }
 
       if (
-        results?.role?.name !== "Admin" &&
-        results?.role?.name !== "Super Admin"
+        results?.role?.name === "Admin" ||
+        results?.role?.name === "Super Admin"
       ) {
+        setUser(results);
+        router.push(Routes.ADMIN_DASHBOARD);
+      } else {
         errorToast("Not an Admin", "This account does not belong to an admin");
-
-        return;
       }
-
-      setUser(results);
-      router.push(Routes.ADMIN_DASHBOARD);
     });
   };
   const togglePasswordVisibility = () =>

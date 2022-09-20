@@ -4,8 +4,6 @@ import authProvider from "../providers/auth_provider";
 import getUserQuery from "../queries/get_user_query";
 
 export class AuthRepository {
-  adminLogin = async (data: string) => {};
-
   login = async (data: ILoginInputs) => {
     try {
       const results = await authProvider.login(

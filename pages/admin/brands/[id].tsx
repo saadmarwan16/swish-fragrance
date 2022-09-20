@@ -111,11 +111,7 @@ const BrandDetails: NextPage<BrandDetailsPageProps> = (props) => {
       products,
     };
     brandController
-      .update(
-        brand?.data.attributes.entity.id.toString()!,
-        isImageUpdatd,
-        transformedData
-      )
+      .update(props.id, isImageUpdatd, transformedData)
       .then((res) => {
         const { error, brand } = res;
         if (error) {

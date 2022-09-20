@@ -5,7 +5,7 @@ export class AuthProvider {
   login = async (query: string, data: string) => {
     const authResponse = await http.post("/auth/local", data);
     const response = await http.get(
-      `http://localhost:1337/api/users/${authResponse.data.user.id}?${query}`
+      `/users/${authResponse.data.user.id}?${query}`
     );
 
     return ConvertUserModel.toUserModel(

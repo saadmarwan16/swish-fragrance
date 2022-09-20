@@ -14,8 +14,6 @@ interface OrdersTableViewProps {
 const OrdersTableView: FunctionComponent<OrdersTableViewProps> = ({
   orders,
 }) => {
-  console.log(orders);
-
   return (
     <div className="w-full overflow-x-auto">
       <table className="table w-full table-compact">
