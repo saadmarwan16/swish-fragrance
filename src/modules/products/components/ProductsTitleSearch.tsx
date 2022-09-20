@@ -8,24 +8,34 @@ import {
 import productsController from "../controllers/products_controller";
 import { Pagination, ProductsModel } from "../data/models/products_model";
 import debounce from "lodash.debounce";
+import { ErrorModel } from "../../../shared/data/models/errror_model";
 
 interface ProductsTitleSearchProps {
   itemsCount: number;
   pagination: Pagination;
   setProducts: Dispatch<SetStateAction<ProductsModel | null>>;
+  setError: Dispatch<SetStateAction<ErrorModel | null>>;
 }
 
 const ProductsTitleSearch: FunctionComponent<ProductsTitleSearchProps> = ({
   itemsCount,
   pagination: { page, pageSize, total },
   setProducts,
+  setError,
 }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSearchQueryChanged = useCallback(
     debounce((value: string) => {
-      productsController
-        .getProductsBySearch(value)
-        .then((res) => setProducts(res));
+      productsController.getMany(value).then((res) => {
+        const { error, products } = res;
+        if (error) {
+          setError(error);
+
+          return;
+        }
+
+        setProducts(products);
+      });
     }, 500),
     []
   );

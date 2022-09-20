@@ -4,18 +4,11 @@ const getBrandPopulateQuery = () => {
   return qs.stringify(
     {
       populate: {
-        meta: {
-          populate: "*",
-        },
         image: {
           fields: ["url"],
         },
         products: {
-          populate: {
-            image: {
-              fields: ["url"],
-            },
-          },
+          fields: ["name"],
         },
       },
     },

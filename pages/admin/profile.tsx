@@ -1,15 +1,18 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import AdminLayout from "../../src/shared/components/AdminLayout";
 import UpdateUserImageButton from "../../src/shared/components/UpdateUserImageButton";
 import { MdEdit } from "react-icons/md";
 import { FiSave } from "react-icons/fi";
 import { FaExchangeAlt } from "react-icons/fa";
 import { useState } from "react";
+import adminServerProps from "../../src/shared/utils/adminServerProps";
+import { useAuthContext } from "../../src/modules/auth/AuthContext";
 
 interface ProfilePageProps {}
 
 const Profile: NextPage<ProfilePageProps> = ({}) => {
   const [isEditing, setIsEditing] = useState(false);
+  const {user} = useAuthContext();
 
   return (
     <AdminLayout titlePrefix="Profile">
@@ -17,13 +20,13 @@ const Profile: NextPage<ProfilePageProps> = ({}) => {
         <UpdateUserImageButton />
 
         <div className="flex flex-col items-center">
-          <p className="text-xl font-semibold">Abdul Rahman</p>
+          <p className="text-xl font-semibold">{user?.name}</p>
           <span className="flex gap-2">
             <p className="text-gray-500">Role:</p>
-            <p className="font-semibold">Master Admin</p>
+            <p className="font-semibold">{user?.role?.name}</p>
           </span>
-          <p className="text-gray-500">mrghana30@gmail.com</p>
-          <p className="text-sm text-primary">@rahmansaad16</p>
+          <p className="text-gray-500">{user?.email}</p>
+          <p className="text-sm text-primary">@{user?.username}</p>
         </div>
 
         <div className="flex flex-col items-center gap-3 w-60 sm:w-72">
@@ -54,6 +57,14 @@ const Profile: NextPage<ProfilePageProps> = ({}) => {
       </div>
     </AdminLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    return {
+      props: {},
+    };
+  });
 };
 
 export default Profile;

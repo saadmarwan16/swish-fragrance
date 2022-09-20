@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .custom-flex-center {
-  @apply flex justify-center items-center;
+  @apply flex items-center justify-center;
 }
 
 .custom-full-screen {
@@ -11,7 +11,7 @@
 }
 
 .custom-heading1 {
-  @apply text-xl font-semibold leading-6  sm:text-2xl lg:text-3xl;
+  @apply text-xl font-semibold leading-6 sm:text-2xl lg:text-3xl;
 }
 
 .custom-heading2 {
@@ -19,11 +19,12 @@
 }
 
 .custom-subtitle1 {
-  @apply text-gray-500 sm:text-base  text-sm;
+  @apply text-sm text-gray-500 sm:text-base;
 }
 
 .custom-subtitle2 {
-  @apply text-gray-500  text-sm;}
+  @apply text-sm text-gray-500;
+}
 
 .custom-input {
   @apply w-full !outline-none input input-ghost border-2 focus:border-secondary input-sm sm:input-md bg-base-200;
@@ -67,4 +68,12 @@
 
 .new-product-layout {
   @apply flex flex-col gap-2 sm:flex-row;
+}
+
+.statistics-grid {
+  @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 sm:gap-6 md:gap-8 lg:gap-10;
+}
+
+.statistics-grid-container {
+  @apply flex flex-col gap-12 mt-8 sm:mt-10 md:mt-12;
 }

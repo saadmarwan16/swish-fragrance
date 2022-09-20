@@ -1,4 +1,3 @@
-import { IImageDetails } from "../../types/interfaces";
 import http from "../../utils/http";
 
 export class ImagesProvider {

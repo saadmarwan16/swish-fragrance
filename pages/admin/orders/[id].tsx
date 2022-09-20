@@ -6,6 +6,7 @@ import { OrderModel } from "../../../src/modules/orders/data/models/order_model"
 import AdminLayout from "../../../src/shared/components/AdminLayout";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
 import { ErrorModel } from "../../../src/shared/data/models/errror_model";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 
 interface OrderDetailsProps {
   id: string;
@@ -41,16 +42,18 @@ const OrderDetails: FunctionComponent<OrderDetailsProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id = query.id as string;
-  const results = await orderController.getOne(id);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    const id = ctx.query.id as string;
+    const results = await orderController.getOne(id);
 
-  return {
-    props: {
-      id,
-      ...results,
-    },
-  };
+    return {
+      props: {
+        id,
+        ...results,
+      },
+    };
+  });
 };
 
 export default OrderDetails;

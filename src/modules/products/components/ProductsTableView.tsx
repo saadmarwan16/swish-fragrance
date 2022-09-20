@@ -51,7 +51,7 @@ const ProductsTableView: FunctionComponent<ProductsTableViewProps> = ({
                 </td>
 
                 <td>
-                  <Link href={Routes.PRODUCT_DETAILS(id)}>
+                  <Link href={Routes.PRODUCT_DETAILS(id.toString())}>
                     <a>
                       <div className="flex items-center space-x-3 hover:cursor-pointer hover:text-primary">
                         <Avatar

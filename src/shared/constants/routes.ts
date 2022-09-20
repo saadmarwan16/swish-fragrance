@@ -12,10 +12,10 @@ abstract class Routes {
   static readonly ADMIN_LOGIN = "/admin/login";
   static readonly FORGOT_PASSWORD = "/admin/forgot-password";
   static readonly RESET_PASSWORD = "/admin/reset-password";
-  static readonly PRODUCT_DETAILS = (id: number) => `/admin/products/${id}`;
-  static readonly CATEGORY_DETAILS = (id: number) => `/admin/categories/${id}`;
-  static readonly BRAND_DETAILS = (id: number) => `/admin/brands/${id}`;
-  static readonly ORDER_DETAILS = (id: number) => `/admin/orders/${id}`;
+  static readonly PRODUCT_DETAILS = (id: string) => `/admin/products/${id}`;
+  static readonly CATEGORY_DETAILS = (id: string) => `/admin/categories/${id}`;
+  static readonly BRAND_DETAILS = (id: string) => `/admin/brands/${id}`;
+  static readonly ORDER_DETAILS = (id: string) => `/admin/orders/${id}`;
 }
 
 export default Routes;

@@ -13,3 +13,5 @@ export const HOME_TAB_MONTHLY = "HOME_TAB_MONTHLY";
 export const HOME_TAB_YEARLY = "HOME_TAB_YEARLY";
 
 export const SUCCESS = "SUCCESS";
+
+export const JWT_SECRET_KEY = process.env.NEXT_PUBLIC_JWT_SECRET_KEY;

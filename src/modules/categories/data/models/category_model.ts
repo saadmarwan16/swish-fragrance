@@ -5,71 +5,57 @@
 //   const categoryModel = Convert.toCategoryModel(json);
 
 export interface CategoryModel {
-  data: CategoryModelData;
+  data: Data;
   meta: Meta;
 }
 
-export interface CategoryModelData {
-  id: number;
-  attributes: PurpleAttributes;
+export interface Data {
+  attributes: DataAttributes;
 }
 
-export interface PurpleAttributes {
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date;
-  products: Products;
+export interface DataAttributes {
+  entity:       Entity;
+  all_products: AllProducts;
 }
 
-export interface Products {
+export interface AllProducts {
   data: Datum[];
+  meta: Meta;
 }
 
 export interface Datum {
-  id: number;
+  id:         number;
   attributes: DatumAttributes;
 }
 
 export interface DatumAttributes {
   name: string;
-  in_stock: number;
-  number_sold: number;
-  revenue_generated: number;
-  createdAt: Date;
-  updatedAt: Date;
+}
+
+export interface Meta {
+}
+
+export interface Entity {
+  id:          number;
+  name:        string;
+  createdAt:   Date;
+  updatedAt:   Date;
   publishedAt: Date;
-  discount: number;
-  selling_price: number;
-  size: string;
-  cost_price: number;
-  restock_point: number;
-  profit: number;
-  image: Image;
+  products:    Product[];
 }
 
-export interface Image {
-  data: ImageData | null;
+export interface Product {
+  id:   number;
+  name: string;
 }
-
-export interface ImageData {
-  id: number;
-  attributes: FluffyAttributes;
-}
-
-export interface FluffyAttributes {
-  url: string;
-}
-
-export interface Meta {}
 
 // Converts JSON strings to/from your types
 export class ConvertCategoryModel {
   public static toCategoryModel(json: string): CategoryModel {
-    return JSON.parse(json);
+      return JSON.parse(json);
   }
 
   public static categoryModelToJson(value: CategoryModel): string {
-    return JSON.stringify(value);
+      return JSON.stringify(value);
   }
 }

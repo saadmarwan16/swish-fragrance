@@ -12,6 +12,7 @@ import ErrorContent from "../../../src/shared/components/ErrorContent";
 import LoaderContent from "../../../src/shared/components/LoaderContent";
 import PaginationTabs from "../../../src/shared/components/PaginationTabs";
 import { ErrorModel } from "../../../src/shared/data/models/errror_model";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 import errorToast from "../../../src/shared/utils/errorToast";
 
 interface OrdersPageProps {
@@ -99,12 +100,12 @@ const Orders: NextPage<OrdersPageProps> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const results = await ordersController.getAll();
-
-  return {
-    props: results,
-  };
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    return {
+      props: await ordersController.getAll(),
+    };
+  });
 };
 
 export default observer(Orders);

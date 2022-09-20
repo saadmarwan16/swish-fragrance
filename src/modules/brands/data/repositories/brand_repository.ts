@@ -1,6 +1,8 @@
+import { serialize } from "object-to-formdata";
 import { SUCCESS } from "../../../../shared/constants/strings";
+import imagesRepository from "../../../../shared/data/repositories/images_repository";
 import handleError from "../../../../shared/errors/handleError";
-import { IBrandInputs } from "../../../../shared/types/interfaces";
+import { IBrandInputsTransformed } from "../../../../shared/types/interfaces";
 import brandProvider from "../providers/brand_provider";
 import getBrandPopulateQuery from "../queries/getBrandPopulateQuery";
 
@@ -15,13 +17,48 @@ export class BrandRepository {
     }
   };
 
-  update = async (id: string, data: IBrandInputs) => {
+  update = async (
+    id: string,
+    isImageUpdated: boolean,
+    data: IBrandInputsTransformed
+  ) => {
     try {
-      const results = await brandProvider.update(
-        id,
-        this.getQuery(),
-        JSON.stringify({ data })
-      );
+      let results;
+
+      if (isImageUpdated) {
+        let image;
+        if (data.image) {
+          image = (
+            await imagesRepository.create(serialize({ files: data.image }))
+          )[0].id;
+        } else {
+          image = null;
+        }
+
+        results = await brandProvider.update(
+          id,
+          this.getQuery(),
+          JSON.stringify({
+            data: {
+              ...data,
+              image,
+            },
+          })
+        );
+      } else {
+        let transformedData: any = data
+        delete transformedData['image']
+        
+        results = await brandProvider.update(
+          id,
+          this.getQuery(),
+          JSON.stringify({
+            data: {
+              ...transformedData,
+            },
+          })
+        );
+      }
 
       return { error: null, results };
     } catch (err) {

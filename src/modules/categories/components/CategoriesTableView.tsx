@@ -30,7 +30,7 @@ const CategoriesTableView: FunctionComponent<CategoriesTableViewProps> = ({
           return (
             <tr key={id} className="hover">
               <td>
-                <Link href={Routes.CATEGORY_DETAILS(id)}>
+                <Link href={Routes.CATEGORY_DETAILS(id.toString())}>
                   <a>
                     <div className=" hover:cursor-pointer hover:text-primary">
                       <div className="font-bold">{attributes.name}</div>

@@ -1,4 +1,5 @@
 import { SUCCESS } from "../../../../shared/constants/strings";
+import imagesRepository from "../../../../shared/data/repositories/images_repository";
 import handleError from "../../../../shared/errors/handleError";
 import getPaginationQuery from "../../../../shared/queries/getPaginationQuery";
 import getSearchQuery from "../../../../shared/queries/getSearchQuery";
@@ -6,11 +7,24 @@ import getSortAlphabetical from "../../../../shared/queries/getSortAlphabetical"
 import { IBrandInputs } from "../../../../shared/types/interfaces";
 import brandsProvider from "../providers/brands_provider";
 import getBrandsPopulateQuery from "../queries/getBrandsPopulateQuery";
+import { serialize } from "object-to-formdata";
 
 export class BrandsRepository {
   create = async (data: IBrandInputs) => {
     try {
-      await brandsProvider.create(JSON.stringify({ data }));
+      let res = null;
+      if (data.image !== null) {
+        res = await imagesRepository.create(serialize({ files: data.image }));
+      }
+
+      await brandsProvider.create(
+        JSON.stringify({
+          data: {
+            ...data,
+            image: res?.[0].id,
+          },
+        })
+      );
 
       return { error: null, results: SUCCESS };
     } catch (err) {

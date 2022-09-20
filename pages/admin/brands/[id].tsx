@@ -1,29 +1,31 @@
 import { observer } from "mobx-react-lite";
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import brandsController from "../../../src/modules/brands/controllers/brands_controller";
+import { useState } from "react";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { GrView } from "react-icons/gr";
 import brandController from "../../../src/modules/brands/controllers/brand_controller";
-import { BrandModel } from "../../../src/modules/brands/data/models/brand_model";
+import {
+  BrandModel,
+  Product,
+} from "../../../src/modules/brands/data/models/brand_model";
 import AdminLayout from "../../../src/shared/components/AdminLayout";
-import CategoriesProductsSelectView from "../../../src/shared/components/CategoriesProductsSelectView";
 import ErrorContent from "../../../src/shared/components/ErrorContent";
-import FormBottomLabel from "../../../src/shared/components/FormBottomLabel";
-import LabelledInput from "../../../src/shared/components/LabelledInput";
-import SizedDeleteButton from "../../../src/shared/components/SizedDeleteButton";
-import SizedEditBackButton from "../../../src/shared/components/SizedEditBackButton";
-import SizedSaveButton from "../../../src/shared/components/SizedSaveButton";
-import UpdateImageButton from "../../../src/shared/components/UpdateImageButton";
-import UploadImageButton from "../../../src/shared/components/UploadImageButton";
 import Routes from "../../../src/shared/constants/routes";
-import { EDIT_BRAND_IMAGE_LOCAL_STORAGE_KEY } from "../../../src/shared/constants/strings";
+import { BASE_URL } from "../../../src/shared/constants/urls";
 import { ErrorModel } from "../../../src/shared/data/models/errror_model";
 import {
-  IImageDetails,
   IBrandInputs,
+  IProductSizeOption,
 } from "../../../src/shared/types/interfaces";
+import adminServerProps from "../../../src/shared/utils/adminServerProps";
 import errorToast from "../../../src/shared/utils/errorToast";
+import sortProducts from "../../../src/shared/utils/sortProducts";
+import BrandHeading from "../../../src/modules/brands/components/BrandHeading";
+import EntryImage from "../../../src/shared/components/EntryImage";
+import EntryProductSelect from "../../../src/shared/components/EntryProductSelect";
+import EntryProduct from "../../../src/shared/components/EntryProduct";
+import convert2base64 from "../../../src/shared/utils/convert2Base64";
 
 interface BrandDetailsPageProps {
   id: string;
@@ -34,62 +36,192 @@ interface BrandDetailsPageProps {
 const BrandDetails: NextPage<BrandDetailsPageProps> = (props) => {
   const [brand, setBrand] = useState(props.brand);
   const [error, setError] = useState(props.error);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isImageAdded, setIsImageAdded] = useState(
-    !!props.brand?.data.attributes.image.data
-  );
-  const [imageDetails, setImageDetails] = useState<IImageDetails | null>(null);
+  const [isImageUpdatd, setIsImageUpdatd] = useState(false);
+  const [image, setImage] = useState<string | null>(() => {
+    if (!props.brand?.data.attributes.entity.image?.url) return null;
+
+    return `${BASE_URL}${props.brand?.data.attributes.entity.image.url}`;
+  });
+
+  const [allProducts, setAllProducts] = useState(() => {
+    const tempAllProducts = brand?.data.attributes.all_products;
+    const tempBrandProducts = brand?.data.attributes.entity.products;
+    if (!tempAllProducts || !tempBrandProducts) return null;
+
+    let allProducts: IProductSizeOption[] = [];
+    tempAllProducts.data.forEach((product) => {
+      allProducts.push({
+        text: product.attributes.name,
+        value: product.id,
+      });
+    });
+    const brandProducts: number[] = [];
+    tempBrandProducts.forEach((product) => {
+      brandProducts.push(product.id);
+    });
+
+    allProducts = allProducts.filter(
+      (product) => !brandProducts.includes(product.value)
+    );
+
+    return allProducts;
+  });
+
+  const getProducts = (products: Product[]) => {
+    const transformedProducts: IProductSizeOption[] = [];
+    products.forEach((product) => {
+      transformedProducts.push({
+        text: product.name,
+        value: product.id,
+      });
+    });
+
+    return transformedProducts;
+  };
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors, isDirty },
   } = useForm<IBrandInputs>({
     defaultValues: {
-      name: brand?.data.attributes.name,
-      image: props.brand?.data.attributes.image.data?.id,
+      name: brand?.data.attributes.entity.name,
+      image: null,
+      products: brand?.data.attributes.entity.products
+        ? getProducts(brand?.data.attributes.entity.products)
+        : [],
     },
   });
 
-  const customSetValue = (value?: number) => {
-    setValue("image", value, {
-      shouldDirty: true,
-    });
-  };
-
-  useEffect(() => {
-    const imageData = props.brand?.data.attributes.image.data;
-    if (imageData) {
-      imageData.attributes.url;
-      const imageDetails = {
-        id: imageData.id,
-        url: imageData.attributes.url,
-      } as IImageDetails;
-      setImageDetails(imageDetails);
-      setIsImageAdded(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { fields, append, remove } = useFieldArray<IBrandInputs>({
+    name: "products",
+    control,
+  });
 
   const onSubmit: SubmitHandler<IBrandInputs> = async (data) => {
-    brandController.update(brand?.data.id.toString()!, data).then((res) => {
-      const { error, brand } = res;
-      if (error) {
-        errorToast(error.name, error.message);
-      }
-
-      if (brand) {
-        setBrand(brand);
-        setIsEditing(!isEditing);
-      }
+    const products: number[] = [];
+    data.products.forEach((product) => {
+      products.push(product.value);
     });
+    const transformedData = {
+      ...data,
+      products,
+    };
+    brandController
+      .update(props.id, isImageUpdatd, transformedData)
+      .then((res) => {
+        const { error, brand } = res;
+        if (error) {
+          errorToast(error.name, error.message);
+
+          return;
+        }
+
+        if (brand) {
+          router.push(Routes.BRANDS);
+        }
+      });
+  };
+
+  const updateImage = (file: File) => {
+    convert2base64(file, setImage);
+    setIsImageUpdatd(true);
+    setValue("image", file, { shouldDirty: true });
   };
 
   return (
-    <AdminLayout titlePrefix={brand?.data.attributes.name ?? "Brand Details"}>
-      {!brand ? (
+    <AdminLayout
+      titlePrefix={brand?.data.attributes.entity.name ?? "Brand Details"}
+    >
+      {brand && allProducts ? (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <BrandHeading brand={brand} isDirty={isDirty} />
+
+          <div className="flex flex-col gap-4 mt-10 md:flex-row sm:gap-8 md:gap-12 lg:gap-16">
+            <EntryImage
+              nameError={errors.name}
+              image={image}
+              registerName={register("name")}
+              registerUpdateImage={register("image", {
+                onChange: (e) => {
+                  const files = e.target.files;
+                  if (files !== null && files.length > 0) {
+                    updateImage(files[0]);
+                  }
+                },
+              })}
+              registerUploadImage={register("image", {
+                onChange: (e) => {
+                  const files = e.target.files;
+                  if (files !== null && files.length > 0) {
+                    updateImage(files[0]);
+                  }
+                },
+              })}
+              removeImage={() => {
+                setImage(null);
+                setIsImageUpdatd(true);
+                setValue("image", undefined, {
+                  shouldDirty: true,
+                });
+              }}
+            />
+
+            <div className="flex flex-col flex-1 gap-6">
+              <EntryProductSelect
+                allProducts={allProducts}
+                selectValueChanged={(e) => {
+                  const value = e.target.value;
+
+                  const product = allProducts.find(
+                    (product) => product.value === parseInt(value)
+                  );
+                  if (product) {
+                    append(product);
+                    setAllProducts(() =>
+                      allProducts.filter(
+                        (product) => product.value !== parseInt(value)
+                      )
+                    );
+                  }
+                }}
+              />
+
+              <div>
+                <span className="font-semibold">
+                  This brand&apos;s product(s)
+                </span>
+                <div className="flex flex-col gap-2 mt-2">
+                  {fields?.map((product, index) => (
+                    <EntryProduct
+                      key={product.id}
+                      register={register(`products.${index}.text`)}
+                      onDeleteClicked={() => {
+                        const productToDelete = fields.find(
+                          (field) => field.value === product.value
+                        );
+                        if (productToDelete) {
+                          remove(index);
+                          setAllProducts(() => {
+                            const products = [...allProducts, productToDelete];
+
+                            products.sort(sortProducts);
+
+                            return products;
+                          });
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      ) : (
         <div className="flex items-center justify-center h-[500px]">
           <ErrorContent
             title={`brand with id #${props.id}`}
@@ -110,138 +242,23 @@ const BrandDetails: NextPage<BrandDetailsPageProps> = (props) => {
             }}
           />
         </div>
-      ) : (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
-            <div>
-              <p className="custom-heading1">{brand.data.attributes.name}</p>
-
-              <p className="custom-subtitle1">
-                {brand.data.attributes.products.data?.length} product(s) found
-              </p>
-            </div>
-
-            {isEditing ? (
-              <div className="flex gap-3">
-                <SizedEditBackButton
-                  title="Back"
-                  onClick={() => setIsEditing(!isEditing)}
-                />
-                <SizedSaveButton
-                  isLoading={brandsController.loading}
-                  title="Save"
-                  isDisabled={!isDirty}
-                />
-              </div>
-            ) : (
-              <div className="flex gap-3">
-                <SizedDeleteButton
-                  onClick={() => {
-                    brandController
-                      .delete(brand.data.id.toString())
-                      .then((res) => {
-                        const { error, results } = res;
-                        if (error) {
-                          errorToast(error.name, error.message);
-                        }
-
-                        router.push(Routes.BRANDS);
-                      });
-                  }}
-                />
-
-                <SizedEditBackButton
-                  title="Edit"
-                  onClick={() => setIsEditing(!isEditing)}
-                />
-              </div>
-            )}
-          </div>
-
-          {isEditing ? (
-            <div className="pt-4">
-              {isImageAdded && imageDetails ? (
-                <UpdateImageButton
-                  imageDetails={imageDetails}
-                  imageLocalStorageKey={EDIT_BRAND_IMAGE_LOCAL_STORAGE_KEY}
-                  setImageDetails={(value) => setImageDetails(value)}
-                  setIsImageAdded={(value) => setIsImageAdded(value)}
-                  setValue={(value) => customSetValue(value)}
-                />
-              ) : (
-                <UploadImageButton
-                  imageLocalStorageKey={EDIT_BRAND_IMAGE_LOCAL_STORAGE_KEY}
-                  setImageDetails={(id, url) => setImageDetails({ id, url })}
-                  setIsImageAdded={() => setIsImageAdded(true)}
-                  setValue={(value) => customSetValue(value)}
-                />
-              )}
-
-              <div className="flex flex-col gap-2 pt-4">
-                <div className="new-product-layout">
-                  <LabelledInput isRequired={true} topFormText={"Name"}>
-                    <input
-                      className={`custom-input sm:!w-2/3 md:!w-1/2 ${
-                        errors.name && "!border-error"
-                      }`}
-                      placeholder="Enter name here"
-                      {...register("name", {
-                        required: "Brand name is required",
-                        minLength: {
-                          value: 3,
-                          message:
-                            "Brand name must contain at least 3 characters",
-                        },
-                      })}
-                    />
-
-                    {errors?.name && (
-                      <FormBottomLabel message={errors.name.message!} />
-                    )}
-                  </LabelledInput>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-center">
-                <p className="custom-heading1">Products</p>
-
-                <div className="flex gap-4">
-                  <CategoriesProductsSelectView
-                    title="Table View"
-                    isActive={brandsController.isTableView}
-                    setIsActive={() => brandsController.setIsTableView(true)}
-                  />
-
-                  <CategoriesProductsSelectView
-                    title="Grid View"
-                    isActive={!brandsController.isTableView}
-                    setIsActive={() => brandsController.setIsTableView(false)}
-                  />
-                </div>
-              </div>
-              <p className="custom-subtitle1">
-                Manage your products to increase sales
-              </p>
-            </div>
-          )}
-        </form>
       )}
     </AdminLayout>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id = query.id as string;
-  const results = await brandController.getOne(id);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return adminServerProps(ctx, async () => {
+    const id = ctx.query.id as string;
+    const results = await brandController.getOne(id);
 
-  return {
-    props: {
-      id,
-      ...results,
-    },
-  };
+    return {
+      props: {
+        id,
+        ...results,
+      },
+    };
+  });
 };
 
 export default observer(BrandDetails);

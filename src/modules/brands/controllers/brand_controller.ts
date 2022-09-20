@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { ErrorModel } from "../../../shared/data/models/errror_model";
-import { IBrandInputs } from "../../../shared/types/interfaces";
+import { IBrandInputsTransformed } from "../../../shared/types/interfaces";
 import { BrandModel } from "../data/models/brand_model";
 import brandRepository from "../data/repositories/brand_repository";
 
@@ -8,6 +8,8 @@ export class BrandController {
   brand: BrandModel | null = null;
   error: ErrorModel | null = null;
   loading = false;
+  saving = false;
+  deleting = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -26,12 +28,12 @@ export class BrandController {
     };
   };
 
-  update = async (id: string, data: IBrandInputs) => {
-    this.loading = true;
-    const { error, results } = await brandRepository.update(id, data);
+  update = async (id: string, isImageUpdated: boolean, data: IBrandInputsTransformed) => {
+    this.saving = true;
+    const { error, results } = await brandRepository.update(id, isImageUpdated, data);
     this.error = error;
     this.brand = results;
-    this.loading = false;
+    this.saving = false;
 
     return {
       error,
@@ -40,10 +42,10 @@ export class BrandController {
   };
 
   delete = async (id: string) => {
-    this.loading = true;
+    this.deleting = true;
     const { error, results } = await brandRepository.delete(id);
     this.error = error;
-    this.loading = false;
+    this.deleting = false;
 
     return {
       error,

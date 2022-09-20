@@ -12,8 +12,8 @@ interface AdminDrawerSideProps {}
 const AdminDrawerSide: FunctionComponent<AdminDrawerSideProps> = () => {
   const router = useRouter();
 
-  const logoutClicked = () => {
-    destroyCookie(null, "jwt");
+  const logoutClicked = async () => {
+    await destroyCookie(null, "user");
     router.reload();
   };
 

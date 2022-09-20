@@ -14,8 +14,6 @@ interface OrdersTableViewProps {
 const OrdersTableView: FunctionComponent<OrdersTableViewProps> = ({
   orders,
 }) => {
-  console.log(orders);
-
   return (
     <div className="w-full overflow-x-auto">
       <table className="table w-full table-compact">
@@ -45,7 +43,7 @@ const OrdersTableView: FunctionComponent<OrdersTableViewProps> = ({
             }) => (
               <tr key={id} className="hover">
                 <td>
-                  <Link key={id} href={Routes.ORDER_DETAILS(id)}>
+                  <Link key={id} href={Routes.ORDER_DETAILS(id.toString())}>
                     <a>
                       <div className="flex items-center space-x-3 hover:cursor-pointer hover:text-primary">
                         <Avatar
