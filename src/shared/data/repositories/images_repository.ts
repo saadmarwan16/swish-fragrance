@@ -19,7 +19,7 @@ export class ImagesRepository {
     try {
       await imagesProvider.delete(id);
 
-      return imagesProvider.create(formData);
+      return await imagesProvider.create(formData);
     } catch (_) {
       return null;
     }
